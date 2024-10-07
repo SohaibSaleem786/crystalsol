@@ -250,9 +250,9 @@ const SideBar1 = () => {
     setActiveDropdown(null);
   };
   return (
-    <div className={`wrapper ${expanded ? "expand" : ""}`}>
+    <div className={`wrapper ${expanded ? "expandopen" : "expandclose"}`}>
       {/* <button onClick={toggleSidebarr}>Toggle Sidebar</button> */}
-      <aside className="sidebar" style={{ marginTop: "-3%" }}>
+      <aside className="sidebar" style={{ marginTop: "2%" }}>
         <button className="toggle-btn" style={{ marginTop: "-23px" }}>
           <i className="lni lni-grid-alt" onClick={toggleSidebar}>
             {isToggled ? <FaToggleOn /> : <FaToggleOff />}
@@ -268,10 +268,7 @@ const SideBar1 = () => {
                 onMouseLeave={handleMouseLeave}
                 show={activeDropdown === topLevel} // Show dropdown only if activeDropdown matches current top-level menu
               >
-                <li
-                  className="sidebar-item"
-                  style={{ position: "relative", marginLeft: "-43%" }}
-                >
+                <li className="sidebar-item" style={{ position: "relative" }}>
                   <Dropdown.Toggle
                     style={{ borderRadius: "0px", textTransform: "none" }}
                     variant="transparent"
@@ -296,34 +293,6 @@ const SideBar1 = () => {
           </ul>
         )}
       </aside>
-      <div className="main p-3">
-        <div className="row dashboard-name">
-          <img
-            src={`${imagelink}02.jpg`}
-            alt="Company Logo"
-            style={{ height: "100px", marginLeft: "150px", width: "350px" }}
-          />
-        </div>
-        <div
-          className="row "
-          style={{ borderTop: "2px solid blue", width: "90%" }}
-        >
-          <div className="col-4 dashboard-okara">LAHORE</div>
-          <div className="col-1"></div>
-          <div className="col-7 dashboard-address">
-            {organisation && organisation.address} <br /> Phone #:
-            {organisation && organisation.contactno}
-          </div>
-        </div>
-        <div className="row" style={{ marginTop: "2%" }}>
-          <div className="col-4 dashboard-companynameimage">
-            <img src={CompanyName} alt="logo" />
-          </div>
-          <div className="col-4 dashboard-companyinfoimage">
-            <img src={CompanyInfo} alt="logo" />
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

@@ -2,11 +2,14 @@ const apiLink = "https://crystalsolutions.com.pk/umair_electronic/web/";
 
 export const fetchDataMenu = async (userId) => {
   try {
-    const requestBody = new URLSearchParams({ userid: userId }).toString();
+    const requestBody = new URLSearchParams({
+      FUsrId: "sohaib",
+      code: "ALPHA",
+    }).toString();
 
     // Send POST request using fetch
     const response = await fetch(
-      `https://crystalsolutions.com.pk/csorder3/UserMenu.php`,
+      `https://crystalsolutions.com.pk/api/GetUserMenu.php`,
       {
         method: "POST",
         headers: {

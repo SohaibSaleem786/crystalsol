@@ -46,7 +46,7 @@ function HomePage1() {
       {/* <Menu /> */}
       <SideBar1 />
 
-      <Container
+      {/* <Container
         className="d-flex justify-content-center align-items-center"
         style={{ backgroundColor: "lightblack", marginTop: "50px" }}
       >
@@ -69,7 +69,7 @@ function HomePage1() {
             </h1>
           </Col>
         </Row>
-      </Container>
+      </Container> */}
 
       {/* <div
         className="d-flex flex-column flex-grow-1"

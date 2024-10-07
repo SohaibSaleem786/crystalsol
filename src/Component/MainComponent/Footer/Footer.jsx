@@ -3,16 +3,13 @@ import "../Footer/Footer.css";
 
 function Footer() {
   return (
-    <footer
-      className="fixed-bottom  "
-      style={{ backgroundColor: "rgb(235, 235, 235)" }}
-    >
-      <div className="footer" style={{color:"black"}}>
-        <a className="text-dark " href="">
+    <footer className="fixed-bottom  " style={{ backgroundColor: "#021a33" }}>
+      <div className="footer" style={{ color: "white" }}>
+        <a className="text-light " href="">
           Privacy Policy
         </a>{" "}
         |{" "}
-        <a className="text-dark" href="">
+        <a className="text-light" href="">
           Terms of Use
         </a>{" "}
         | © 2024 Crystal Solution. All rights reserved.
