@@ -1,219 +1,3 @@
-// import Cart from "../../../image/cart.png";
-// import Logo from "../../../image/UMAIR.png";
-// import itc from "../HomePage/itc.png";
-// import "../Header/Header.css";
-// import React, { useState, useEffect } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-// import { Dropdown } from "react-bootstrap";
-// import moment from "moment";
-// import { useNavigate } from "react-router-dom";
-// import { useTheme } from "../../../ThemeContext";
-// import { FaToggleOn, FaToggleOff } from "react-icons/fa"; // Import toggle icons
-// import {
-//   Card,
-//   Row,
-//   Col,
-//   Button,
-//   FormControl,
-//   InputGroup,
-// } from "react-bootstrap";
-// import axios from "axios";
-// import { useData } from "../../../DataContext";
-// import { useSidebar } from "../../../SidebarContext";
-// import { isLoggedIn, getUserData, getOrganisationData } from "../../Auth";
-// function Header({ id }) {
-//   const navigate = useNavigate();
-//   const user = getUserData();
-//   const organisation = getOrganisationData();
-//   useEffect(() => {
-//     if (!isLoggedIn()) {
-//       // navigate("/login");
-//     }
-//   }, [navigate]);
-//   const { primaryColor, secondaryColor } = useTheme();
-//   const { apiLinks } = useTheme();
-
-//   const imagelink = `https://crystalsolutions.com.pk/images/${
-//     organisation && organisation.code
-//   }`;
-//   // Define a state to handle the dropdown visibility
-//   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-//   // Function to toggle dropdown visibility
-//   const toggleDropdown = () => {
-//     setDropdownOpen(!dropdownOpen);
-//   };
-
-// const handleLogout = () => {
-//   // e.preventdefault();
-//   // Remove user data from local storage
-//   localStorage.removeItem("user_id");
-//   // Redirect to the login page
-//   navigate("/");
-// };
-//   // console.log("=======================");
-
-//   // console.log(imagelink + getUser.tprjid);
-//   /////////////////////////////////////////////////////////////////////////
-//   /////////////////////////////////////////////////////////////////////////
-//   ////////////CART ICON KA OPER ITEM NUMBER ///////////////////////////////
-//   /////////////////////////////////////////////////////////////////////////
-//   const { orderData } = useData();
-
-//   // Use a side effect to log the value of user whenever it changes
-
-//   const [totalItems, settotalItem] = useState([]);
-//   // useEffect(() => {
-//   //   fetch(`${apiLinks}/PendingOrder.php`)
-//   //     .then((response) => response.json())
-//   //     .then((apiData) => {
-//   //       const transformedData = apiData.map((item) => ({
-//   //           id : item.id,
-
-//   //       }));
-
-//   //       const columns = [
-//   //         { label: "Order ID", field: "id", sort: "asc" },
-
-//   //         { label: "Edit ", field: "tedtdat", sort: "asc" },
-
-//   //       ];
-
-//   //       // setData({ columns, rows: transformedData });
-
-//   //       settotalItem(apiData.length);
-//   //     })
-//   //     .catch((error) => console.error(error));
-//   // }, []);
-//   const totalItem = totalItems; // Replace with your actual total item count
-//   const [isSidebarToggled, setIsSidebarToggled] = useState(false); // State variable for toggling sidebar
-//   // const { toggleSidebar } = useSidebar();
-
-//   // const toggleSidebarr = () => {
-//   //   setIsSidebarToggled(!isSidebarToggled);
-//   // };
-
-//   const { isSidebarOpen, toggleSidebar } = useSidebar();
-
-//   const toggleSidebarr = () => {
-//     toggleSidebar(); // Call the toggleSidebar function from SidebarContext
-//   };
-
-//   return (
-//     <>
-//       <header
-//         style={{
-//           display: "flex",
-//           justifyContent: "space-between",
-//           alignItems: "center",
-//           padding: "5px",
-//           backgroundColor: "rgb(235, 235, 235)",
-//         }}
-//       >
-//         {/* <button className="toggle-btn" onClick={toggleSidebar}>
-//           <i className="lni lni-grid-alt">
-//             {isSidebarToggled ? <FaToggleOn /> : <FaToggleOff />}
-//           </i>
-//         </button> */}
-//         {/* <button onClick={toggleSidebarr}>Toggle Sidebar</button> */}
-
-//         <div style={{ display: "flex", alignItems: "center" }}>
-// <img
-//   src={`${imagelink}01.jpg`}
-//   alt="Company Logo"
-//   style={{ height: "50px", marginRight: "20px", marginLeft: "70px" }}
-// />
-//           <h1
-//             style={{
-//               fontSize: "22px",
-//               margin: "0",
-//               color: primaryColor,
-//               fontWeight: "bold",
-//             }}
-//           >
-//             {user && user.tprjdsc}
-//           </h1>
-//         </div>
-
-//         <div style={{ display: "flex", alignItems: "center" }}>
-//           <div className="btn-group">
-//             <h5 style={{ fontSize: "14px", marginTop: "10px" }}>
-//               {moment().format("DD/MM/YYYY")}
-//             </h5>
-//             <button
-//               className="btn"
-//               style={{
-//                 fontSize: "14px",
-//                 border: "none",
-//                 boxShadow: "none",
-//                 borderRadius: "0",
-//               }}
-//               data-bs-toggle="dropdown"
-//               aria-expanded="false"
-//             >
-//               <FontAwesomeIcon icon={faEllipsisV} />
-//             </button>
-//             <ul className="dropdown-menu dropdown-menu-left">
-//               <li>
-//                 <a
-//                   className="dropdown-item"
-//                   href="#"
-//                   onMouseEnter={(e) => {
-//                     e.target.style.backgroundColor = primaryColor;
-//                     e.target.style.color = secondaryColor;
-//                   }}
-//                   onMouseLeave={(e) => {
-//                     e.target.style.backgroundColor = "";
-//                     e.target.style.color = "";
-//                   }}
-//                 >
-//                   {user && user.tusrnam}
-//                 </a>
-//               </li>
-//               <li>
-//                 <a
-//                   className="dropdown-item"
-//                   href="#"
-//                   onClick={navigate("/UserManagement")}
-//                   onMouseEnter={(e) => {
-//                     e.target.style.backgroundColor = primaryColor;
-//                     e.target.style.color = secondaryColor;
-//                   }}
-//                   onMouseLeave={(e) => {
-//                     e.target.style.backgroundColor = "";
-//                     e.target.style.color = "";
-//                   }}
-//                 >
-//                   User Management
-//                 </a>
-//               </li>
-//               <li>
-//                 <a
-//                   className="dropdown-item"
-//                   href="#"
-//                   onMouseEnter={(e) => {
-//                     e.target.style.backgroundColor = primaryColor;
-//                     e.target.style.color = secondaryColor;
-//                   }}
-//                   onMouseLeave={(e) => {
-//                     e.target.style.backgroundColor = "";
-//                     e.target.style.color = "";
-//                   }}
-// onClick={handleLogout}
-//                 >
-//                   Logout
-//                 </a>
-//               </li>
-//             </ul>
-//           </div>
-//         </div>
-//       </header>
-//     </>
-//   );
-// }
-
-// export default Header;
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../ThemeContext";
 import React, { useState, useEffect } from "react";
@@ -228,13 +12,13 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useData } from "../../../DataContext";
-import { useSidebar } from "../../../SidebarContext";
+import "bootstrap-icons/font/bootstrap-icons.css"; // Ensure this is imported
+import man from "../../../image/man.png";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../Auth";
 import { SvgIcon, Button } from "@mui/material";
 import { Avatar, Divider, ListItemIcon } from "@mui/material";
@@ -242,6 +26,7 @@ import { Settings, ExitToApp, Brightness4, Inbox } from "@mui/icons-material";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { useSidebar } from "../../../SidebarContext";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -258,15 +43,15 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+// const SearchIconWrapper = styled("div")(({ theme }) => ({
+//   padding: theme.spacing(0, 2),
+//   height: "100%",
+//   position: "absolute",
+//   pointerEvents: "none",
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+// }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
@@ -290,14 +75,14 @@ const Menufile = ({ isOpen }) => {
       style={{
         position: "absolute",
         top: "60px",
-        right: "400px",
-        width: "800px",
+        right: "475px",
+        width: "650px",
         backgroundColor: "#0d2949",
         color: "white",
         padding: "20px",
         borderRadius: "10px",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        zIndex: 1000,
+        zIndex: 9999,
       }}
     >
       <div
@@ -676,9 +461,10 @@ const Menufile = ({ isOpen }) => {
             Quick Links
           </strong>
           <ul style={{ listStyle: "none", padding: 0 }}>
+            <br />
             {[
               "Pricing Page",
-              "Authentication Design",
+              "Authentication",
               "Register Now",
               "404 Error Page",
               "Notes App",
@@ -726,57 +512,121 @@ const Menufile = ({ isOpen }) => {
     </div>
   );
 };
-
-function CustomGridIcon(props) {
+const Threelineiconheader = () => {
   return (
-    <SvgIcon {...props}>
-      <rect
-        x="3"
-        y="3"
-        width="5"
-        height="5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <rect
-        x="14"
-        y="3"
-        width="5"
-        height="5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <rect
-        x="14"
-        y="14"
-        width="5"
-        height="5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <rect
-        x="3"
-        y="14"
-        width="5"
-        height="5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </SvgIcon>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
   );
-}
+};
+
+// function CustomGridIcon(props) {
+//   return (
+//     <SvgIcon {...props}>
+//       <rect
+//         x="3"
+//         y="3"
+//         width="5"
+//         height="5"
+//         fill="none"
+//         stroke="currentColor"
+//         strokeWidth="2"
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//       />
+//       <rect
+//         x="14"
+//         y="3"
+//         width="5"
+//         height="5"
+//         fill="none"
+//         stroke="currentColor"
+//         strokeWidth="2"
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//       />
+//       <rect
+//         x="14"
+//         y="14"
+//         width="5"
+//         height="5"
+//         fill="none"
+//         stroke="currentColor"
+//         strokeWidth="2"
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//       />
+//       <rect
+//         x="3"
+//         y="14"
+//         width="5"
+//         height="5"
+//         fill="none"
+//         stroke="currentColor"
+//         strokeWidth="2"
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//       />
+//     </SvgIcon>
+//   );
+// }
+const CustomGridIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="7" height="7"></rect>
+      <rect x="14" y="3" width="7" height="7"></rect>
+      <rect x="14" y="14" width="7" height="7"></rect>
+      <rect x="3" y="14" width="7" height="7"></rect>
+    </svg>
+  );
+};
+/**
+ * Custom SVG Icon for Search
+ *
+ * @returns {JSX.Element} A custom SVG icon for search
+ */
+const SearchIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {/* Circle for search icon */}
+      <circle cx="11" cy="11" r="8"></circle>
+      {/* Line for search icon */}
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+  );
+};
 export default function Header() {
   const navigate = useNavigate();
   const user = getUserData();
@@ -1138,9 +988,17 @@ export default function Header() {
     setIsfilesOpen(!isfilesOpen);
   };
 
+  // const { toggleSidebar } = useSidebar();
+  // const { toggleColor } = useColorchange();
+  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
+    useSidebar();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" style={{ background: "#1E88E5" }}>
+      <AppBar
+        position="static"
+        style={{ background: "#1E88E5", height: "55px" }}
+      >
         <Toolbar>
           {/* Display the logo in small size */}
           <img
@@ -1157,44 +1015,93 @@ export default function Header() {
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(191, 191, 191,0.5)",
+                borderRadius: "50%",
+              },
+            }}
+            onClick={toggleSidebar}
           >
-            <MenuIcon />
+            <Threelineiconheader />
           </IconButton>
-          <div onClick={togglefiles}>
+          <IconButton
+            size="small"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{
+              ml: 2,
+              "&:hover": {
+                backgroundColor: "rgba(191, 191, 191,0.5)",
+                borderRadius: "50%",
+              },
+            }}
+            onClick={togglefiles}
+          >
             <CustomGridIcon />
-          </div>
-
-          {/* Conditionally rendered Menu */}
+          </IconButton>
           <Menufile isOpen={isfilesOpen} />
-          {/* <CustomGridIcon /> */}
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+
+          <IconButton
+            size="small"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{
+              ml: 2,
+              "&:hover": {
+                backgroundColor: "rgba(191, 191, 191,0.5)",
+                borderRadius: "50%",
+              },
+            }}
+          >
+            <SearchIcon />
+          </IconButton>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
-              size="large"
-              aria-label="show new notification"
+              size="small"
+              edge="start"
               color="inherit"
-              // onClick={handleClicknotification}
+              aria-label="open drawer"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(191, 191, 191,0.5)",
+                  borderRadius: "50%",
+                },
+              }}
+              onClick={toggleChangeColor}
             >
-              <Brightness4 />
+              <i className="bi bi-brightness-high fs-5 text-white"></i>
             </IconButton>
+
             <IconButton
               size="large"
               aria-label="show new mails"
               color="inherit"
               onClick={handleClickmail}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(191, 191, 191,0.5)",
+                  borderRadius: "50%",
+                },
+              }}
             >
               <Badge badgeContent={5} color="error">
-                <MailIcon />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
               </Badge>
             </IconButton>
 
@@ -1265,9 +1172,28 @@ export default function Header() {
               aria-label="show new notification"
               color="inherit"
               onClick={handleClicknotification}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(191, 191, 191,0.5)",
+                  borderRadius: "50%",
+                },
+              }}
             >
               <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
               </Badge>
             </IconButton>
 
@@ -1338,13 +1264,17 @@ export default function Header() {
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
               color="inherit"
+              onClick={handleProfileMenuOpen}
             >
-              <AccountCircle />
+              <Avatar
+                alt="Profile"
+                src={man}
+                sx={{ height: "30px", width: "30px", marginTop: "-10px" }}
+              />
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+          {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="show more"
@@ -1355,7 +1285,7 @@ export default function Header() {
             >
               <MoreIcon />
             </IconButton>
-          </Box>
+          </Box> */}
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

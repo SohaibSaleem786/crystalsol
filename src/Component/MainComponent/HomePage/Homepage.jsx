@@ -16,6 +16,7 @@ import "../../../menu.css";
 import { useTheme } from "../../../ThemeContext";
 import "./Homepage.css";
 import SideBar1 from "../SideBar1/SideBar";
+import { useSidebar } from "../../../SidebarContext";
 function HomePage1() {
   const location = useLocation();
   const { primaryColor, secondaryColor } = useTheme();
@@ -26,6 +27,9 @@ function HomePage1() {
   };
   const userid = location?.state?.userid || null; // Check if location state contains the userid
   const permissions = location?.state?.permissions || [];
+
+  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
+    useSidebar();
 
   return (
     <>
@@ -40,12 +44,11 @@ function HomePage1() {
     </button>
 
     </div> */}
+      <div style={{ backgroundColor: getcolor, height: "100vh" }}>
+        <Header />
 
-      <Header />
-      {/* <NavBar /> */}
-      {/* <Menu /> */}
-      <SideBar1 />
-
+        <SideBar1 />
+      </div>
       {/* <Container
         className="d-flex justify-content-center align-items-center"
         style={{ backgroundColor: "lightblack", marginTop: "50px" }}

@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
-import "./Sidebarr.css";
-import axios from "axios";
-import { Dropdown } from "react-bootstrap";
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Collapse,
+  IconButton,
+  Divider,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
   FaFile,
@@ -11,69 +19,141 @@ import {
   FaToggleOn,
   FaToggleOff,
 } from "react-icons/fa";
-import { useSidebar } from "../../../SidebarContext";
-import { Link } from "react-router-dom";
+import { ExpandLess, ExpandMore, Opacity } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchMenu } from "../../Redux/action";
-import CompanyName from "../../../image/logowithname.jpeg";
-import CompanyInfo from "../../../image/Crystal_info.jpeg";
-import { isLoggedIn, getUserData, getOrganisationData } from "../../Auth";
+import { getUserData, getOrganisationData, isLoggedIn } from "../../Auth";
+import { useSidebar } from "../../../SidebarContext";
+import { Avatar } from "@mui/material"; // Import Avatar component
+import { Typography } from "@mui/material";
+import { Row, Col } from "react-bootstrap";
+import imagebackground from "../../../image/homeapp.png";
+import man from "../../../image/man.png";
+import "./Sidebarr.css";
+import { DataProvider } from "../../../DataContext";
+const SidebarHeader = ({ userName, userAvatar }) => {
+  return (
+    <Box
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: 2,
+        backgroundImage: `url(${imagebackground})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        position: "relative",
+        height: "100px",
+        justifyContent: "center",
+        opacity: 0.8,
+        zIndex: -1,
+      }}
+    >
+      {/* Avatar Row */}
+      <Row style={{ marginBottom: "20px" }}>
+        <Avatar
+          alt={userName}
+          src={userAvatar}
+          sx={{ width: 80, height: 50 }}
+        />
+      </Row>
 
+      <Row
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          width: "100%",
+          justifyContent: "center", // Center the contents horizontally
+          alignItems: "start", // Center the contents vertically
+          padding: "10px",
+          position: "absolute",
+          height: "33px",
+          bottom: 0,
+        }}
+      >
+        <Col
+          className="col-9"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          <Typography
+            sx={{
+              color: "#FFFFFF",
+              display: "flex",
+              fontSize: "13px",
+              justifyContent: "left", // Center text horizontally
+            }}
+          >
+            {userName}
+          </Typography>
+        </Col>
+        <Col
+          className="col-3"
+          style={{ display: "flex", justifyContent: "center" }} // Center the IconButton
+        >
+          <IconButton
+            sx={{ color: "#FFFFFF", marginTop: "-7px", fontSize: "13px" }}
+          >
+            {/* <ExpandMore /> */}
+            <i className="bi bi-caret-down-fill"></i>
+          </IconButton>
+        </Col>
+      </Row>
+    </Box>
+  );
+};
 const SideBar1 = () => {
   const dispatch = useDispatch();
   const user = getUserData();
   const organisation = getOrganisationData();
-  const imagelink = `https://crystalsolutions.com.pk/images/${
-    organisation && organisation.code
-  }`;
   const navigate = useNavigate();
+  const { data, loading, error } = useSelector((state) => state.item);
+
+  const [expanded, setExpanded] = useState(true);
+  const [menuData, setMenuData] = useState([]);
+  const [openMenu, setOpenMenu] = useState({}); // To track open/closed top-level menus
+  const [openSubMenu, setOpenSubMenu] = useState({}); // To track open/closed sub-menus
+  const [isToggled, setIsToggled] = useState(true);
+
+  // const { isSidebarOpen, toggleSidebarr } = useSidebar();
 
   useEffect(() => {
     if (!isLoggedIn()) {
-      // If user is not logged in, redirect to login page
       navigate("/login");
     }
   }, [navigate]);
-  const { data, loading, error } = useSelector((state) => state.item);
 
   useEffect(() => {
     setMenuData(data);
     dispatch(fetchMenu(user.tusrid));
   }, [dispatch, user.tusrid]);
+
   useEffect(() => {
-    if (data) {
-      // Make sure data is an array before sorting
-      if (Array.isArray(data)) {
-        setMenuData(data);
-        menuData.sort((a, b) => a.tmencod.localeCompare(b.tmencod));
-      } else {
-        // console.error("Data is not an array:", data);
-      }
+    if (Array.isArray(data)) {
+      setMenuData(data.sort((a, b) => a.tmencod.localeCompare(b.tmencod)));
     }
   }, [data]);
 
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleSidebar = () => {
+  const handleToggle = () => {
     setIsToggled(!isToggled);
     setExpanded(!expanded);
   };
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
 
-    if (userData) {
-    } else {
-    }
-  }, []);
+  const handleMenuClick = (menuKey) => {
+    setOpenMenu((prevOpenMenu) => ({
+      ...Object.keys(prevOpenMenu).reduce((acc, key) => {
+        acc[key] = key === menuKey ? !prevOpenMenu[key] : false;
+        return acc;
+      }, {}),
+      [menuKey]: !prevOpenMenu[menuKey],
+    }));
+  };
 
-  const [isToggled, setIsToggled] = useState(false);
-
-  const { isSidebarOpen, toggleSidebarr } = useSidebar();
-  // console.log("isSidebarOpen", isSidebarOpen);
-
-  const [menuData, setMenuData] = useState([]);
-  console.log("menuData", menuData);
-  const menuUrl = "https://crystalsolutions.com.pk/complaint/get_usrmenu.php";
+  const handleSubMenuClick = (menuKey, subMenuKey) => {
+    setOpenSubMenu((prevOpenSubMenu) => ({
+      ...prevOpenSubMenu,
+      [`${menuKey}-${subMenuKey}`]:
+        !prevOpenSubMenu[`${menuKey}-${subMenuKey}`],
+    }));
+  };
 
   const customLinks = {
     "1-01-00": "/AccountCodeMaintenance",
@@ -82,218 +162,189 @@ const SideBar1 = () => {
     "1-02-03": "/CapacityMaintenance",
     "1-02-04": "/TypeMaintenance",
     "1-02-05": "/ItemMaintenance",
-
     "1-05-00": "/Get_Complain",
-    // "1-07-00": "/Get_Mobile",
-
     "1-08-00": "/Get_Mobile",
     "1-09-00": "/Get_Category",
-
     "2-06-00": "/ItemPurchase",
     "2-07-00": "/ItemSale",
-
     "3-01-00": "/DailyJobReport",
     "3-02-00": "/Get_Comparison_Report",
     "3-03-00": "/Item_Comparison_Report",
     "4-01-00": "/UserManagement",
   };
-  // sfsf
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.altKey) {
-        switch (event.key.toLowerCase()) {
-          case "c":
-            navigate(customLinks["1-01-00"]);
-            break;
-          case "m":
-            navigate(customLinks["1-02-01"]);
-            break;
-          case "g":
-            navigate(customLinks["1-02-02"]);
-            break;
-          case "p":
-            navigate(customLinks["1-02-03"]);
-            break;
-          case "t":
-            navigate(customLinks["1-02-04"]);
-            break;
-          case "i":
-            navigate(customLinks["1-02-05"]);
-            break;
-          default:
-            break;
-        }
-      }
-    };
 
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [navigate]);
-  // Sort the menuData array based on tmencod
-  menuData.sort((a, b) => a.tmencod.localeCompare(b.tmencod));
-
-  // Initialize an empty object to store the hierarchical menu data
+  // Sort the menuData array and create hierarchical structure
   const hierarchicalMenuData = {};
-
-  // Loop through the sorted menuData array
   menuData.forEach((item) => {
-    const [topLevel, middleLevel, subLevel] = item.tmencod.split("-");
-
-    // Create the top-level menu item if it doesn't exist
+    const [topLevel, middleLevel] = item.tmencod.split("-");
     if (!hierarchicalMenuData[topLevel]) {
-      hierarchicalMenuData[topLevel] = {
-        label: item.tmendsc,
-        items: [],
-      };
+      hierarchicalMenuData[topLevel] = { label: item.tmendsc, items: {} };
     }
-
-    // Create the middle-level menu item if it doesn't exist
     if (!hierarchicalMenuData[topLevel].items[middleLevel]) {
-      hierarchicalMenuData[topLevel].items[middleLevel] = {
-        label: item.tmendsc,
-        items: [],
-      };
+      hierarchicalMenuData[topLevel].items[middleLevel] = [];
     }
-
-    // Add the sub-level menu item
-    hierarchicalMenuData[topLevel].items[middleLevel].items.push({
+    hierarchicalMenuData[topLevel].items[middleLevel].push({
       label: item.tmendsc,
       to: item.tmenurl,
       disabled: item.tmenprm === "N",
     });
   });
 
-  const renderSubSubDropdown = (topLevel) => {
-    const middleLevelItems = hierarchicalMenuData[topLevel].items;
+  // Function to render sub-submenu
+  const renderSubSubMenu = (topLevel, middleLevel, subItems) => {
+    // Exclude the first item (assuming the first item in subItems is already shown in the sub-menu)
+    const filteredSubItems = subItems.slice(1);
 
-    // Sort middle level keys based on the middle digit of tmencod
-    const sortedMiddleLevelKeys = Object.keys(middleLevelItems).sort((a, b) => {
-      const middleDigitA = parseInt(a);
-      const middleDigitB = parseInt(b);
-      return middleDigitA - middleDigitB;
-    });
+    return filteredSubItems.map((subItem, index) => (
+      <ListItem
+        button
+        key={index}
+        component="a"
+        href={subItem.to}
+        disabled={subItem.disabled}
+        sx={{
+          pl: 7,
+          "&:hover": {
+            backgroundColor: "#737270",
+            color: "white",
+          },
+        }}
+      >
+        <ListItemText primary={subItem.label} />
+      </ListItem>
+    ));
+  };
 
-    return sortedMiddleLevelKeys
-      .map((middleLevel, index) => {
-        const subSubItems = middleLevelItems[middleLevel].items;
+  // Function to render submenu (middle level)
+  const renderSubMenu = (topLevel, middleLevelItems) => {
+    return Object.keys(middleLevelItems)
+      .filter((middleLevel) => middleLevel !== "00")
+      .map((middleLevel) => {
+        const subItems = middleLevelItems[middleLevel];
+        const hasSubSubMenu = subItems.length > 1;
 
-        // Check if there are sub-sub-items
-        if (subSubItems.length > 1) {
-          // Filter out the first sub-sub-item
-          const filteredSubSubItems = subSubItems.slice(1);
-
-          return (
-            <Dropdown
-              key={middleLevel}
-              className="custom-dropdown-button dropend"
-            >
-              <Dropdown.Toggle
-                variant="transparent"
-                id={`dropdown-${topLevel}-${middleLevel}`}
-                className="sub-dropdown-toggle"
-              >
-                {middleLevelItems[middleLevel].label}
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {filteredSubSubItems.map((item, subIndex) => (
-                  <Dropdown.Item
-                    key={subIndex}
-                    as={item.to !== "#" ? Link : undefined}
-                    to={item.to}
-                    disabled={item.disabled}
-                    className="sub-dropdown-item"
-                  >
-                    {item.label}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          );
-        } else if (subSubItems.length === 1) {
-          return (
-            <Dropdown.Item
-              key={middleLevel}
-              as={subSubItems[0].to !== "#" ? Link : undefined}
-              to={subSubItems[0].to}
-              disabled={subSubItems[0].disabled}
-              className={`custom-dropdown-item${
-                index === 0 ? " hide-first-item" : ""
-              }`}
-              style={
-                middleLevel === "2-01-00"
-                  ? { borderBottom: "1px solid black" }
-                  : {}
+        return (
+          <React.Fragment key={middleLevel}>
+            <ListItem
+              button
+              onClick={
+                () =>
+                  hasSubSubMenu
+                    ? handleSubMenuClick(topLevel, middleLevel)
+                    : subItems[0].to && navigate(subItems[0].to) // Directly navigate if no sub-sub-menu
               }
+              sx={{
+                pl: 6,
+                "&:hover": {
+                  backgroundColor: "#737270",
+                },
+              }}
             >
-              {middleLevelItems[middleLevel].label}
-            </Dropdown.Item>
-          );
-        }
-
-        return null;
-      })
-      .filter(Boolean);
-  };
-
-  const [activeDropdown, setActiveDropdown] = useState(null);
-
-  // Handler for mouse enter event on a top-level menu
-  const handleMouseEnter = (menuKey) => {
-    setActiveDropdown(menuKey);
-  };
-
-  // Handler for mouse leave event on a top-level menu
-  const handleMouseLeave = () => {
-    setActiveDropdown(null);
-  };
-  return (
-    <div className={`wrapper ${expanded ? "expandopen" : "expandclose"}`}>
-      {/* <button onClick={toggleSidebarr}>Toggle Sidebar</button> */}
-      <aside className="sidebar" style={{ marginTop: "2%" }}>
-        <button className="toggle-btn" style={{ marginTop: "-23px" }}>
-          <i className="lni lni-grid-alt" onClick={toggleSidebar}>
-            {isToggled ? <FaToggleOn /> : <FaToggleOff />}
-          </i>
-        </button>
-        {isSidebarOpen && (
-          <ul className="sidebar-nav">
-            {Object.keys(hierarchicalMenuData).map((topLevel, index) => (
-              <Dropdown
-                key={topLevel}
-                className="custom-dropdown-button"
-                onMouseEnter={() => handleMouseEnter(topLevel)}
-                onMouseLeave={handleMouseLeave}
-                show={activeDropdown === topLevel} // Show dropdown only if activeDropdown matches current top-level menu
+              <ListItemText primary={subItems[0].label} />
+              {hasSubSubMenu ? (
+                openSubMenu[`${topLevel}-${middleLevel}`] ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )
+              ) : null}
+            </ListItem>
+            {hasSubSubMenu && (
+              <Collapse
+                in={openSubMenu[`${topLevel}-${middleLevel}`]}
+                timeout="auto"
+                unmountOnExit
               >
-                <li className="sidebar-item" style={{ position: "relative" }}>
-                  <Dropdown.Toggle
-                    style={{ borderRadius: "0px", textTransform: "none" }}
-                    variant="transparent"
-                    id={`dropdown-${topLevel}`}
-                    className={`${expanded ? "sidebar-menu" : "sidebar-menuu"}`}
+                {renderSubSubMenu(topLevel, middleLevel, subItems)}
+              </Collapse>
+            )}
+          </React.Fragment>
+        );
+      });
+  };
+
+  const imagelink = `https://crystalsolutions.com.pk/images/${
+    organisation && organisation.code
+  }`;
+
+  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
+    useSidebar();
+
+  return (
+    <>
+      <Box sx={{ display: "flex" }}>
+        <Drawer
+          sx={{
+            width: isSidebarVisible ? 240 : 60,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              marginTop: "55px",
+              width: isSidebarVisible ? 240 : 60,
+              boxSizing: "border-box",
+              backgroundColor: "#021A33",
+              color: "white",
+              overflowX: isSidebarVisible ? "auto" : "hidden",
+            },
+          }}
+          variant="permanent"
+          anchor="left"
+          open={isSidebarVisible}
+        >
+          <SidebarHeader userName={user.tusrnam} userAvatar={man} />
+          <Divider />
+          {/* <IconButton onClick={handleToggle}>
+            {isToggled ? <FaToggleOn /> : <FaToggleOff />}
+          </IconButton> */}
+          <br />
+          <br />
+          <List>
+            {Object.keys(hierarchicalMenuData)
+              .filter((topLevel) => topLevel !== "00") // Exclude top levels with code `00`
+              .map((topLevel, index) => (
+                <React.Fragment key={topLevel}>
+                  <ListItem
+                    button
+                    onClick={() => handleMenuClick(topLevel)}
+                    sx={{
+                      pl: 2,
+                      "&:hover": {
+                        backgroundColor: "#737270",
+                      },
+                    }}
                   >
-                    <i className="lni lni-user">
+                    <ListItemIcon sx={{ color: "white" }}>
                       {index === 0 && <FaFile />}
                       {index === 1 && <FaExchangeAlt />}
                       {index === 2 && <FaChartBar />}
                       {index === 3 && <FaTools />}
-                    </i>
-                    {expanded && hierarchicalMenuData[topLevel].label}
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    {renderSubSubDropdown(topLevel)}
-                  </Dropdown.Menu>
-                </li>
-              </Dropdown>
-            ))}
-          </ul>
-        )}
-      </aside>
-    </div>
+                    </ListItemIcon>
+                    {isSidebarVisible && (
+                      <ListItemText
+                        sx={{
+                          marginLeft: "-28px",
+                        }}
+                        primary={hierarchicalMenuData[topLevel].label}
+                      />
+                    )}
+                    {openMenu[topLevel] ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse
+                    in={openMenu[topLevel]}
+                    timeout="auto"
+                    unmountOnExit
+                  >
+                    {renderSubMenu(
+                      topLevel,
+                      hierarchicalMenuData[topLevel].items
+                    )}
+                  </Collapse>
+                </React.Fragment>
+              ))}
+          </List>
+          <Divider />
+        </Drawer>
+      </Box>
+    </>
   );
 };
 
