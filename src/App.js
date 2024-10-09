@@ -28,7 +28,10 @@ import CryptoJS from "crypto-js"; // Import crypto-js
 import UserMaintenance from "./Component/Utilities/UserManagement/UserManagement1.jsx";
 import MenuUser from "./Component/Utilities/UserManagement/MenuUser/MenuUser.jsx";
 import EditUser from "./Component/Utilities/UserManagement/Edit_User/Edit_User.jsx";
-import AddUser1 from "./Component/Utilities/UserManagement/Add_User1/AddUser1.jsx";
+
+import SideBar1 from "./Component/MainComponent/SideBar1/SideBar.jsx";
+import Layout from "./Component/MainComponent/Layout/Layout.js";
+import AddUser1 from "./Component/Utilities/UserManagement/AddUser/AddUser.jsx";
 
 const secretKey = "your-secret-key-roomiBaba-@123786"; // Secret key for encryption
 
@@ -104,58 +107,59 @@ function App() {
             <QueryClientProvider client={queryClient}>
               <Routes>
                 <Route exact path="/" element={<Loginn />} />
-                <Route exact path="/login" element={<Loginn />}></Route>
-                <Route exact path="/MainPage" element={<HomePage1 />}></Route>
-                {/* ///////////////////////////////// file  /////////////////////////////// */}
-
-                <Route
-                  exact
-                  path="/AccountCodeMaintenance"
-                  element={<Account_Code_Maintenance />}
-                ></Route>
-                <Route
-                  exact
-                  path="/ItemMaintenance"
-                  element={<Item_Maintenance />}
-                ></Route>
-                <Route
-                  exact
-                  path="/CompanyMaintenance"
-                  element={<Company_Maintenance />}
-                ></Route>
-                <Route
-                  exact
-                  path="/TypeMaintenance"
-                  element={<Type_Maintenance />}
-                ></Route>
-                <Route
-                  exact
-                  path="/CategoryMaintenance"
-                  element={<Category_Maintenance />}
-                ></Route>
-                <Route
-                  exact
-                  path="/CapacityMaintenance"
-                  element={<Capacity_Maintenance />}
-                ></Route>
-                <Route exact path="/ItemSale" element={<Item_Sale />}></Route>
-                <Route
-                  exact
-                  path="/ItemPurchase"
-                  element={<Item_Purchase />}
-                ></Route>
-                <Route
-                  exact
-                  path="/UserManagement"
-                  element={<UserMaintenance />}
-                ></Route>
-                <Route
-                  exact
-                  path="/MenuUser/:id"
-                  element={<MenuUser />}
-                ></Route>
-                <Route exact path="/EditUser" element={<EditUser />}></Route>
-                <Route exact path="/AddUser1" element={<AddUser1 />}></Route>
+                <Route exact path="/login" element={<Loginn />} />
+                <Route element={<Layout />}>
+                  {/* All pages with the sidebar */}
+                  <Route exact path="/MainPage" element={<HomePage1 />} />
+                  <Route
+                    exact
+                    path="/AccountCodeMaintenance"
+                    element={<Account_Code_Maintenance />}
+                  />
+                  <Route
+                    exact
+                    path="/ItemMaintenance"
+                    element={<Item_Maintenance />}
+                  />
+                  <Route
+                    exact
+                    path="/CompanyMaintenance"
+                    element={<Company_Maintenance />}
+                  />
+                  <Route
+                    exact
+                    path="/TypeMaintenance"
+                    element={<Type_Maintenance />}
+                  />
+                  <Route
+                    exact
+                    path="/CategoryMaintenance"
+                    element={<Category_Maintenance />}
+                  />
+                  <Route
+                    exact
+                    path="/CapacityMaintenance"
+                    element={<Capacity_Maintenance />}
+                  />
+                  <Route exact path="/ItemSale" element={<Item_Sale />} />
+                  <Route
+                    exact
+                    path="/ItemPurchase"
+                    element={<Item_Purchase />}
+                  />
+                  <Route
+                    exact
+                    path="/UserManagement"
+                    element={<UserMaintenance />}
+                  />
+                  <Route
+                    exact
+                    path="/MenuUser/:tusrid"
+                    element={<MenuUser />}
+                  />
+                  <Route exact path="/EditUser" element={<EditUser />} />
+                  <Route exact path="/AddUser1" element={<AddUser1 />} />
+                </Route>
               </Routes>
             </QueryClientProvider>
           </ThemeProvider>

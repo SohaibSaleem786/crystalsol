@@ -45,9 +45,9 @@ function HomePage1() {
 
     </div> */}
       <div style={{ backgroundColor: getcolor, height: "100vh" }}>
-        <Header />
+        {/* <Header /> */}
 
-        <SideBar1 />
+        {/* <SideBar1 /> */}
       </div>
       {/* <Container
         className="d-flex justify-content-center align-items-center"
@@ -102,7 +102,7 @@ function HomePage1() {
 
       </div> */}
 
-      <Footer className="mt-auto fixed-bottom" />
+      {/* <Footer className="mt-auto fixed-bottom" /> */}
     </>
   );
 }

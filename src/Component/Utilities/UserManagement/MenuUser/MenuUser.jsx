@@ -6,9 +6,15 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "../../../MainComponent/Header/Header";
 import Footer from "../../../MainComponent/Footer/Footer";
-
+import { useSidebar } from "../../../../SidebarContext";
+import Alert from "@mui/material/Alert";
+import { useTheme } from "../../../../ThemeContext";
+import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
 const MenuUser = () => {
-  const { id } = useParams();
+  const { tusrid } = useParams();
+  const user = getUserData();
+  const { apiLinks } = useTheme();
+  const organisation = getOrganisationData();
   const [activeTab, setActiveTab] = useState(1);
   const [data, setData] = useState({ columns: [], rows: [] });
   const [showAlert, setShowAlert] = useState(false);
@@ -17,51 +23,42 @@ const MenuUser = () => {
   const [userType, setUserType] = useState("");
   const [toggleState, setToggleState] = useState(true);
   const navigate = useNavigate();
+  const [alertData, setAlertData] = useState(null);
 
-  //   useEffect(() => {
-  //     fetch(
-  //       `https://crystalsolutions.com.pk/american_lec/web/utilties/UserList.php`
-  //     )
-  //       .then((response) => response.json())
-  //       .then((apiData) => {
-  //         const user = apiData.find((item) => item.id === id);
-  //         setUserName(user.tusrid);
-  //         setUserType(user.tusrtyp);
-  //       })
-  //       .catch((error) => console.error(error));
-  //   }, [id]);
-  useEffect(() => {
+  const functioncallingmenu = () => {
     const data = {
-      code: "ALPHA",
+      code: organisation.code,
+      FUsrId: user.tusrid,
     };
     const formdata = new URLSearchParams(data).toString();
 
     axios
-      .post(
-        "https://crystalsolutions.com.pk/american_lec/web/utilties/getPermissions.php",
-        formdata,
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      )
-      .then((response) => response.json())
-      .then((apiData) => {
-        const user = apiData.find((item) => item.id === id);
+      .post(`${apiLinks}/GetUser.php`, formdata, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((response) => {
+        const apiData = response.data;
+        const user = apiData.find((item) => item.tusrid === tusrid);
         setUserName(user.tusrid);
         setUserType(user.tusrtyp);
       })
       .catch((error) => console.error(error));
-  }, [id]);
+  };
 
   useEffect(() => {
-    fetchDataForUserId(id);
+    functioncallingmenu();
+  }, [tusrid]);
+
+  useEffect(() => {
+    fetchDataForUserId(tusrid);
   }, [activeTab]);
 
-  function fetchDataForUserId(userId) {
-    const apiUrl = "https://crystalsolutions.com.pk/american_lec/web/Menu.php";
-    const data = { userid: 167 };
+  function fetchDataForUserId() {
+    console.log("call the api");
+    const apiUrl = `${apiLinks}/GetMenu.php`;
+    const data = { FUsrId: tusrid, code: organisation.code };
     const formData = new URLSearchParams(data).toString();
 
     return axios
@@ -89,7 +86,7 @@ const MenuUser = () => {
           Description: item.tmendsc,
           Permissions: (
             <select
-              value={item.tusrpem}
+              value={item.Permission}
               onChange={(e) =>
                 handlePermissionChange(item.tmencod, e.target.value)
               }
@@ -107,7 +104,7 @@ const MenuUser = () => {
           { label: "Description", field: "Description", sort: "asc" },
           { label: "Permissions", field: "Permissions", sort: "asc" },
         ];
-
+        console.log(transformedData, "transformData");
         setData({ columns, rows: transformedData });
       })
       .catch((error) => {
@@ -117,29 +114,38 @@ const MenuUser = () => {
   }
 
   function handlePermissionChange(menuCode, newPermissionValue) {
-    Update_Menu({ id: id, mcode: menuCode, permission: newPermissionValue })
+    Update_Menu({ id: tusrid, mcode: menuCode, permission: newPermissionValue })
       .then(() => {
-        fetchDataForUserId(id);
+        fetchDataForUserId(tusrid);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }
 
-  function Update_Menu(user) {
-    const apiUrl =
-      "https://crystalsolutions.com.pk/american_lec/web/utilties/update_permission.php";
+  function Update_Menu(users) {
+    const apiUrl = `${apiLinks}/SavePermission.php`;
     const data = {
-      userid: user.id,
-      mcode: user.mcode,
-      permission: user.permission,
+      code: organisation.code,
+      FUsrId: tusrid,
+      FMenCod: users.mcode,
+      FUsrPem: users.permission,
     };
     const formData = new URLSearchParams(data).toString();
 
     return axios
       .post(apiUrl, formData)
       .then((response) => {
-        // console.log("Update response:", response.data);
+        functioncallingmenu();
+        fetchDataForUserId();
+        console.log("Update response:", response.data);
+        setAlertData({
+          type: "success",
+          message: response.data.message,
+        });
+        setTimeout(() => {
+          setAlertData(null);
+        }, 3000);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -176,147 +182,219 @@ const MenuUser = () => {
   function handleTabClick(tabNumber) {
     setActiveTab(tabNumber);
   }
-
+  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
+    useSidebar();
   return (
     <>
-      <Header />
-      <Container style={{ marginTop: "10%" }}>
-        <div
-          style={{ width: "40vw", margin: "0 auto", border: "1px solid black" }}
-        >
-          <Nav
-            className="col-12 d-flex justify-content-between"
+      <div
+        style={{
+          backgroundColor: getcolor,
+          height: "100vh",
+          width: "80vw",
+          overflowX: "hidden",
+          overflowY: "hidden",
+        }}
+      >
+        {alertData && (
+          <Alert
+            severity={alertData.type}
             style={{
-              backgroundColor: "#3368b5",
-              color: "#fff",
-              height: "24px",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "30%",
+              marginLeft: "35%",
+              zIndex: 9999, // Ensuring this is very high
+              textAlign: "center",
             }}
           >
-            <div className="col-4"></div>
-            <div style={{ fontSize: "14px" }} className="col-4 text-center">
-              <strong>Menu Update</strong>
-            </div>
-            <div className="col-4"></div>
-          </Nav>
-          <div className="">
-            <span>
-              User id: <u>{userName}</u>
-              <br />
-              User type: <u>{userType}</u>
-              <br />
-              Last Login Date: <u>{}</u>
-            </span>
-          </div>
-          <Tabs
-            activeKey={activeTab.toString()}
-            onSelect={(k) => handleTabClick(parseInt(k))}
-            id="fill-tab-example"
-            className=""
-            fill
+            {alertData.message}
+          </Alert>
+        )}
+        <div
+          style={{
+            display: "flex",
+            // alignItems: "center",
+            justifyContent: "center",
+            height: "100vh",
+          }}
+        >
+          <div
+            style={{
+              width: "60vw",
+              height: "75vh",
+              border: "1px solid black",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "8px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              backgroundColor: "#fff",
+            }}
           >
-            {["Files", "Transactions", "Reports", "Utilities"].map(
-              (tabLabel, index) => (
-                <Tab eventKey={index + 1} title={tabLabel} key={index}>
-                  <div
-                    style={{
-                      overflowY: "auto",
-                      maxHeight: "35vh",
-                      width: "100%",
-                    }}
-                  >
-                    <table
-                      className="myTable"
+            <Nav
+              className="col-12 d-flex justify-content-between"
+              style={{
+                backgroundColor: "#3368b5",
+                color: "#fff",
+                height: "40px",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+                padding: "10px",
+              }}
+            >
+              <div className="col-4"></div>
+              <div style={{ fontSize: "16px" }} className="col-4 text-center">
+                <strong>Menu Update</strong>
+              </div>
+              <div className="col-4"></div>
+            </Nav>
+            <div style={{ padding: "20px" }}>
+              <span>
+                User Id: <u>{userName}</u>
+                <br />
+                User Type: <u>{userType}</u>
+              </span>
+            </div>
+            <Tabs
+              activeKey={activeTab.toString()}
+              onSelect={(k) => handleTabClick(parseInt(k))}
+              id="fill-tab-example"
+              fill
+            >
+              {["Files", "Transactions", "Reports", "Utilities"].map(
+                (tabLabel, index) => (
+                  <Tab eventKey={index + 1} title={tabLabel} key={index}>
+                    <div
                       style={{
-                        fontSize: "12px",
+                        overflowY: "auto",
+                        maxHeight: "35vh",
                         width: "100%",
-                        position: "relative",
+                        padding: "10px",
                       }}
                     >
-                      <thead
+                      <table
+                        className="myTable"
                         style={{
-                          fontWeight: "bold",
-                          height: "24px",
-                          position: "sticky",
-                          top: 0,
-                          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                          fontSize: "14px",
+                          width: "100%",
+                          borderCollapse: "collapse",
                         }}
                       >
-                        <tr>
-                          {data.columns.map((column, index) => (
-                            <th
-                              key={index}
-                              style={{
-                                width: column.field === "Sr" ? "60px" : "auto",
-                              }}
-                              onDoubleClick={
-                                column.field === "Permissions"
-                                  ? handleDoubleClick
-                                  : null
-                              }
-                            >
-                              {column.label}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.rows.map((row, rowIndex) => (
-                          <tr key={rowIndex}>
-                            {Object.keys(row).map((key, index) => (
-                              <td
+                        <thead
+                          style={{
+                            fontWeight: "bold",
+                            height: "40px",
+                            position: "sticky",
+                            top: 0,
+                            backgroundColor: "#3368b5",
+                            color: "#fff",
+                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                          }}
+                        >
+                          <tr>
+                            {data.columns.map((column, index) => (
+                              <th
                                 key={index}
                                 style={{
-                                  fontsize: "12px !important",
                                   width:
-                                    index === 0
-                                      ? "10%"
-                                      : index === 1
-                                      ? "70%"
-                                      : "20%",
-                                  textAlign:
-                                    key === "Description" ? "left" : "center",
+                                    column.field === "Sr" ? "60px" : "auto",
+                                  padding: "10px",
+                                  textAlign: "center",
                                 }}
+                                onDoubleClick={
+                                  column.field === "Permissions"
+                                    ? handleDoubleClick
+                                    : null
+                                }
                               >
-                                {row[key]}
-                              </td>
+                                {column.label}
+                              </th>
                             ))}
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </Tab>
-              )
-            )}
-          </Tabs>
-          <div className="d-flex justify-content-center mt-3">
-            <Button
-              type="submit"
-              style={{
-                margin: "5px",
-                width: "100px",
-                fontSize: "12px",
-                height: "30px",
-              }}
-              onClick={submit}
-            >
-              Save
-            </Button>
-            <Button
-              style={{
-                margin: "5px",
-                width: "100px",
-                fontSize: "12px",
-                height: "30px",
-              }}
-              onClick={() => navigate("/UserManagement")}
-            >
-              Return
-            </Button>
+                        </thead>
+                        <tbody>
+                          {data.rows.map((row, rowIndex) => (
+                            <tr
+                              key={rowIndex}
+                              style={{ borderBottom: "1px solid #ddd" }}
+                            >
+                              {Object.keys(row).map((key, index) => (
+                                <td
+                                  key={index}
+                                  style={{
+                                    fontSize: "14px",
+                                    padding: "10px",
+                                    width:
+                                      index === 0
+                                        ? "10%"
+                                        : index === 1
+                                        ? "70%"
+                                        : "20%",
+                                    textAlign:
+                                      key === "Description" ? "left" : "center",
+                                  }}
+                                >
+                                  {row[key]}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                          {Array.from({ length: Math.max(0, 8 - 3) }).map(
+                            (_, rowIndex) => (
+                              <tr key={`blank-${rowIndex}`}>
+                                {Array.from({ length: 3 }).map(
+                                  (_, colIndex) => (
+                                    <td key={`blank-${rowIndex}-${colIndex}`}>
+                                      &nbsp;
+                                    </td>
+                                  )
+                                )}
+                              </tr>
+                            )
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </Tab>
+                )
+              )}
+            </Tabs>
+            <div className="d-flex justify-content-center mt-3">
+              <Button
+                type="submit"
+                style={{
+                  margin: "5px",
+                  width: "120px",
+                  fontSize: "14px",
+                  height: "40px",
+                  borderRadius: "4px",
+                  backgroundColor: "#3368b5",
+                  color: "#fff",
+                  border: "none",
+                }}
+                onClick={submit}
+              >
+                Save
+              </Button>
+              <Button
+                style={{
+                  margin: "5px",
+                  width: "120px",
+                  fontSize: "14px",
+                  height: "40px",
+                  borderRadius: "4px",
+                  backgroundColor: "#6c757d",
+                  color: "#fff",
+                  border: "none",
+                }}
+                onClick={() => navigate("/UserManagement")}
+              >
+                Return
+              </Button>
+            </div>
           </div>
         </div>
-      </Container>
-      <Footer />
+      </div>
     </>
   );
 };
