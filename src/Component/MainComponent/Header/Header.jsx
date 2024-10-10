@@ -27,45 +27,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useSidebar } from "../../../SidebarContext";
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
 
-// const SearchIconWrapper = styled("div")(({ theme }) => ({
-//   padding: theme.spacing(0, 2),
-//   height: "100%",
-//   position: "absolute",
-//   pointerEvents: "none",
-//   display: "flex",
-//   alignItems: "center",
-//   justifyContent: "center",
-// }));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
 const Menufile = ({ isOpen }) => {
   if (!isOpen) return null;
 
@@ -532,56 +494,6 @@ const Threelineiconheader = () => {
   );
 };
 
-// function CustomGridIcon(props) {
-//   return (
-//     <SvgIcon {...props}>
-//       <rect
-//         x="3"
-//         y="3"
-//         width="5"
-//         height="5"
-//         fill="none"
-//         stroke="currentColor"
-//         strokeWidth="2"
-//         strokeLinecap="round"
-//         strokeLinejoin="round"
-//       />
-//       <rect
-//         x="14"
-//         y="3"
-//         width="5"
-//         height="5"
-//         fill="none"
-//         stroke="currentColor"
-//         strokeWidth="2"
-//         strokeLinecap="round"
-//         strokeLinejoin="round"
-//       />
-//       <rect
-//         x="14"
-//         y="14"
-//         width="5"
-//         height="5"
-//         fill="none"
-//         stroke="currentColor"
-//         strokeWidth="2"
-//         strokeLinecap="round"
-//         strokeLinejoin="round"
-//       />
-//       <rect
-//         x="3"
-//         y="14"
-//         width="5"
-//         height="5"
-//         fill="none"
-//         stroke="currentColor"
-//         strokeWidth="2"
-//         strokeLinecap="round"
-//         strokeLinejoin="round"
-//       />
-//     </SvgIcon>
-//   );
-// }
 const CustomGridIcon = () => {
   return (
     <svg
@@ -602,11 +514,7 @@ const CustomGridIcon = () => {
     </svg>
   );
 };
-/**
- * Custom SVG Icon for Search
- *
- * @returns {JSX.Element} A custom SVG icon for search
- */
+
 const SearchIcon = () => {
   return (
     <svg
@@ -634,7 +542,6 @@ export default function Header() {
 
   useEffect(() => {
     if (!isLoggedIn()) {
-      // navigate("/login");
     }
   }, [navigate]);
 
@@ -669,21 +576,17 @@ export default function Header() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
   const handleLogout = () => {
-    // e.preventdefault();
-    // Remove user data from local storage
     localStorage.removeItem("user_id");
-    // Redirect to the login page
+
     navigate("/");
   };
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <div>
-      {/* Trigger button for menu */}
       <IconButton onClick={handleMenuOpen}>
         <Avatar alt={user?.tusrnam || ""} src="/path-to-avatar.jpg" />
       </IconButton>
 
-      {/* Menu design */}
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -988,8 +891,6 @@ export default function Header() {
     setIsfilesOpen(!isfilesOpen);
   };
 
-  // const { toggleSidebar } = useSidebar();
-  // const { toggleColor } = useColorchange();
   const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
     useSidebar();
 
@@ -997,10 +898,13 @@ export default function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="static"
-        style={{ background: "#1E88E5", height: "55px" }}
+        style={{
+          background: "#3368B5",
+          height: "55px",
+          borderBottom: "1px solid gray",
+        }}
       >
         <Toolbar>
-          {/* Display the logo in small size */}
           <img
             src={`${imagelink}01.jpg`}
             alt="Company Logo"
@@ -1021,7 +925,7 @@ export default function Header() {
                 borderRadius: "50%",
               },
             }}
-            onClick={toggleSidebar}
+            onClick={() => toggleSidebar(!isSidebarVisible)}
           >
             <Threelineiconheader />
           </IconButton>
@@ -1274,18 +1178,6 @@ export default function Header() {
               />
             </IconButton>
           </Box>
-          {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box> */}
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

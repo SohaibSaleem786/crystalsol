@@ -11,11 +11,12 @@ export const SidebarProvider = ({ children }) => {
   const [isSidebarVisible, setSidebarVisible] = useState(true);
   const [getcolor, setcolor] = useState("#021A33"); // Initial color state
 
-  const toggleSidebar = () => {
-    console.log(isSidebarVisible);
-    setSidebarVisible((prev) => !prev);
+  const toggleSidebar = (visible) => {
+    // Only update the state if it's different from the current value
+    if (visible !== isSidebarVisible) {
+      setSidebarVisible(visible);
+    }
   };
-
   const toggleChangeColor = () => {
     console.log(getcolor);
     // Toggle between two colors

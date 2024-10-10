@@ -35,17 +35,18 @@
 }
 
 .label-item {
+  font-weight: bold;
   display: flex;
   align-items: start;
   justify-content: flex-end;
 }
-.form-category-container {
+.form-user-container {
   background-color: #e7e7e7;
   border-radius: 5px;
   padding: 0px;
   /* box-shadow: 0px 0px 20px #113f8f; */
   width: 100%;
-  max-width: 610px;
+  max-width: 730px;
   /* height: "10vh"; */
   margin: "20px 0";
   font-size: 12px;

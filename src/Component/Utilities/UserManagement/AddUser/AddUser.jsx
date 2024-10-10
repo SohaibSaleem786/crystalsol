@@ -554,7 +554,7 @@ function AddUser1() {
           </Alert>
         )}
 
-        <div className="col-md-12 form-category-container">
+        <div className="col-md-12 form-user-container">
           <NavComponent textdata={textdata} />
 
           <br />

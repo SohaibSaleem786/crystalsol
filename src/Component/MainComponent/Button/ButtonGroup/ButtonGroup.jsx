@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-const ButtonGroupp = ({
+const ButtonGroup = ({
   Submit,
   handleFocus,
   handleBlur,
@@ -19,7 +19,7 @@ const ButtonGroupp = ({
         flexDirection: "row",
         justifyContent: "center",
         marginBottom: "2px",
-        borderTop: "1px solid gray ",
+        borderTop: "1px solid gray",
       }}
     >
       <button
@@ -30,6 +30,10 @@ const ButtonGroupp = ({
           marginTop: "2px",
           color: "white",
           backgroundColor: "#3368B5",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center", // Centers text vertically
+          borderRadius: "0px",
         }}
         onFocus={() => handleFocus(Submit)}
         onBlur={() => handleBlur(Submit)}
@@ -58,6 +62,10 @@ const ButtonGroupp = ({
           marginTop: "2px",
           color: "white",
           backgroundColor: "#3368B5",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center", // Centers text vertically
+          borderRadius: "0px",
         }}
         accessKey="r"
         onKeyDown={(event) => {
@@ -89,6 +97,10 @@ const ButtonGroupp = ({
           marginTop: "2px",
           color: "white",
           backgroundColor: "#3368B5",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center", // Centers text vertically
+          borderRadius: "0px",
         }}
         accessKey="c"
         onKeyDown={(event) => {
@@ -114,4 +126,4 @@ const ButtonGroupp = ({
   );
 };
 
-export default ButtonGroupp;
+export default ButtonGroup;

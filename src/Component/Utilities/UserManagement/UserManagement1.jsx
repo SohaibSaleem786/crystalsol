@@ -69,29 +69,59 @@ export default function UserMaintenance() {
 
   const firstColWidth = { width: "6%" };
   const secondColWidth = { width: "10%" };
-  const thirdColWidth = { width: "25%" };
+  const thirdColWidth = { width: "20%" };
   const forthColWidth = { width: "11%" };
   const fifthColWidth = { width: "8%" };
   const sixthColWidth = { width: "8%" };
   const seventhColWidth = { width: "11%" };
-  const eighthColWidth = { width: "16%" };
+  const eighthColWidth = { width: "21%" };
   const ninthColWidth = { width: "6%" };
 
   const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
     useSidebar();
+  // Adjust the content width based on sidebar state
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const contentStyle = {
+    backgroundColor: getcolor,
+    height: "100vh",
+    width: isSidebarVisible ? "calc(100vw - 5vw)" : "100vw", // Adjusts based on sidebar
+    marginLeft: isSidebarVisible ? "5vw" : "25vh", // Shift content when sidebar is open
+    transition: isSidebarVisible
+      ? "margin-left 2s ease-in-out, margin-right 2s ease-in-out"
+      : "margin-left 2s ease-in-out, margin-right 2s ease-in-out",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "start",
+    overflowX: "hidden",
+    overflowY: "hidden",
+    wordBreak: "break-word",
+    textAlign: "center",
+    maxWidth: "1000px",
+  };
+
+  // Centering the content horizontally
+  const centerStyle = {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
   return (
     <>
-      <div
-        style={{
-          backgroundColor: getcolor,
-          height: "100vh",
-          width: "80vw",
-          overflowX: "hidden",
-          overflowY: "hidden",
-        }}
-      >
-        <div style={{ backgroundColor: "white" }}>
+      <div style={contentStyle}>
+        <div style={{ backgroundColor: "white", width: "100%" }}>
           <Nav
             className="col-12 d-flex justify-content-between"
             style={{
@@ -102,10 +132,7 @@ export default function UserMaintenance() {
           >
             <div className="col-4">
               <Link to="/AddUser1">
-                <i
-                  className="fa-solid fa-arrow-right fa-xl topBtn"
-                  title="Next Page"
-                ></i>
+                {/* <i className="fa-solid fa-arrow-right fa-xl topBtn" title="Next Page"></i> */}
               </Link>
             </div>
             <div style={{ fontSize: "14px" }} className="col-4 text-center">
@@ -113,14 +140,17 @@ export default function UserMaintenance() {
             </div>
             <div className="text-end col-4">
               <Link to="/sidebar">
-                <i className="fa fa-close fa-2xl crossBtn"></i>
+                {/* <i className="fa fa-close fa-2xl crossBtn"></i> */}
               </Link>
             </div>
           </Nav>
           <div className="my-1 mx-3">
             <div className="col-12 d-flex justify-content-between mt-1">
               <div className="col-4 d-flex justify-content-start">
-                <label className="col-3 text-end">
+                <label
+                  className="col-3 text-end"
+                  style={{ fontSize: "0.8rem" }}
+                >
                   <strong>Search: &nbsp;&nbsp;</strong>
                 </label>
                 <input
@@ -129,9 +159,26 @@ export default function UserMaintenance() {
                   className="col-6"
                   onChange={handleSearch}
                   value={selectedSearch}
+                  style={{ height: "22px", fontSize: "0.8rem" }}
                 />
               </div>
+
               <div>
+                <Link to="/MainPage">
+                  <button
+                    className="btn btn-primary"
+                    style={{
+                      backgroundColor: btnColor,
+                      color: textColor,
+                      borderRadius: "0px",
+                      height: "22px",
+                      fontSize: "0.8rem",
+                      padding: "0px 5px",
+                    }}
+                  >
+                    Return
+                  </button>
+                </Link>
                 <Link to="/AddUser1">
                   <button
                     className="btn btn-primary"
@@ -139,6 +186,10 @@ export default function UserMaintenance() {
                       backgroundColor: btnColor,
                       color: textColor,
                       borderRadius: "0px",
+                      height: "22px",
+                      marginLeft: "5px",
+                      fontSize: "0.8rem",
+                      padding: "0px 5px",
                     }}
                   >
                     Add User
@@ -151,9 +202,10 @@ export default function UserMaintenance() {
             <div
               style={{
                 backgroundColor: textColor,
-                overflowY: "auto",
-                maxHeight: "63vh",
+                overflowY: getFilteredTableData.length > 10 ? "auto" : "hidden",
+                maxHeight: "60vh",
                 width: "100%",
+                wordBreak: "break-word",
               }}
             >
               <table
@@ -163,6 +215,7 @@ export default function UserMaintenance() {
                   fontSize: "12px",
                   width: "100%",
                   position: "relative",
+                  wordBreak: "break-word",
                 }}
               >
                 <thead
@@ -172,6 +225,7 @@ export default function UserMaintenance() {
                     position: "sticky",
                     top: 0,
                     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                    wordBreak: "break-word",
                   }}
                 >
                   <tr
@@ -179,32 +233,86 @@ export default function UserMaintenance() {
                       backgroundColor: tableHeadColor,
                     }}
                   >
-                    <td className="border-dark" style={firstColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...firstColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       Avatar
                     </td>
-                    <td className="border-dark" style={secondColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...secondColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       UserId
                     </td>
-                    <td className="border-dark" style={thirdColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...thirdColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       Name
                     </td>
-                    <td className="border-dark" style={forthColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...forthColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       Password
                     </td>
-                    <td className="border-dark" style={fifthColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...fifthColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       Status
                     </td>
-                    <td className="border-dark" style={sixthColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...sixthColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       Type
                     </td>
-                    <td className="border-dark" style={seventhColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...seventhColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       Mobile No
                     </td>
-                    <td className="border-dark" style={eighthColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...eighthColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       Email Address
                     </td>
 
-                    <td className="border-dark" style={ninthColWidth}>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...ninthColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       Menu
                     </td>
                   </tr>
@@ -240,34 +348,89 @@ export default function UserMaintenance() {
                             key={i}
                             style={{
                               fontSize: "12px !important",
+                              wordBreak: "break-word",
                             }}
                           >
-                            <td className="text-center" style={firstColWidth}>
+                            <td
+                              className="text-center"
+                              style={{
+                                ...firstColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               <i className="fa fa-user fa-xl"></i>
                             </td>
-                            <td className="text-start" style={secondColWidth}>
+                            <td
+                              className="text-start"
+                              style={{
+                                ...secondColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               {item.tusrid}
                             </td>
-                            <td className="text-start" style={thirdColWidth}>
+                            <td
+                              className="text-start"
+                              style={{
+                                ...thirdColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               {item.tusrnam}
                             </td>
-                            <td className="text-center" style={forthColWidth}>
+                            <td
+                              className="text-center"
+                              style={{
+                                ...forthColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               {item.tusrpwd ? "*****" : ""}
                             </td>
-                            <td className="text-center" style={fifthColWidth}>
+                            <td
+                              className="text-center"
+                              style={{
+                                ...fifthColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               {item.tusrsts}
                             </td>
-                            <td className="text-center" style={sixthColWidth}>
+                            <td
+                              className="text-center"
+                              style={{
+                                ...sixthColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               {item.tusrtyp}
                             </td>
-                            <td className="text-center" style={seventhColWidth}>
+                            <td
+                              className="text-center"
+                              style={{
+                                ...seventhColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               {item.tmobnum}
                             </td>
-                            <td className="text-start" style={eighthColWidth}>
+                            <td
+                              className="text-start"
+                              style={{
+                                ...eighthColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               {item.temladd}
                             </td>
 
-                            <td className="text-center" style={ninthColWidth}>
+                            <td
+                              className="text-center"
+                              style={{
+                                ...ninthColWidth,
+                                wordBreak: "break-word",
+                              }}
+                            >
                               <Link to={`/MenuUser/${item.tusrid}`}>
                                 <i className="fa fa-list fa-xl"></i>
                               </Link>
@@ -275,7 +438,7 @@ export default function UserMaintenance() {
                           </tr>
                         );
                       })}
-                      {Array.from({ length: Math.max(0, 60 - 3) }).map(
+                      {Array.from({ length: Math.max(0, 20 - 3) }).map(
                         (_, rowIndex) => (
                           <tr key={`blank-${rowIndex}`}>
                             {Array.from({ length: 9 }).map((_, colIndex) => (

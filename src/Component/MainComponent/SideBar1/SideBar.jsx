@@ -57,7 +57,6 @@ const SidebarHeader = ({ userName, userAvatar }) => {
           sx={{ width: 80, height: 50 }}
         />
       </Row>
-
       <Row
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -225,30 +224,33 @@ const SideBar1 = () => {
 
         return (
           <React.Fragment key={middleLevel}>
-            <ListItem
-              button
-              onClick={
-                () =>
-                  hasSubSubMenu
-                    ? handleSubMenuClick(topLevel, middleLevel)
-                    : subItems[0].to && navigate(subItems[0].to) // Directly navigate if no sub-sub-menu
-              }
-              sx={{
-                pl: 6,
-                "&:hover": {
-                  backgroundColor: "#737270",
-                },
-              }}
-            >
-              <ListItemText primary={subItems[0].label} />
-              {hasSubSubMenu ? (
-                openSubMenu[`${topLevel}-${middleLevel}`] ? (
-                  <ExpandLess />
-                ) : (
-                  <ExpandMore />
-                )
-              ) : null}
-            </ListItem>
+            {isSidebarVisible && (
+              <ListItem
+                button
+                onClick={
+                  () =>
+                    hasSubSubMenu
+                      ? handleSubMenuClick(topLevel, middleLevel)
+                      : subItems[0].to && navigate(subItems[0].to) // Directly navigate if no sub-sub-menu
+                }
+                sx={{
+                  pl: 6,
+                  "&:hover": {
+                    backgroundColor: "#737270",
+                  },
+                }}
+              >
+                <ListItemText primary={subItems[0].label} />
+                {hasSubSubMenu ? (
+                  openSubMenu[`${topLevel}-${middleLevel}`] ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )
+                ) : null}
+              </ListItem>
+            )}
+
             {hasSubSubMenu && (
               <Collapse
                 in={openSubMenu[`${topLevel}-${middleLevel}`]}
@@ -286,9 +288,12 @@ const SideBar1 = () => {
               overflowX: isSidebarVisible ? "auto" : "hidden",
             },
           }}
+          onMouseEnter={() => toggleSidebar(true)}
+          onMouseLeave={() => toggleSidebar(false)}
           variant="permanent"
           anchor="left"
           open={isSidebarVisible}
+          // onMouseEnter={toggleSidebar}
         >
           <SidebarHeader userName={user.tusrnam} userAvatar={man} />
           <Divider />
