@@ -31,7 +31,10 @@ import imagebackground from "../../../image/homeapp.png";
 import man from "../../../image/man.png";
 import "./Sidebarr.css";
 import { DataProvider } from "../../../DataContext";
+
 const SidebarHeader = ({ userName, userAvatar }) => {
+  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
+    useSidebar();
   return (
     <Box
       style={{
@@ -57,45 +60,47 @@ const SidebarHeader = ({ userName, userAvatar }) => {
           sx={{ width: 80, height: 50 }}
         />
       </Row>
-      <Row
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
-          width: "100%",
-          justifyContent: "center", // Center the contents horizontally
-          alignItems: "start", // Center the contents vertically
-          padding: "10px",
-          position: "absolute",
-          height: "33px",
-          bottom: 0,
-        }}
-      >
-        <Col
-          className="col-9"
-          style={{ display: "flex", justifyContent: "center" }}
+      {isSidebarVisible && (
+        <Row
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            width: "100%",
+            justifyContent: "center", // Center the contents horizontally
+            alignItems: "start", // Center the contents vertically
+            padding: "10px",
+            position: "absolute",
+            height: "33px",
+            bottom: 0,
+          }}
         >
-          <Typography
-            sx={{
-              color: "#FFFFFF",
-              display: "flex",
-              fontSize: "13px",
-              justifyContent: "left", // Center text horizontally
-            }}
+          <Col
+            className="col-9"
+            style={{ display: "flex", justifyContent: "center" }}
           >
-            {userName}
-          </Typography>
-        </Col>
-        <Col
-          className="col-3"
-          style={{ display: "flex", justifyContent: "center" }} // Center the IconButton
-        >
-          <IconButton
-            sx={{ color: "#FFFFFF", marginTop: "-7px", fontSize: "13px" }}
+            <Typography
+              sx={{
+                color: "#FFFFFF",
+                display: "flex",
+                fontSize: "13px",
+                justifyContent: "left", // Center text horizontally
+              }}
+            >
+              {userName}
+            </Typography>
+          </Col>
+          <Col
+            className="col-3"
+            style={{ display: "flex", justifyContent: "center" }} // Center the IconButton
           >
-            {/* <ExpandMore /> */}
-            <i className="bi bi-caret-down-fill"></i>
-          </IconButton>
-        </Col>
-      </Row>
+            <IconButton
+              sx={{ color: "#FFFFFF", marginTop: "-7px", fontSize: "13px" }}
+            >
+              {/* <ExpandMore /> */}
+              <i className="bi bi-caret-down-fill"></i>
+            </IconButton>
+          </Col>
+        </Row>
+      )}
     </Box>
   );
 };
@@ -204,12 +209,23 @@ const SideBar1 = () => {
         sx={{
           pl: 7,
           "&:hover": {
-            backgroundColor: "#737270",
-            color: "white",
+            backgroundColor: "#01172e",
+            color: "rgb(33, 193, 214)",
           },
         }}
       >
-        <ListItemText primary={subItem.label} />
+        <ListItemText
+          primary={subItem.label}
+          sx={{
+            fontSize: "15px",
+            fontFamily: "Poppins, sans-serif",
+            lineHeight: "22.5px",
+            textAlign: "left",
+            textTransform: "none",
+            textDecoration: "none",
+            fontWeight: 500,
+          }}
+        />
       </ListItem>
     ));
   };
@@ -236,11 +252,23 @@ const SideBar1 = () => {
                 sx={{
                   pl: 6,
                   "&:hover": {
-                    backgroundColor: "#737270",
+                    backgroundColor: "#01172e",
+                    color: "rgb(33, 193, 214)",
                   },
                 }}
               >
-                <ListItemText primary={subItems[0].label} />
+                <ListItemText
+                  primary={subItems[0].label}
+                  sx={{
+                    fontSize: "15px",
+                    fontFamily: "Poppins, sans-serif",
+                    lineHeight: "22.5px",
+                    textAlign: "left",
+                    textTransform: "none",
+                    textDecoration: "none",
+                    fontWeight: 500,
+                  }}
+                />
                 {hasSubSubMenu ? (
                   openSubMenu[`${topLevel}-${middleLevel}`] ? (
                     <ExpandLess />
@@ -271,7 +299,7 @@ const SideBar1 = () => {
 
   const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
     useSidebar();
-
+  const [hovered, setHovered] = useState(false); // track if opened via hover
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -279,21 +307,33 @@ const SideBar1 = () => {
           sx={{
             width: isSidebarVisible ? 240 : 60,
             flexShrink: 0,
+            transition: "width 0.3s ease-in-out",
             "& .MuiDrawer-paper": {
-              marginTop: "55px",
+              marginTop: "56px",
               width: isSidebarVisible ? 240 : 60,
               boxSizing: "border-box",
               backgroundColor: "#021A33",
+              borderRight: "1px solid gray",
               color: "white",
               overflowX: isSidebarVisible ? "auto" : "hidden",
+              transition: "width 1s ease-in-out",
             },
           }}
-          onMouseEnter={() => toggleSidebar(true)}
-          onMouseLeave={() => toggleSidebar(false)}
+          onMouseEnter={() => {
+            if (!isSidebarVisible) {
+              toggleSidebar(true);
+              setHovered(true);
+            }
+          }}
+          onMouseLeave={() => {
+            if (hovered) {
+              toggleSidebar(false);
+              setHovered(false);
+            }
+          }}
           variant="permanent"
           anchor="left"
           open={isSidebarVisible}
-          // onMouseEnter={toggleSidebar}
         >
           <SidebarHeader userName={user.tusrnam} userAvatar={man} />
           <Divider />
@@ -313,7 +353,8 @@ const SideBar1 = () => {
                     sx={{
                       pl: 2,
                       "&:hover": {
-                        backgroundColor: "#737270",
+                        backgroundColor: "#01172e",
+                        color: "rgb(33, 193, 214)",
                       },
                     }}
                   >
@@ -327,6 +368,16 @@ const SideBar1 = () => {
                       <ListItemText
                         sx={{
                           marginLeft: "-28px",
+                          "& .MuiTypography-root": {
+                            fontSize: "15px",
+                            fontWeight: 400,
+                            fontFamily: "Poppins, sans-serif",
+
+                            backgroundColor: "rgba(0, 0, 0, 0)",
+                            textAlign: "left",
+                            lineHeight: "22.5px",
+                            textDecoration: "none solid rgb(33, 193, 214)",
+                          },
                         }}
                         primary={hierarchicalMenuData[topLevel].label}
                       />

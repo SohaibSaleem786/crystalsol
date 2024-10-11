@@ -35,7 +35,7 @@
 }
 
 .label-item {
-  font-weight: bold;
+  /* font-weight: bold; */
   display: flex;
   align-items: start;
   justify-content: flex-end;

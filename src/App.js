@@ -101,7 +101,7 @@ function App() {
         </SidebarProvider>
       </Router> */}
 
-      <Router basename="/alphahardware">
+      <Router basename="/crystalsol">
         <SidebarProvider>
           <ThemeProvider>
             <QueryClientProvider client={queryClient}>

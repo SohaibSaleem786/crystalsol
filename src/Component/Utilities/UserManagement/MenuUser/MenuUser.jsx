@@ -10,6 +10,8 @@ import { useSidebar } from "../../../../SidebarContext";
 import Alert from "@mui/material/Alert";
 import { useTheme } from "../../../../ThemeContext";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
+import NavComponent from "../../../MainComponent/Navform/navbarform";
+import "./MenuUser.css";
 const MenuUser = () => {
   const { tusrid } = useParams();
   const user = getUserData();
@@ -41,7 +43,7 @@ const MenuUser = () => {
       .then((response) => {
         const apiData = response.data;
         const user = apiData.find((item) => item.tusrid === tusrid);
-        setUserName(user.tusrid);
+        setUserName(user.tusrnam);
         setUserType(user.tusrtyp);
       })
       .catch((error) => console.error(error));
@@ -54,6 +56,13 @@ const MenuUser = () => {
   useEffect(() => {
     fetchDataForUserId(tusrid);
   }, [activeTab]);
+  const {
+    isSidebarVisible,
+    toggleSidebar,
+    getcolor, // Background color from context
+    fontcolor, // Font color from context
+    toggleChangeColor,
+  } = useSidebar();
 
   function fetchDataForUserId() {
     console.log("call the api");
@@ -81,16 +90,25 @@ const MenuUser = () => {
           );
         });
 
+        // Transform data for rendering
         const transformedData = subItems.map((item) => ({
           Sr: `${item.tmencod.split("-")[1]}`,
           Description: item.tmendsc,
           Permissions: (
             <select
+              style={{
+                height: "20px",
+                fontSize: "12px",
+                padding: "0px",
+                textAlign: "center",
+                color: fontcolor, // Apply dynamic font color
+                backgroundColor: getcolor, // Apply dynamic background color
+                border: "1px solid #ccc", // Optional: to make sure the border color is visible
+              }}
               value={item.Permission}
               onChange={(e) =>
                 handlePermissionChange(item.tmencod, e.target.value)
               }
-              className="form-select"
             >
               <option value="Y">Yes</option>
               <option value="N">No</option>
@@ -99,12 +117,15 @@ const MenuUser = () => {
           ),
         }));
 
+        // Columns configuration for the table
         const columns = [
           { label: "Sr", field: "Sr", sort: "asc" },
           { label: "Description", field: "Description", sort: "asc" },
           { label: "Permissions", field: "Permissions", sort: "asc" },
         ];
         console.log(transformedData, "transformData");
+
+        // Set the transformed data for the table
         setData({ columns, rows: transformedData });
       })
       .catch((error) => {
@@ -182,8 +203,25 @@ const MenuUser = () => {
   function handleTabClick(tabNumber) {
     setActiveTab(tabNumber);
   }
-  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
-    useSidebar();
+
+  const contentStyle = {
+    backgroundColor: getcolor,
+    height: "100vh",
+    width: isSidebarVisible ? "calc(100vw - 5vw)" : "100vw",
+    marginLeft: isSidebarVisible ? "5vw" : "25vh",
+    transition: isSidebarVisible
+      ? "margin-left 2s ease-in-out, margin-right 2s ease-in-out"
+      : "margin-left 2s ease-in-out, margin-right 2s ease-in-out",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "start",
+    overflowX: "hidden",
+    overflowY: "hidden",
+    wordBreak: "break-word",
+    textAlign: "center",
+    maxWidth: "1000px",
+  };
+
   return (
     <>
       <div
@@ -211,65 +249,63 @@ const MenuUser = () => {
             {alertData.message}
           </Alert>
         )}
-        <div
-          style={{
-            display: "flex",
-            // alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-          }}
-        >
+        <div style={contentStyle}>
           <div
             style={{
-              width: "60vw",
-              height: "75vh",
-              border: "1px solid black",
+              width: "40vw",
+              height: "73vh",
+              border: `1px solid ${fontcolor}`,
               alignItems: "center",
               justifyContent: "center",
               borderRadius: "8px",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-              backgroundColor: "#fff",
+              backgroundColor: getcolor,
+              color: fontcolor,
             }}
           >
-            <Nav
-              className="col-12 d-flex justify-content-between"
-              style={{
-                backgroundColor: "#3368b5",
-                color: "#fff",
-                height: "40px",
-                borderTopLeftRadius: "8px",
-                borderTopRightRadius: "8px",
-                padding: "10px",
-              }}
-            >
-              <div className="col-4"></div>
-              <div style={{ fontSize: "16px" }} className="col-4 text-center">
-                <strong>Menu Update</strong>
+            <NavComponent textdata="Menu User" />
+            <div className="row">
+              <div className="col-5 label-item" style={{ textAlign: "left" }}>
+                User: <b>{userName}</b>
               </div>
               <div className="col-4"></div>
-            </Nav>
-            <div style={{ padding: "20px" }}>
-              <span>
-                User Id: <u>{userName}</u>
-                <br />
-                User Type: <u>{userType}</u>
-              </span>
+              <div className="col-3 label-item" style={{ textAlign: "right" }}>
+                Type:{" "}
+                <b>
+                  {userType === "A"
+                    ? "Admin"
+                    : userType === "U"
+                    ? "User"
+                    : userType}
+                </b>
+              </div>
             </div>
             <Tabs
               activeKey={activeTab.toString()}
               onSelect={(k) => handleTabClick(parseInt(k))}
               id="fill-tab-example"
               fill
+              style={{ backgroundColor: "#5aa4f2" }}
             >
               {["Files", "Transactions", "Reports", "Utilities"].map(
                 (tabLabel, index) => (
-                  <Tab eventKey={index + 1} title={tabLabel} key={index}>
+                  <Tab
+                    eventKey={index + 1}
+                    title={
+                      <span style={{ color: "white", fontSize: "11px" }}>
+                        {tabLabel}
+                      </span>
+                    }
+                    key={index}
+                  >
                     <div
                       style={{
-                        overflowY: "auto",
-                        maxHeight: "35vh",
+                        overflowY: data.rows > 10 ? "auto" : "hidden",
+                        maxHeight: "48vh",
                         width: "100%",
-                        padding: "10px",
+                        borderBottom: `1px solid ${fontcolor}`,
+
+                        // padding: "10px",
                       }}
                     >
                       <table
@@ -278,6 +314,7 @@ const MenuUser = () => {
                           fontSize: "14px",
                           width: "100%",
                           borderCollapse: "collapse",
+                          backgroundColor: getcolor,
                         }}
                       >
                         <thead
@@ -300,6 +337,8 @@ const MenuUser = () => {
                                     column.field === "Sr" ? "60px" : "auto",
                                   padding: "10px",
                                   textAlign: "center",
+                                  height: "40px",
+                                  // color: "white",
                                 }}
                                 onDoubleClick={
                                   column.field === "Permissions"
@@ -316,7 +355,12 @@ const MenuUser = () => {
                           {data.rows.map((row, rowIndex) => (
                             <tr
                               key={rowIndex}
-                              style={{ borderBottom: "1px solid #ddd" }}
+                              style={{
+                                height: "40px",
+                                borderBottom: "1px solid #ddd",
+                                backgroundColor: getcolor,
+                                color: "black",
+                              }}
                             >
                               {Object.keys(row).map((key, index) => (
                                 <td
@@ -328,10 +372,12 @@ const MenuUser = () => {
                                       index === 0
                                         ? "10%"
                                         : index === 1
-                                        ? "70%"
-                                        : "20%",
+                                        ? "65%"
+                                        : "25%",
                                     textAlign:
                                       key === "Description" ? "left" : "center",
+                                    height: "40px",
+                                    color: fontcolor,
                                   }}
                                 >
                                   {row[key]}
@@ -339,9 +385,16 @@ const MenuUser = () => {
                               ))}
                             </tr>
                           ))}
-                          {Array.from({ length: Math.max(0, 8 - 3) }).map(
+                          {Array.from({ length: Math.max(0, 20 - 3) }).map(
                             (_, rowIndex) => (
-                              <tr key={`blank-${rowIndex}`}>
+                              <tr
+                                key={`blank-${rowIndex}`}
+                                style={{
+                                  height: "40px",
+                                  backgroundColor: getcolor,
+                                  color: fontcolor,
+                                }}
+                              >
                                 {Array.from({ length: 3 }).map(
                                   (_, colIndex) => (
                                     <td key={`blank-${rowIndex}-${colIndex}`}>
@@ -359,38 +412,58 @@ const MenuUser = () => {
                 )
               )}
             </Tabs>
-            <div className="d-flex justify-content-center mt-3">
-              <Button
-                type="submit"
-                style={{
-                  margin: "5px",
-                  width: "120px",
-                  fontSize: "14px",
-                  height: "40px",
-                  borderRadius: "4px",
-                  backgroundColor: "#3368b5",
-                  color: "#fff",
-                  border: "none",
-                }}
-                onClick={submit}
-              >
-                Save
-              </Button>
-              <Button
-                style={{
-                  margin: "5px",
-                  width: "120px",
-                  fontSize: "14px",
-                  height: "40px",
-                  borderRadius: "4px",
-                  backgroundColor: "#6c757d",
-                  color: "#fff",
-                  border: "none",
-                }}
-                onClick={() => navigate("/UserManagement")}
-              >
-                Return
-              </Button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Link to="/UserManagement">
+                <button
+                  className="btn btn-primary"
+                  style={{
+                    fontSize: "13px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    fontFamily: "Poppins, sans-serif",
+                    color: "white",
+                    backgroundColor: "#186DB7",
+                    padding: "10px 20px",
+                    border: "none",
+                    cursor: "pointer",
+                    lineHeight: "13px",
+                    width: "120px",
+                    textAlign: "center",
+                    borderRadius: "5px",
+                    marginRight: "5px",
+                  }}
+                >
+                  Return
+                </button>
+              </Link>
+              <Link to="/AddUser1">
+                <button
+                  className="btn btn-primary"
+                  style={{
+                    fontSize: "13px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    fontFamily: "Poppins, sans-serif",
+                    color: "white",
+                    backgroundColor: "#186DB7",
+                    padding: "10px 20px",
+                    border: "none",
+                    cursor: "pointer",
+                    lineHeight: "13px",
+                    width: "120px",
+                    textAlign: "center",
+                    borderRadius: "5px",
+                  }}
+                >
+                  User
+                </button>
+              </Link>
             </div>
           </div>
         </div>

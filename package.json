@@ -1,7 +1,7 @@
 {
   "name": "crystal",
   "version": "1.0.1",
-  "homepage": "https://crystalsolutions.com.pk/alphahardware/",
+  "homepage": "https://crystalsolutions.com.pk/crystalsol/",
   "private": true,
   "dependencies": {
     "@emotion/styled": "^11.11.0",

@@ -899,7 +899,7 @@ export default function Header() {
       <AppBar
         position="static"
         style={{
-          background: "#3368B5",
+          background: "#3368b5",
           height: "55px",
           borderBottom: "1px solid gray",
         }}
@@ -910,7 +910,20 @@ export default function Header() {
             alt="Company Logo"
             style={{ height: "40px", marginRight: "5px" }}
           />
-          <h6 style={{ fontWeight: "bold" }}>
+          <h6
+            style={{
+              fontSize: "15px",
+              fontWeight: "400",
+              fontStyle: "normal",
+              color: "white",
+              fontFamily: "Poppins, sans-serif",
+              lineHeight: "22.5px",
+              textAlign: "center",
+              alignItems: "center",
+              textTransform: "none",
+              textDecoration: "none",
+            }}
+          >
             {organisation && organisation.description}
           </h6>
           <IconButton
@@ -941,7 +954,11 @@ export default function Header() {
                 borderRadius: "50%",
               },
             }}
-            onClick={togglefiles}
+            onClick={() => {
+              if (isfilesOpen) {
+                togglefiles();
+              }
+            }}
           >
             <CustomGridIcon />
           </IconButton>

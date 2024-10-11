@@ -523,9 +523,30 @@ function AddUser1() {
       codeparam.current.style.backgroundColor = "#3368B5";
     }
   };
-  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
-    useSidebar();
-
+  const {
+    isSidebarVisible,
+    toggleSidebar,
+    getcolor,
+    fontcolor,
+    toggleChangeColor,
+  } = useSidebar();
+  const contentStyle = {
+    backgroundColor: getcolor,
+    height: "100vh",
+    width: isSidebarVisible ? "calc(100vw - 5vw)" : "100vw",
+    marginLeft: isSidebarVisible ? "15vw" : "45vh",
+    transition: isSidebarVisible
+      ? "margin-left 2s ease-in-out, margin-right 2s ease-in-out"
+      : "margin-left 2s ease-in-out, margin-right 2s ease-in-out",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "start",
+    overflowX: "hidden",
+    overflowY: "hidden",
+    textAlign: "center",
+    maxWidth: "670px",
+    fontSize: "12px",
+  };
   return (
     <>
       <div
@@ -553,381 +574,399 @@ function AddUser1() {
             {alertData.message}
           </Alert>
         )}
+        <div style={contentStyle}>
+          <div
+            className="col-md-12 "
+            style={{
+              border: `1px solid ${fontcolor}`,
+              borderRadius: "9px",
+            }}
+          >
+            <NavComponent textdata={textdata} />
 
-        <div className="col-md-12 form-user-container">
-          <NavComponent textdata={textdata} />
+            <br />
+            <Form
+              onSubmit={handleFormSubmit}
+              style={{
+                backgroundColor: getcolor,
+                color: fontcolor,
+              }}
+            >
+              <div className="row">
+                <div className="col-sm-12">
+                  <br />
 
-          <br />
-          <Form onSubmit={handleFormSubmit}>
-            <div className="row">
-              <div className="col-sm-12">
-                <br />
+                  <div className="row">
+                    <div className="col-sm-2 label-item">Userid:</div>
+                    <div className="col-sm-3">
+                      <Form.Control
+                        type="text"
+                        className="form-control-account custom-input"
+                        placeholder="Code"
+                        name="AccountCodeform"
+                        value={formData.AccountCodeform}
+                        onChange={handleInputChangefetchdata}
+                        style={{
+                          fontSize: "15px",
+                          padding: "10px",
+                          textAlign: "left",
+                          borderRadius: "8px",
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleBlurRVC();
+                            handleEnterKeyPress(Description, e);
+                            const upperCaseValue = e.target.value.toUpperCase();
 
-                <div className="row">
-                  <div className="col-sm-2 label-item">Userid:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="text"
-                      className="form-control-account custom-input"
-                      placeholder="Code"
-                      name="AccountCodeform"
-                      value={formData.AccountCodeform}
-                      onChange={handleInputChangefetchdata}
-                      style={{
-                        fontSize: "15px",
-                        padding: "10px",
-                        textAlign: "left",
-                        borderRadius: "8px",
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleBlurRVC();
-                          handleEnterKeyPress(Description, e);
-                          const upperCaseValue = e.target.value.toUpperCase();
+                            if (dataa && dataa.length > 0) {
+                              const selectedItem = dataa.find(
+                                (item) => item.tusrid === upperCaseValue
+                              );
 
-                          if (dataa && dataa.length > 0) {
-                            const selectedItem = dataa.find(
-                              (item) => item.tusrid === upperCaseValue
-                            );
-
-                            if (selectedItem) {
-                              console.log("selectedItem:", selectedItem);
-                              handleEnterKeyPress(Description, e);
-                            } else if (upperCaseValue.length < 10) {
-                              // setAlertData({
-                              //   type: "success",
-                              //   message: "Fetch Data",
-                              // });
-                              // setTimeout(() => {
-                              //   setAlertData(null);
-                              // }, 3000);
+                              if (selectedItem) {
+                                console.log("selectedItem:", selectedItem);
+                                handleEnterKeyPress(Description, e);
+                              } else if (upperCaseValue.length < 10) {
+                                // setAlertData({
+                                //   type: "success",
+                                //   message: "Fetch Data",
+                                // });
+                                // setTimeout(() => {
+                                //   setAlertData(null);
+                                // }, 3000);
+                              } else {
+                                handleEnterKeyPress(Description, e);
+                              }
                             } else {
-                              handleEnterKeyPress(Description, e);
+                              console.warn(
+                                "Data rows are not available or empty."
+                              );
                             }
-                          } else {
-                            console.warn(
-                              "Data rows are not available or empty."
-                            );
                           }
+                        }}
+                        onFocus={(e) => {
+                          setTimeout(() => {
+                            e.target.select();
+                          }, 500);
+                        }}
+                        onDoubleClick={(e) => {
+                          handleDoubleClick(e);
+                          setTimeout(() => {
+                            focusNextInput(SearchBox);
+                          }, 100);
+                        }}
+                        ref={Code}
+                      />
+                    </div>
+                    <div className="col-sm-2"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-item">Description:</div>
+                    <div
+                      className="col-sm-10"
+                      style={{ display: "flex", gap: "10px" }}
+                    >
+                      <Form.Control
+                        type="text"
+                        id="Descriptionform"
+                        placeholder="Description"
+                        name="Descriptionform"
+                        className={`form-control-item ${
+                          errors.Descriptionform ? "border-red" : ""
+                        }`}
+                        value={formData.Descriptionform}
+                        ref={Description}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform4ref, e)}
+                        style={{ flex: "1", marginRight: "4px" }}
+                      />
+                      <Form.Control
+                        type="text"
+                        id="UrduFormDescription"
+                        placeholder="اردو میں"
+                        name="UrduFormDescription"
+                        className={`form-control-item ${
+                          errors.Descriptionform ? "border-red" : ""
+                        }`}
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          flex: "1",
+                          marginRight: "10px",
+                          textAlign: "right",
+                          fontFamily: "Noto Nastaliq Urdu",
+                        }}
+                        value={geturdu}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-item">Cash Code:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform4"
+                        placeholder="Cash Code"
+                        name="inputform4"
+                        className={`form-control-item ${
+                          errors.inputform4 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform4}
+                        ref={inputform4ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform5ref, e)}
+                      />
+                    </div>
+                    <div className="col-sm-2 label-item">Store Code:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform5"
+                        placeholder="Store Code"
+                        name="inputform5"
+                        className={`form-control-item ${
+                          errors.inputform5 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform5}
+                        ref={inputform5ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform6ref, e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-item">Emp Code:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform6"
+                        placeholder="Employee Code"
+                        name="inputform6"
+                        className={`form-control-item ${
+                          errors.inputform6 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform6}
+                        ref={inputform6ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform7ref, e)}
+                      />
+                    </div>
+
+                    <div className="col-sm-2 label-item">Pswd Exp:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform7"
+                        placeholder="Pswd Exp"
+                        name="inputform7"
+                        className={`form-control-item ${
+                          errors.inputform7 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform7}
+                        ref={inputform7ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform8ref, e)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-sm-2 label-item">Status:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        as="select"
+                        name="inputform8"
+                        value={formData.inputform8}
+                        onChange={handleInputChange}
+                        className={`form-control-account ${
+                          errors.Status ? "border-red" : ""
+                        }`}
+                        style={{
+                          height: "28px",
+                          fontSize: "11px",
+                          padding: "0px",
+                          paddingLeft: "5px",
+                        }}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform9ref, e)}
+                        ref={inputform8ref}
+                      >
+                        <option value="A">Active</option>
+                        <option value="C">Cancell</option>
+                        <option value="S">Suspend</option>
+                      </Form.Control>
+                    </div>
+
+                    <div className="col-sm-2 label-item">User Type:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        as="select"
+                        name="inputform9"
+                        value={formData.inputform9}
+                        onChange={handleInputChange}
+                        className={`form-control-account ${
+                          errors.Status ? "border-red" : ""
+                        }`}
+                        style={{
+                          height: "28px",
+                          fontSize: "11px",
+                          padding: "0px",
+                          paddingLeft: "5px",
+                        }}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform10ref, e)
                         }
-                      }}
-                      onFocus={(e) => {
-                        setTimeout(() => {
-                          e.target.select();
-                        }, 500);
-                      }}
-                      onDoubleClick={(e) => {
-                        handleDoubleClick(e);
-                        setTimeout(() => {
-                          focusNextInput(SearchBox);
-                        }, 100);
-                      }}
-                      ref={Code}
-                    />
+                        ref={inputform9ref}
+                      >
+                        <option value="A">Admin</option>
+                        <option value="U">User</option>
+                        <option value="S">Super User</option>
+                        <option value="G">Guest</option>
+                      </Form.Control>
+                    </div>
                   </div>
-                  <div className="col-sm-2"></div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-2 label-item">Description:</div>
-                  <div
-                    className="col-sm-10"
-                    style={{ display: "flex", gap: "10px" }}
-                  >
-                    <Form.Control
-                      type="text"
-                      id="Descriptionform"
-                      placeholder="Description"
-                      name="Descriptionform"
-                      className={`form-control-item ${
-                        errors.Descriptionform ? "border-red" : ""
-                      }`}
-                      value={formData.Descriptionform}
-                      ref={Description}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform4ref, e)}
-                      style={{ flex: "1", marginRight: "4px" }}
-                    />
-                    <Form.Control
-                      type="text"
-                      id="UrduFormDescription"
-                      placeholder="اردو میں"
-                      name="UrduFormDescription"
-                      className={`form-control-item ${
-                        errors.Descriptionform ? "border-red" : ""
-                      }`}
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        flex: "1",
-                        marginRight: "10px",
-                        textAlign: "right",
-                        fontFamily: "Noto Nastaliq Urdu",
-                      }}
-                      value={geturdu}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-2 label-item">Cash Code:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="text"
-                      id="inputform4"
-                      placeholder="Cash Code"
-                      name="inputform4"
-                      className={`form-control-item ${
-                        errors.inputform4 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform4}
-                      ref={inputform4ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform5ref, e)}
-                    />
-                  </div>
-                  <div className="col-sm-2"></div>
-                  <div className="col-sm-2 label-item">Store Code:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="text"
-                      id="inputform5"
-                      placeholder="Store Code"
-                      name="inputform5"
-                      className={`form-control-item ${
-                        errors.inputform5 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform5}
-                      ref={inputform5ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform6ref, e)}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-2 label-item">Emp Code:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="text"
-                      id="inputform6"
-                      placeholder="Employee Code"
-                      name="inputform6"
-                      className={`form-control-item ${
-                        errors.inputform6 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform6}
-                      ref={inputform6ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform7ref, e)}
-                    />
-                  </div>
-                  <div className="col-sm-2"></div>
+                  <div className="row">
+                    <div className="col-sm-2 label-item">Mobile:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform10"
+                        placeholder="Mobile No"
+                        name="inputform10"
+                        className={`form-control-item ${
+                          errors.inputform10 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform10}
+                        ref={inputform10ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform11ref, e)
+                        }
+                      />
+                    </div>
 
-                  <div className="col-sm-2 label-item">Pswd Exp:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="text"
-                      id="inputform7"
-                      placeholder="Pswd Exp"
-                      name="inputform7"
-                      className={`form-control-item ${
-                        errors.inputform7 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform7}
-                      ref={inputform7ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform8ref, e)}
-                    />
+                    <div className="col-sm-2 label-item">Email:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform11"
+                        placeholder="Pswd Exp"
+                        name="inputform11"
+                        className={`form-control-item ${
+                          errors.inputform11 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform11}
+                        ref={inputform11ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform12ref, e)
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-item">Time From:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="time"
+                        id="inputform12"
+                        placeholder="Time From"
+                        name="inputform12"
+                        className={`form-control-item ${
+                          errors.inputform12 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform12}
+                        ref={inputform12ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform13ref, e)
+                        }
+                      />
+                    </div>
 
-                <div className="row">
-                  <div className="col-sm-2 label-item">Status:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      as="select"
-                      name="inputform8"
-                      value={formData.inputform8}
-                      onChange={handleInputChange}
-                      className={`form-control-account ${
-                        errors.Status ? "border-red" : ""
-                      }`}
-                      style={{
-                        height: "28px",
-                        fontSize: "11px",
-                        padding: "0px",
-                        paddingLeft: "5px",
-                      }}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform9ref, e)}
-                      ref={inputform8ref}
-                    >
-                      <option value="A">Active</option>
-                      <option value="C">Cancell</option>
-                      <option value="S">Suspend</option>
-                    </Form.Control>
+                    <div className="col-sm-2 label-item">Time To:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="time"
+                        id="inputform13"
+                        placeholder="Time To"
+                        name="inputform13"
+                        className={`form-control-item ${
+                          errors.inputform13 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform13}
+                        ref={inputform13ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform14ref, e)
+                        }
+                      />
+                    </div>
                   </div>
-                  <div className="col-sm-2 label-item"></div>
-
-                  <div className="col-sm-2 label-item">User Type:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      as="select"
-                      name="inputform9"
-                      value={formData.inputform9}
-                      onChange={handleInputChange}
-                      className={`form-control-account ${
-                        errors.Status ? "border-red" : ""
-                      }`}
-                      style={{
-                        height: "28px",
-                        fontSize: "11px",
-                        padding: "0px",
-                        paddingLeft: "5px",
-                      }}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform10ref, e)}
-                      ref={inputform9ref}
-                    >
-                      <option value="A">Admin</option>
-                      <option value="U">User</option>
-                      <option value="S">Super User</option>
-                      <option value="G">Guest</option>
-                    </Form.Control>
+                  <div className="row">
+                    <div className="col-sm-2 label-item">Password:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform14"
+                        placeholder="Password"
+                        name="inputform14"
+                        className={`form-control-item ${
+                          errors.inputform14 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform14}
+                        ref={inputform14ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(Submit, e)}
+                      />
+                    </div>
+                    <div className="col-sm-2"></div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-2 label-item">Mobile:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="text"
-                      id="inputform10"
-                      placeholder="Mobile No"
-                      name="inputform10"
-                      className={`form-control-item ${
-                        errors.inputform10 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform10}
-                      ref={inputform10ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform11ref, e)}
-                    />
-                  </div>
-                  <div className="col-sm-2"></div>
-
-                  <div className="col-sm-2 label-item">Email:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="text"
-                      id="inputform11"
-                      placeholder="Pswd Exp"
-                      name="inputform11"
-                      className={`form-control-item ${
-                        errors.inputform11 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform11}
-                      ref={inputform11ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform12ref, e)}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-2 label-item">Time From:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="time"
-                      id="inputform12"
-                      placeholder="Time From"
-                      name="inputform12"
-                      className={`form-control-item ${
-                        errors.inputform12 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform12}
-                      ref={inputform12ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform13ref, e)}
-                    />
-                  </div>
-                  <div className="col-sm-2"></div>
-
-                  <div className="col-sm-2 label-item">Time To:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="time"
-                      id="inputform13"
-                      placeholder="Time To"
-                      name="inputform13"
-                      className={`form-control-item ${
-                        errors.inputform13 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform13}
-                      ref={inputform13ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(inputform14ref, e)}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-2 label-item">Password:</div>
-                  <div className="col-sm-3">
-                    <Form.Control
-                      type="text"
-                      id="inputform14"
-                      placeholder="Password"
-                      name="inputform14"
-                      className={`form-control-item ${
-                        errors.inputform14 ? "border-red" : ""
-                      }`}
-                      style={{ textAlign: "right" }}
-                      value={formData.inputform14}
-                      ref={inputform14ref}
-                      onFocus={(e) => e.target.select()}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => handleEnterKeyPress(Submit, e)}
-                    />
-                  </div>
-                  <div className="col-sm-2"></div>
                 </div>
               </div>
-            </div>
-          </Form>
+            </Form>
 
-          {/* // three button in this  */}
-          <ButtonGroupp
-            Submit={Submit}
-            handleFocus={handleFocus}
-            handleBlur={handleBlur}
-            handleSave={handleSave}
-            handleReturn={handleReturn}
-            handleClear={handleClear}
-            handleFormSubmit={handleFormSubmit}
-          />
-          <GeneralTwoFieldsModal
-            isOpen={isModalOpen}
-            handleClose={handleCloseModal}
-            title="Select User"
-            technicians={dataa}
-            searchRef={SearchBox}
-            handleRowClick={handleRowClick}
-            firstColKey="tusrid"
-            secondColKey="tusrnam"
-          />
+            {/* // three button in this  */}
+            <ButtonGroupp
+              Submit={Submit}
+              handleFocus={handleFocus}
+              handleBlur={handleBlur}
+              handleSave={handleSave}
+              handleReturn={handleReturn}
+              handleClear={handleClear}
+              handleFormSubmit={handleFormSubmit}
+            />
+            <GeneralTwoFieldsModal
+              isOpen={isModalOpen}
+              handleClose={handleCloseModal}
+              title="Select User"
+              technicians={dataa}
+              searchRef={SearchBox}
+              handleRowClick={handleRowClick}
+              firstColKey="tusrid"
+              secondColKey="tusrnam"
+            />
+          </div>
         </div>
       </div>
     </>

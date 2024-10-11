@@ -20,20 +20,25 @@ const ButtonGroup = ({
         justifyContent: "center",
         marginBottom: "2px",
         borderTop: "1px solid gray",
+        marginTop: "5px",
       }}
     >
       <button
         style={{
-          border: "1px solid #FFFFFF",
-          width: "75px",
-          height: "25px",
-          marginTop: "2px",
+          fontSize: "13px",
+          fontStyle: "normal",
+          fontWeight: 400,
+          fontFamily: "Poppins, sans-serif",
           color: "white",
-          backgroundColor: "#3368B5",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center", // Centers text vertically
-          borderRadius: "0px",
+          backgroundColor: "#186DB7",
+          padding: "10px 20px",
+          border: "none",
+          cursor: "pointer",
+          lineHeight: "13px",
+          width: "120px",
+          textAlign: "center",
+          borderRadius: "5px",
+          marginRight: "5px",
         }}
         onFocus={() => handleFocus(Submit)}
         onBlur={() => handleBlur(Submit)}
@@ -55,17 +60,20 @@ const ButtonGroup = ({
 
       <button
         style={{
-          border: "1px solid #FFFFFF",
-          width: "75px",
-          marginLeft: "2px",
-          height: "25px",
-          marginTop: "2px",
+          fontSize: "13px",
+          fontStyle: "normal",
+          fontWeight: 400,
+          fontFamily: "Poppins, sans-serif",
           color: "white",
-          backgroundColor: "#3368B5",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center", // Centers text vertically
-          borderRadius: "0px",
+          backgroundColor: "#186DB7",
+          padding: "10px 20px",
+          border: "none",
+          cursor: "pointer",
+          lineHeight: "13px",
+          width: "120px",
+          textAlign: "center",
+          borderRadius: "5px",
+          marginRight: "5px",
         }}
         accessKey="r"
         onKeyDown={(event) => {
@@ -90,17 +98,19 @@ const ButtonGroup = ({
 
       <button
         style={{
-          border: "1px solid #FFFFFF",
-          width: "75px",
-          marginLeft: "2px",
-          height: "25px",
-          marginTop: "2px",
+          fontSize: "13px",
+          fontStyle: "normal",
+          fontWeight: 400,
+          fontFamily: "Poppins, sans-serif",
           color: "white",
-          backgroundColor: "#3368B5",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center", // Centers text vertically
-          borderRadius: "0px",
+          backgroundColor: "#186DB7",
+          padding: "10px 20px",
+          border: "none",
+          cursor: "pointer",
+          lineHeight: "13px",
+          width: "120px",
+          textAlign: "center",
+          borderRadius: "5px",
         }}
         accessKey="c"
         onKeyDown={(event) => {

@@ -8,11 +8,12 @@ import { useTheme } from "../../../ThemeContext";
 import SideBar1 from "../../MainComponent/SideBar1/SideBar";
 import { useSidebar } from "../../../SidebarContext";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../Auth";
+import NavComponent from "../../MainComponent/Navform/navbarform";
 export default function UserMaintenance() {
   const user = getUserData();
   const organisation = getOrganisationData();
   const tableTopColor = "#3368B5";
-  const tableHeadColor = "#3368B5";
+  const tableHeadColor = "#3368b5";
   const secondaryColor = "white";
   const btnColor = "#3368B5";
   const textColor = "white";
@@ -77,8 +78,6 @@ export default function UserMaintenance() {
   const eighthColWidth = { width: "21%" };
   const ninthColWidth = { width: "6%" };
 
-  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
-    useSidebar();
   // Adjust the content width based on sidebar state
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -92,12 +91,18 @@ export default function UserMaintenance() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
+  const {
+    isSidebarVisible,
+    toggleSidebar,
+    getcolor,
+    fontcolor,
+    toggleChangeColor,
+  } = useSidebar();
   const contentStyle = {
     backgroundColor: getcolor,
     height: "100vh",
-    width: isSidebarVisible ? "calc(100vw - 5vw)" : "100vw", // Adjusts based on sidebar
-    marginLeft: isSidebarVisible ? "5vw" : "25vh", // Shift content when sidebar is open
+    width: isSidebarVisible ? "calc(100vw - 5%)" : "100vw",
+    marginLeft: isSidebarVisible ? "5%" : "15%",
     transition: isSidebarVisible
       ? "margin-left 2s ease-in-out, margin-right 2s ease-in-out"
       : "margin-left 2s ease-in-out, margin-right 2s ease-in-out",
@@ -111,39 +116,19 @@ export default function UserMaintenance() {
     maxWidth: "1000px",
   };
 
-  // Centering the content horizontally
-  const centerStyle = {
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  };
   return (
     <>
       <div style={contentStyle}>
-        <div style={{ backgroundColor: "white", width: "100%" }}>
-          <Nav
-            className="col-12 d-flex justify-content-between"
-            style={{
-              backgroundColor: tableTopColor,
-              color: textColor,
-              width: "100%",
-            }}
-          >
-            <div className="col-4">
-              <Link to="/AddUser1">
-                {/* <i className="fa-solid fa-arrow-right fa-xl topBtn" title="Next Page"></i> */}
-              </Link>
-            </div>
-            <div style={{ fontSize: "14px" }} className="col-4 text-center">
-              <strong>User Maintenance</strong>
-            </div>
-            <div className="text-end col-4">
-              <Link to="/sidebar">
-                {/* <i className="fa fa-close fa-2xl crossBtn"></i> */}
-              </Link>
-            </div>
-          </Nav>
+        <div
+          style={{
+            backgroundColor: getcolor,
+            color: fontcolor,
+            width: "100%",
+            border: `1px solid ${fontcolor}`,
+            borderRadius: "9px",
+          }}
+        >
+          <NavComponent textdata="User Management" />
           <div className="my-1 mx-3">
             <div className="col-12 d-flex justify-content-between mt-1">
               <div className="col-4 d-flex justify-content-start">
@@ -159,42 +144,17 @@ export default function UserMaintenance() {
                   className="col-6"
                   onChange={handleSearch}
                   value={selectedSearch}
-                  style={{ height: "22px", fontSize: "0.8rem" }}
+                  style={{
+                    height: "22px",
+                    fontSize: "0.8rem",
+                    backgroundColor: getcolor,
+                    border: `1px solid ${fontcolor}`,
+                    color: fontcolor,
+                    "::placeholder": {
+                      color: fontcolor,
+                    },
+                  }}
                 />
-              </div>
-
-              <div>
-                <Link to="/MainPage">
-                  <button
-                    className="btn btn-primary"
-                    style={{
-                      backgroundColor: btnColor,
-                      color: textColor,
-                      borderRadius: "0px",
-                      height: "22px",
-                      fontSize: "0.8rem",
-                      padding: "0px 5px",
-                    }}
-                  >
-                    Return
-                  </button>
-                </Link>
-                <Link to="/AddUser1">
-                  <button
-                    className="btn btn-primary"
-                    style={{
-                      backgroundColor: btnColor,
-                      color: textColor,
-                      borderRadius: "0px",
-                      height: "22px",
-                      marginLeft: "5px",
-                      fontSize: "0.8rem",
-                      padding: "0px 5px",
-                    }}
-                  >
-                    Add User
-                  </button>
-                </Link>
               </div>
             </div>
           </div>
@@ -202,6 +162,7 @@ export default function UserMaintenance() {
             <div
               style={{
                 backgroundColor: textColor,
+                borderBottom: `1px solid ${fontcolor}`,
                 overflowY: getFilteredTableData.length > 10 ? "auto" : "hidden",
                 maxHeight: "60vh",
                 width: "100%",
@@ -240,7 +201,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      Avatar
+                      <a style={{ color: "white" }}>Avatar</a>
                     </td>
                     <td
                       className="border-dark"
@@ -249,7 +210,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      UserId
+                      <a style={{ color: "white" }}>UserId</a>
                     </td>
                     <td
                       className="border-dark"
@@ -258,7 +219,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      Name
+                      <a style={{ color: "white" }}>Name</a>
                     </td>
                     <td
                       className="border-dark"
@@ -267,7 +228,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      Password
+                      <a style={{ color: "white" }}>Password</a>
                     </td>
                     <td
                       className="border-dark"
@@ -276,7 +237,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      Status
+                      <a style={{ color: "white" }}>Status</a>
                     </td>
                     <td
                       className="border-dark"
@@ -285,7 +246,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      Type
+                      <a style={{ color: "white" }}>Type</a>
                     </td>
                     <td
                       className="border-dark"
@@ -294,7 +255,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      Mobile No
+                      <a style={{ color: "white" }}>Mobile</a>
                     </td>
                     <td
                       className="border-dark"
@@ -303,7 +264,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      Email Address
+                      <a style={{ color: "white" }}>Email</a>
                     </td>
 
                     <td
@@ -313,7 +274,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      Menu
+                      <a style={{ color: "white" }}>Menu</a>
                     </td>
                   </tr>
                 </thead>
@@ -349,6 +310,8 @@ export default function UserMaintenance() {
                             style={{
                               fontSize: "12px !important",
                               wordBreak: "break-word",
+                              backgroundColor: getcolor,
+                              color: fontcolor,
                             }}
                           >
                             <td
@@ -356,6 +319,7 @@ export default function UserMaintenance() {
                               style={{
                                 ...firstColWidth,
                                 wordBreak: "break-word",
+                                color: fontcolor,
                               }}
                             >
                               <i className="fa fa-user fa-xl"></i>
@@ -364,6 +328,7 @@ export default function UserMaintenance() {
                               className="text-start"
                               style={{
                                 ...secondColWidth,
+                                color: fontcolor,
                                 wordBreak: "break-word",
                               }}
                             >
@@ -373,6 +338,7 @@ export default function UserMaintenance() {
                               className="text-start"
                               style={{
                                 ...thirdColWidth,
+                                color: fontcolor,
                                 wordBreak: "break-word",
                               }}
                             >
@@ -382,6 +348,7 @@ export default function UserMaintenance() {
                               className="text-center"
                               style={{
                                 ...forthColWidth,
+                                color: fontcolor,
                                 wordBreak: "break-word",
                               }}
                             >
@@ -391,6 +358,7 @@ export default function UserMaintenance() {
                               className="text-center"
                               style={{
                                 ...fifthColWidth,
+                                color: fontcolor,
                                 wordBreak: "break-word",
                               }}
                             >
@@ -400,6 +368,7 @@ export default function UserMaintenance() {
                               className="text-center"
                               style={{
                                 ...sixthColWidth,
+                                color: fontcolor,
                                 wordBreak: "break-word",
                               }}
                             >
@@ -409,6 +378,7 @@ export default function UserMaintenance() {
                               className="text-center"
                               style={{
                                 ...seventhColWidth,
+                                color: fontcolor,
                                 wordBreak: "break-word",
                               }}
                             >
@@ -418,6 +388,7 @@ export default function UserMaintenance() {
                               className="text-start"
                               style={{
                                 ...eighthColWidth,
+                                color: fontcolor,
                                 wordBreak: "break-word",
                               }}
                             >
@@ -428,11 +399,15 @@ export default function UserMaintenance() {
                               className="text-center"
                               style={{
                                 ...ninthColWidth,
+                                color: fontcolor,
                                 wordBreak: "break-word",
                               }}
                             >
                               <Link to={`/MenuUser/${item.tusrid}`}>
-                                <i className="fa fa-list fa-xl"></i>
+                                <i
+                                  className="fa fa-list fa-xl"
+                                  style={{ color: fontcolor }}
+                                ></i>
                               </Link>
                             </td>
                           </tr>
@@ -440,7 +415,13 @@ export default function UserMaintenance() {
                       })}
                       {Array.from({ length: Math.max(0, 20 - 3) }).map(
                         (_, rowIndex) => (
-                          <tr key={`blank-${rowIndex}`}>
+                          <tr
+                            key={`blank-${rowIndex}`}
+                            style={{
+                              backgroundColor: getcolor,
+                              color: fontcolor,
+                            }}
+                          >
                             {Array.from({ length: 9 }).map((_, colIndex) => (
                               <td key={`blank-${rowIndex}-${colIndex}`}>
                                 &nbsp;
@@ -454,6 +435,56 @@ export default function UserMaintenance() {
                 </tbody>
               </table>
             </div>
+          </div>
+          <div
+            style={{
+              margin: "5px",
+              marginBottom: "2px",
+            }}
+          >
+            <Link to="/MainPage">
+              <button
+                className="btn btn-primary"
+                style={{
+                  fontSize: "13px",
+                  fontStyle: "normal",
+                  fontWeight: 400,
+                  fontFamily: "Poppins, sans-serif",
+                  color: "white",
+                  backgroundColor: "#186DB7",
+                  padding: "10px 20px",
+                  border: "none",
+                  cursor: "pointer",
+                  lineHeight: "13px",
+                  width: "120px",
+                  textAlign: "center",
+                  marginRight: "5px",
+                }}
+              >
+                Return
+              </button>
+            </Link>
+            <Link to="/AddUser1">
+              <button
+                className="btn btn-primary"
+                style={{
+                  fontSize: "13px",
+                  fontStyle: "normal",
+                  fontWeight: 400,
+                  fontFamily: "Poppins, sans-serif",
+                  color: "white",
+                  backgroundColor: "#186DB7",
+                  padding: "10px 20px",
+                  border: "none",
+                  cursor: "pointer",
+                  lineHeight: "13px",
+                  width: "120px",
+                  textAlign: "center",
+                }}
+              >
+                User
+              </button>
+            </Link>
           </div>
         </div>
       </div>
