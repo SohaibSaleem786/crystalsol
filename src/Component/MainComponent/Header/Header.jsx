@@ -29,6 +29,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { useSidebar } from "../../../SidebarContext";
 
 const Menufile = ({ isOpen }) => {
+  console.log("menu open");
   if (!isOpen) return null;
 
   return (
@@ -37,7 +38,7 @@ const Menufile = ({ isOpen }) => {
       style={{
         position: "absolute",
         top: "60px",
-        right: "475px",
+        left: "18%",
         width: "650px",
         backgroundColor: "#0d2949",
         color: "white",
@@ -954,9 +955,7 @@ export default function Header() {
               },
             }}
             onClick={() => {
-              if (isfilesOpen) {
-                togglefiles();
-              }
+              togglefiles();
             }}
           >
             <CustomGridIcon />

@@ -101,10 +101,13 @@ export default function UserMaintenance() {
     backgroundColor: getcolor,
     height: "100vh",
     width: isSidebarVisible ? "calc(100vw - 5%)" : "100vw",
-    marginLeft: isSidebarVisible ? "5%" : "15%",
+    position: "relative",
+    top: "50%",
+    left: isSidebarVisible ? "50%" : "50%",
+    transform: "translate(-50%, -50%)",
     transition: isSidebarVisible
-      ? "margin-left 2s ease-in-out, margin-right 2s ease-in-out"
-      : "margin-left 2s ease-in-out, margin-right 2s ease-in-out",
+      ? "left 3s ease-in-out, width 2s ease-in-out"
+      : "left 3s ease-in-out, width 2s ease-in-out",
     display: "flex",
     justifyContent: "center",
     alignItems: "start",
@@ -144,9 +147,9 @@ export default function UserMaintenance() {
                 </label>
                 <input
                   type="text"
-                  placeholder="Item Description"
                   className="col-6"
                   onChange={handleSearch}
+                  placeholder="Search by Name"
                   value={selectedSearch}
                   style={{
                     height: "22px",
@@ -156,6 +159,7 @@ export default function UserMaintenance() {
                     color: fontcolor,
                     "::placeholder": {
                       color: "white",
+                      opacity: 5,
                     },
                   }}
                 />
@@ -466,18 +470,19 @@ export default function UserMaintenance() {
               <button
                 className="btn btn-primary"
                 style={{
-                  fontSize: "13px",
+                  fontFamily: "Poppins, sans-serif",
                   fontStyle: "normal",
                   fontWeight: 400,
-                  fontFamily: "Poppins, sans-serif",
-                  color: "white",
+                  fontSize: "15px",
+                  lineHeight: "15px",
+                  color: "rgb(230, 233, 236)",
                   backgroundColor: "#186DB7",
                   padding: "10px 20px",
                   border: "none",
                   cursor: "pointer",
-                  lineHeight: "13px",
                   width: "120px",
                   textAlign: "center",
+                  borderRadius: "5px",
                   marginRight: "5px",
                 }}
               >
@@ -488,18 +493,20 @@ export default function UserMaintenance() {
               <button
                 className="btn btn-primary"
                 style={{
-                  fontSize: "13px",
+                  fontFamily: "Poppins, sans-serif",
                   fontStyle: "normal",
                   fontWeight: 400,
-                  fontFamily: "Poppins, sans-serif",
-                  color: "white",
+                  fontSize: "15px",
+                  lineHeight: "15px",
+                  color: "rgb(230, 233, 236)",
                   backgroundColor: "#186DB7",
                   padding: "10px 20px",
                   border: "none",
                   cursor: "pointer",
-                  lineHeight: "13px",
                   width: "120px",
                   textAlign: "center",
+                  borderRadius: "5px",
+                  marginRight: "5px",
                 }}
               >
                 User

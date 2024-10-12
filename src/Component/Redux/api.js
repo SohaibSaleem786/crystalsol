@@ -7,7 +7,6 @@ export const fetchDataMenu = async (userId) => {
       code: "ALPHA",
     }).toString();
 
-    // Send POST request using fetch
     const response = await fetch(
       `https://crystalsolutions.com.pk/api/GetUserMenu.php`,
       {

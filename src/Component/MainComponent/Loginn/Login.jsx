@@ -9,6 +9,7 @@ import { useTheme } from "../../../ThemeContext";
 import Key from "../../../image/keys.png";
 import { Link } from "react-router-dom";
 import Crystall from "../../../image/logowithname.jpeg";
+import logocrystal from "../../../image/logo.png";
 
 function Loginn() {
   const navigate = useNavigate();
@@ -26,12 +27,16 @@ function Loginn() {
 
   const [isSignUp, setIsSignUp] = useState(false);
 
-  function UserLogin() {
+  function UserLogin(e) {
+    // Prevent form's default behavior of reloading the page
+    e.preventDefault();
+
     const data = {
       userid: userid.current.value,
       password: password.current.value,
       code: Code.current.value,
     };
+
     const formData = new URLSearchParams(data).toString();
 
     axios
@@ -41,29 +46,35 @@ function Loginn() {
         },
       })
       .then((response) => {
+        console.log(response, "response");
+
         if (response.data.error === 200) {
+          setAlertData({
+            type: "success",
+            message: `${response.data.message}`,
+          });
+
           localStorage.setItem("isLoggedIn", "true");
           localStorage.setItem("user", JSON.stringify(response.data.user));
           localStorage.setItem(
             "organisation",
             JSON.stringify(response.data.organisation)
           );
-          setAlertData({
-            type: "success",
-            message: `${response.data.message}`,
-          });
+
           setTimeout(() => {
             navigate("/MainPage");
-
             setAlertData(null);
           }, 1000);
         } else {
           console.log(response.data.message);
 
+          // Show error message
           setAlertData({
             type: "error",
             message: `${response.data.message}`,
           });
+
+          // Clear the alert after 2 seconds
           setTimeout(() => {
             setAlertData(null);
           }, 2000);
@@ -112,11 +123,15 @@ function Loginn() {
   const toggleSignUp = () => {
     setIsSignUp(!isSignUp);
   };
+  const [showPassword, setShowPassword] = useState(false);
 
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <div
       style={{
-        // backgroundColor: getcolor,
+        backgroundColor: "#becedd",
         height: "100vh",
         // width: "80vw",
         overflowX: "hidden",
@@ -139,19 +154,12 @@ function Loginn() {
           {alertData.message}
         </Alert>
       )}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "50px",
-        }}
-      >
+      <div className="form-login-container">
         <div
           style={{
             fontFamily: "Arial, sans-serif",
             background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-            borderRadius: "15px",
+            borderRadius: "0px",
             boxShadow:
               "0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23)",
             overflow: "hidden",
@@ -166,7 +174,7 @@ function Loginn() {
               <img
                 src={Crystall}
                 alt="Logo"
-                style={{ width: "60%", margin: "20px 0" }}
+                style={{ width: "70%", margin: "20px 0" }}
               />
 
               <div className="social-container">
@@ -202,18 +210,30 @@ function Loginn() {
                   border: "1px solid #ccc",
                 }}
               />
-              <input
-                type="password"
-                placeholder="Password"
-                ref={password}
-                onKeyDown={(e) => handleEnterKeyPress(Code, e)}
-                style={{
-                  padding: "10px",
-                  margin: "10px 0",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                }}
-              />
+              <div className="input-container" style={{ position: "relative" }}>
+                <input
+                  className="eyeball-input"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  ref={password}
+                  onKeyDown={(e) => handleEnterKeyPress(Code, e)}
+                  style={{
+                    padding: "10px",
+                    margin: "10px 0",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                    width: "100%",
+                  }}
+                />
+                <div className="monkey" onClick={togglePassword}>
+                  {showPassword ? (
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                  ) : (
+                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                  )}
+                </div>
+              </div>
+
               <input
                 type="text"
                 placeholder="Code"
@@ -264,13 +284,13 @@ function Loginn() {
           </div>
           <div className="form-container sign-up-container">
             <form action="#">
-              <h1 style={{ color: "#6c63ff", fontWeight: "bold" }}>
-                Create Account
-              </h1>
-              <div
-                className="social-container"
-                style={{ marginBottom: "20px" }}
-              >
+              <img
+                src={Crystall}
+                alt="Logo"
+                style={{ width: "70%", margin: "20px 0" }}
+              />
+
+              <div className="social-container">
                 <a href="#" className="social" style={{ marginRight: "10px" }}>
                   <i
                     className="fab fa-facebook-f"
@@ -290,22 +310,12 @@ function Loginn() {
                   ></i>
                 </a>
               </div>
-              <span style={{ color: "#777", fontSize: "14px" }}>
-                or use your email for registration
-              </span>
+
               <input
                 type="text"
-                placeholder="Name"
-                style={{
-                  padding: "10px",
-                  margin: "10px 0",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                }}
-              />
-              <input
-                type="email"
-                placeholder="Email"
+                placeholder="User ID"
+                // ref={userid}
+                onKeyDown={(e) => handleEnterKeyPress(password, e)}
                 style={{
                   padding: "10px",
                   margin: "10px 0",
@@ -316,6 +326,8 @@ function Loginn() {
               <input
                 type="password"
                 placeholder="Password"
+                // ref={password}
+                // onKeyDown={(e) => handleEnterKeyPress(Code, e)}
                 style={{
                   padding: "10px",
                   margin: "10px 0",
@@ -323,7 +335,40 @@ function Loginn() {
                   border: "1px solid #ccc",
                 }}
               />
+              <input
+                type="text"
+                placeholder="Code"
+                // ref={Code}
+                onChange={(e) =>
+                  (e.target.value = e.target.value.toUpperCase())
+                }
+                onKeyDown={(e) => handleEnterKeyPress(Enter3, e)}
+                style={{
+                  padding: "10px",
+                  margin: "10px 0",
+                  borderRadius: "5px",
+                  border: "1px solid #ccc",
+                }}
+              />
+              <a
+                href="#"
+                style={{
+                  color: "#6c63ff",
+                  fontSize: "14px",
+                  display: "block",
+                  margin: "10px 0",
+                }}
+              >
+                Forgot your password?
+              </a>
               <button
+                className="btn-primary-itc"
+                ref={Enter3}
+                onClick={UserLogin}
+                type="submit"
+                // disabled={userData.loading}
+                onFocus={() => handleFocus(Enter3)}
+                onBlur={() => handleBlur(Enter3)}
                 style={{
                   background: "#6c63ff",
                   color: "#fff",
@@ -332,25 +377,48 @@ function Loginn() {
                   borderRadius: "5px",
                   cursor: "pointer",
                   fontSize: "12px",
-                  marginTop: "20px",
                 }}
               >
-                Sign Up
+                Sign In
               </button>
             </form>
           </div>
           <div className="overlay-container">
             <div className="overlay">
               <div className="overlay-panel overlay-left">
-                <h1 style={{ color: "#fff", fontWeight: "bold" }}>
-                  Welcome Back!
+                <img
+                  src={logocrystal}
+                  alt="Logo"
+                  style={{
+                    width: "60%",
+                    margin: "20px 0",
+                    borderRadius: "50%",
+                    boxShadow: "0 0 10px #6c63ff",
+                  }}
+                />
+                <h1
+                  style={{
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontFamily: "cursive",
+                    fontSize: "24px",
+                  }}
+                >
+                  CRYSTAL SOLUTION
                 </h1>
-                <p style={{ color: "#fff", fontSize: "14px" }}>
-                  To keep connected with us please login with your personal info
+                <p
+                  style={{
+                    color: "#fff",
+                    fontSize: "14px",
+                    fontFamily: "cursive",
+                  }}
+                >
+                  Call: +92 304 4770075 +92 423518408 <br />
+                  support@crystalsolutions.com.pk
                 </p>
                 <button
                   className="ghost"
-                  id="signIn"
+                  id="signUp"
                   onClick={toggleSignUp}
                   style={{
                     background: "#fff",
@@ -363,15 +431,39 @@ function Loginn() {
                     marginTop: "20px",
                   }}
                 >
-                  Sign In
+                  Sign Up
                 </button>
               </div>
               <div className="overlay-panel overlay-right">
-                <h1 style={{ color: "#fff", fontWeight: "bold" }}>
-                  Hello, Friend!
+                <img
+                  src={logocrystal}
+                  alt="Logo"
+                  style={{
+                    width: "60%",
+                    margin: "20px 0",
+                    borderRadius: "50%",
+                    boxShadow: "0 0 10px #6c63ff",
+                  }}
+                />
+                <h1
+                  style={{
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontFamily: "cursive",
+                    fontSize: "24px",
+                  }}
+                >
+                  CRYSTAL SOLUTION
                 </h1>
-                <p style={{ color: "#fff", fontSize: "14px" }}>
-                  Enter your personal details and start journey with us
+                <p
+                  style={{
+                    color: "#fff",
+                    fontSize: "14px",
+                    fontFamily: "cursive",
+                  }}
+                >
+                  Call: +92 304 4770075 +92 423518408 <br />
+                  support@crystalsolutions.com.pk
                 </p>
                 <button
                   className="ghost"

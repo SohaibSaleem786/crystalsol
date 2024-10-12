@@ -1,251 +1,3 @@
-/* .label-login {
-  font-size: 11px;
-  text-align: right;
-  font-weight: bold;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-}
-
-.form-control {
-  background-color: rgb(239, 247, 255);
-  border: 1px solid rgb(153, 153, 153);
-  height: 24px;
-  font-size: 11px;
-  border-radius: 5px;
-
-
-  box-shadow: inset 4px 4px 4px #dde2e7, inset -4px -4px 4px white;
-}
-.form-control::placeholder {
-  color: rgb(156, 154, 154);
-}
-
-.btn {
-  border-radius: 100%;
-}
-
-.btn-primary-itc {
-  justify-content: center;
-  display: flex;
-  align-items: center;
-  margin-top: 1%;
-  margin-left: 8%;
-  font-size: 11px;
-  width: 85px;
-  height: 30px;
-  font-weight: bold;
-  background-color: rgb(204, 204, 204);
-
-  color: rgb(255, 255, 255);
-  border: "none";
-  padding: 10px 20px;
-  border-radius: 0px;
-}
-
-.first-row {
-  height: 21vh;
-}
-.company-logo {
-  align-items: end;
-  display: flex;
-  justify-content: end;
-}
-.itc-logo {
-  align-items: center;
-  display: flex;
-  justify-content: start;
-}
-.company-name {
-  margin-top: 3%;
-  align-items: center;
-  display: flex;
-  justify-content: start;
-  font-size: 27px;
-}
-.itc-name {
-  font-weight: bold;
-  align-items: center;
-  display: flex;
-  color: #1f2670;
-  justify-content: start;
-  font-size: 25px;
-}
-.umair-image {
-  height: 20vh;
-  width: 20vh;
-}
-.itc-data {
-  align-items: center;
-  display: flex;
-  justify-content: start;
-  font-size: 13px;
-  color: rgb(90, 90, 90);
-}
-
-.company-dataa {
-  align-items: end;
-  display: flex;
-  justify-content: start;
-  font-size: 13px;
-  color: rgb(70, 68, 68);
-}
-
-
-@media only screen and (max-width: 500px) {
-  
-  .company-dataa {
-    display: none;
-  }
-  .login-form {
-
-    margin-left: 10%;
-    margin-top: -70%;
-    border: 1px solid #1f2670;
-    width: 100%;
-    height: 50vh !important;
-    box-shadow: 0px 0px 5px 0px #1f2670;
-  }
-  .label-login {
-    font-size: 11px;
-    font-weight: bold;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-  }
-  .itc-data {
-    display: none;
-  }
-  .company-data {
-    display: none;
-  }
-  .first-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 30%;
-  }
-  .umair-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 10vh;
-    width: 10vh;
-  }
-  .itc-name {
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-  }
-  .company-logo,
-  .company-name,
-  .company-data {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
-
-  .second-row {
-    height: 36vh;
-  
-    background-color: #555b8b;
-  }
-  .iner-card {
-    width: 90%;
-    background-color: #555b8b;
-    margin-left: 8%;
-    box-shadow: 0px 0px 10px 0px white;
-  }
-
-  .AC-logo {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
-  .technicial-logo {
-    display: none;
-
-  }
-  .card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .label {
-    text-align: left;
-  }
-}
-@media screen and (max-width: 1200px) {
-  .company-name {
-    font-size: 17px;
-    align-items: end;
-    display: flex;
-    justify-content: start;
-  }
-}
-
-@media screen and (max-width: 1200px) {
-  .company-data {
-    align-items: end;
-    display: flex;
-    justify-content: start;
-    font-size: 9px;
-    color: rgb(90, 90, 90);
-  }
-  .label {
-    text-align: right;
-    font-size: 9px;
-  }
-}
-.second-row {
-  height: 22vh;
-  background-color: #1f2670;
- 
-
-  border-top: 1px solid rgb(255, 105, 105);
-  border-bottom: 1px solid rgb(255, 105, 105);
-}
-.iner-card {
-  width: 50%;
-  background-color: #1f2670;
-  margin-left: 25%;
-  box-shadow: 0px 0px 10px 0px white;
-}
-
-.AC-logo {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
-.images {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.third-row {
-  height: 58vh;
-  padding: 2%;
-}
-
-.technicial-logo {
-  text-align: right;
-  margin-top: 1%;
-}
-.login-form {
-  border: 1px solid #1f2670;
-  width: 60%;
-  height: 25vh;
-  box-shadow: 0px 0px 10px 0px #1f2670;
-  background-color: #b2c2d1;
-}
-
-.label {
-  text-align: right;
-} */
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
 
 * {
@@ -260,7 +12,17 @@ h1 {
 h2 {
   text-align: center;
 }
-
+.form-login-container {
+  background-color: #8196aa;
+  border-radius: 0px;
+  padding: 0px;
+  /* font-size: 12px; */
+  border: 1px solid black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 p {
   font-size: 14px;
   font-weight: 100;
@@ -290,7 +52,7 @@ button {
   padding: 12px 45px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  transition: transform 80ms ease-in;
+  transition: all 0.3s ease-in-out;
 }
 
 button:active {
@@ -317,15 +79,6 @@ form {
   text-align: center;
 }
 
-/* .inputt {
-  background-color: #eee;
-  border: none;
-  padding: 12px 15px;
-  margin: 8px 0;
-  width: 100%;
-  border-radius: 5px;
-} */
-
 .container {
   background-color: #fff;
   border-radius: 10px;
@@ -335,6 +88,7 @@ form {
   width: 768px;
   max-width: 100%;
   min-height: 480px;
+  transition: all 0.6s ease-in-out;
 }
 
 .form-container {
@@ -348,6 +102,7 @@ form {
   left: 0;
   width: 50%;
   z-index: 2;
+  transition: all 2s ease-in-out;
 }
 
 .container.right-panel-active .sign-in-container {
@@ -359,13 +114,14 @@ form {
   width: 50%;
   opacity: 0;
   z-index: 1;
+  transition: all 0.6s ease-in-out;
 }
 
 .container.right-panel-active .sign-up-container {
   transform: translateX(100%);
   opacity: 1;
   z-index: 5;
-  animation: show 0.6s;
+  animation: show 2s ease-in-out;
 }
 
 @keyframes show {
@@ -373,12 +129,19 @@ form {
   49.99% {
     opacity: 0;
     z-index: 1;
+    transform: translateX(-100%);
   }
 
-  50%,
+  50% {
+    opacity: 1;
+    z-index: 5;
+    transform: translateX(-50%);
+  }
+
   100% {
     opacity: 1;
     z-index: 5;
+    transform: translateX(0);
   }
 }
 
@@ -389,7 +152,7 @@ form {
   width: 50%;
   height: 100%;
   overflow: hidden;
-  transition: transform 0.6s ease-in-out;
+  transition: all 0.6s ease-in-out;
   z-index: 100;
 }
 
@@ -410,7 +173,7 @@ form {
   height: 100%;
   width: 200%;
   transform: translateX(0);
-  transition: transform 0.6s ease-in-out;
+  transition: all 3s ease-in-out;
 }
 
 .container.right-panel-active .overlay {
@@ -429,7 +192,7 @@ form {
   height: 100%;
   width: 50%;
   transform: translateX(0);
-  transition: transform 0.6s ease-in-out;
+  transition: all 0.6s ease-in-out;
 }
 
 .overlay-left {
@@ -474,6 +237,7 @@ footer {
   right: 0;
   text-align: center;
   z-index: 999;
+  transition: all 0.6s ease-in-out;
 }
 
 footer p {
@@ -487,4 +251,30 @@ footer i {
 footer a {
   color: #3c97bf;
   text-decoration: none;
+}
+
+/* .eyeball-input {
+  font-family: "Geist Mono", monospace;
+  font-size: 1.75rem;
+  padding: 1rem 2rem;
+  padding-right: 4rem;
+  letter-spacing: 0.2ch;
+  border-radius: 6px;
+  color: var(--color-alpha);
+  border-color: #021a33;
+  border-style: solid;
+  background: black;
+  outline: none;
+  transition: border-color 0.2s;
+  color: 0.2s;
+} */
+
+.monkey {
+  position: absolute;
+  top: 50%;
+  left: 86%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
 }

@@ -27,10 +27,14 @@ import { useSidebar } from "../../../SidebarContext";
 import { Avatar } from "@mui/material"; // Import Avatar component
 import { Typography } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
-import imagebackground from "../../../image/homeapp.png";
+import imagebackground from "../../../image/homeapp.jpg";
 import man from "../../../image/man.png";
 import "./Sidebar.css";
 import { DataProvider } from "../../../DataContext";
+import Filemenu from "../../../image/filemenu.png";
+import Transactionmenu from "../../../image/transactionmenu.png";
+import Reportmenu from "../../../image/reportmenu.png";
+import Utilitymenu from "../../../image/utilitimenu.png";
 
 const SidebarHeader = ({ userName, userAvatar }) => {
   const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
@@ -43,7 +47,7 @@ const SidebarHeader = ({ userName, userAvatar }) => {
         alignItems: "center",
         padding: 2,
         backgroundImage: `url(${imagebackground})`,
-        backgroundSize: "cover",
+        backgroundSize: "100% 100%",
         backgroundPosition: "center",
         position: "relative",
         height: "100px",
@@ -251,7 +255,8 @@ const SideBar1 = () => {
                     backgroundColor: "#01172e",
                     color: "rgb(33, 193, 214)",
                   },
-                  mt: -1,
+                  height: "25px",
+                  // mt: -2,
                 }}
               >
                 <ListItemText
@@ -348,7 +353,7 @@ const SideBar1 = () => {
                     button
                     onClick={() => handleMenuClick(topLevel)}
                     sx={{
-                      pl: 2,
+                      pl: 1,
                       "&:hover": {
                         backgroundColor: "#01172e",
                         color: "rgb(33, 193, 214)",
@@ -356,10 +361,34 @@ const SideBar1 = () => {
                     }}
                   >
                     <ListItemIcon sx={{ color: "white" }}>
-                      {index === 0 && <FaFile />}
+                      {/* {index === 0 && <FaFile />}
                       {index === 1 && <FaExchangeAlt />}
                       {index === 2 && <FaChartBar />}
-                      {index === 3 && <FaTools />}
+                      {index === 3 && <FaTools />} */}
+                      {index === 0 && (
+                        <img
+                          src={Filemenu}
+                          style={{ width: "25px", height: "25px" }}
+                        />
+                      )}
+                      {index === 1 && (
+                        <img
+                          src={Transactionmenu}
+                          style={{ width: "25px", height: "25px" }}
+                        />
+                      )}
+                      {index === 2 && (
+                        <img
+                          src={Reportmenu}
+                          style={{ width: "25px", height: "25px" }}
+                        />
+                      )}
+                      {index === 3 && (
+                        <img
+                          src={Utilitymenu}
+                          style={{ width: "30px", height: "30px" }}
+                        />
+                      )}
                     </ListItemIcon>
                     {isSidebarVisible && (
                       <ListItemText
@@ -369,7 +398,7 @@ const SideBar1 = () => {
                             fontSize: "15px",
                             fontWeight: 400,
                             fontFamily: "Poppins, sans-serif",
-
+                            marginLeft: "10px",
                             backgroundColor: "rgba(0, 0, 0, 0)",
                             textAlign: "left",
                             lineHeight: "22.5px",

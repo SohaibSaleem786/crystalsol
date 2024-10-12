@@ -25,20 +25,21 @@ const ButtonGroup = ({
     >
       <button
         style={{
-          fontSize: "13px",
+          fontFamily: "Poppins, sans-serif",
           fontStyle: "normal",
           fontWeight: 400,
-          fontFamily: "Poppins, sans-serif",
-          color: "white",
+          fontSize: "15px",
+          lineHeight: "15px",
+          color: "rgb(230, 233, 236)",
           backgroundColor: "#186DB7",
           padding: "10px 20px",
           border: "none",
           cursor: "pointer",
-          lineHeight: "13px",
           width: "120px",
           textAlign: "center",
           borderRadius: "5px",
           marginRight: "5px",
+          marginTop: "2px",
         }}
         onFocus={() => handleFocus(Submit)}
         onBlur={() => handleBlur(Submit)}
@@ -60,20 +61,21 @@ const ButtonGroup = ({
 
       <button
         style={{
-          fontSize: "13px",
+          fontFamily: "Poppins, sans-serif",
           fontStyle: "normal",
           fontWeight: 400,
-          fontFamily: "Poppins, sans-serif",
-          color: "white",
+          fontSize: "15px",
+          lineHeight: "15px",
+          color: "rgb(230, 233, 236)",
           backgroundColor: "#186DB7",
           padding: "10px 20px",
           border: "none",
           cursor: "pointer",
-          lineHeight: "13px",
           width: "120px",
           textAlign: "center",
           borderRadius: "5px",
           marginRight: "5px",
+          marginTop: "2px",
         }}
         accessKey="r"
         onKeyDown={(event) => {
@@ -98,19 +100,21 @@ const ButtonGroup = ({
 
       <button
         style={{
-          fontSize: "13px",
+          fontFamily: "Poppins, sans-serif",
           fontStyle: "normal",
           fontWeight: 400,
-          fontFamily: "Poppins, sans-serif",
-          color: "white",
+          fontSize: "15px",
+          lineHeight: "15px",
+          color: "rgb(230, 233, 236)",
           backgroundColor: "#186DB7",
           padding: "10px 20px",
           border: "none",
           cursor: "pointer",
-          lineHeight: "13px",
           width: "120px",
           textAlign: "center",
           borderRadius: "5px",
+          marginRight: "5px",
+          marginTop: "2px",
         }}
         accessKey="c"
         onKeyDown={(event) => {
