@@ -220,6 +220,11 @@ const MenuUser = () => {
     wordBreak: "break-word",
     textAlign: "center",
     maxWidth: "1000px",
+    fontSize: "15px",
+    fontStyle: "normal",
+    fontWeight: "400",
+    lineHeight: "23px",
+    fontFamily: '"Poppins", sans-serif',
   };
 
   return (

@@ -6,7 +6,7 @@ const NavComponent = ({ textdata }) => {
     <Nav
       className="col-12 d-flex justify-content-between"
       style={{
-        borderRadius: "8px 8px 0 0",
+        borderRadius: "10px 10px 0 0",
         backgroundColor: "#3368b5",
         color: "#fff",
         height: "24px",

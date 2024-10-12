@@ -874,12 +874,11 @@ export default function Header() {
     </Menu>
   );
   const [isOpenmail, setIsOpenmail] = useState(false);
+  const [isOpennotification, setIsOpennotification] = useState(false);
 
   const handleClickmail = () => {
     setIsOpenmail(!isOpenmail);
   };
-
-  const [isOpennotification, setIsOpennotification] = useState(false);
 
   const handleClicknotification = () => {
     setIsOpennotification(!isOpennotification);

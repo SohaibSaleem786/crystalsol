@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Container, Spinner, Nav } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Header from "../../MainComponent/Header/Header";
-import Footer from "../../MainComponent/Footer/Footer";
 import { useTheme } from "../../../ThemeContext";
-import SideBar1 from "../../MainComponent/SideBar1/SideBar";
 import { useSidebar } from "../../../SidebarContext";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../Auth";
 import NavComponent from "../../MainComponent/Navform/navbarform";
+import "./UserManagement1.css";
+
 export default function UserMaintenance() {
   const user = getUserData();
   const organisation = getOrganisationData();
@@ -114,6 +113,11 @@ export default function UserMaintenance() {
     wordBreak: "break-word",
     textAlign: "center",
     maxWidth: "1000px",
+    fontSize: "15px",
+    fontStyle: "normal",
+    fontWeight: "400",
+    lineHeight: "23px",
+    fontFamily: '"Poppins", sans-serif',
   };
 
   return (
@@ -134,7 +138,7 @@ export default function UserMaintenance() {
               <div className="col-4 d-flex justify-content-start">
                 <label
                   className="col-3 text-end"
-                  style={{ fontSize: "0.8rem" }}
+                  // style={{ fontSize: "0.8rem" }}
                 >
                   <strong>Search: &nbsp;&nbsp;</strong>
                 </label>
@@ -146,15 +150,32 @@ export default function UserMaintenance() {
                   value={selectedSearch}
                   style={{
                     height: "22px",
-                    fontSize: "0.8rem",
+                    // fontSize: "0.8rem",
                     backgroundColor: getcolor,
                     border: `1px solid ${fontcolor}`,
                     color: fontcolor,
                     "::placeholder": {
-                      color: fontcolor,
+                      color: "white",
                     },
                   }}
                 />
+                {/* <Form.Control
+                  type="search"
+                  placeholder="Search"
+                  className="col-6"
+                  onChange={handleSearch}
+                  value={selectedSearch}
+                  style={{
+                    height: "22px",
+                    // fontSize: "0.8rem",
+                    backgroundColor: getcolor,
+                    border: `1px solid ${fontcolor}`,
+                    color: fontcolor,
+                    "::placeholder": {
+                      color: "white",
+                    },
+                  }}
+                /> */}
               </div>
             </div>
           </div>
@@ -164,7 +185,7 @@ export default function UserMaintenance() {
                 backgroundColor: textColor,
                 borderBottom: `1px solid ${fontcolor}`,
                 overflowY: getFilteredTableData.length > 10 ? "auto" : "hidden",
-                maxHeight: "60vh",
+                maxHeight: "59vh",
                 width: "100%",
                 wordBreak: "break-word",
               }}
@@ -173,7 +194,6 @@ export default function UserMaintenance() {
                 className="myTable"
                 id="table"
                 style={{
-                  fontSize: "12px",
                   width: "100%",
                   position: "relative",
                   wordBreak: "break-word",
@@ -201,7 +221,7 @@ export default function UserMaintenance() {
                         wordBreak: "break-word",
                       }}
                     >
-                      <a style={{ color: "white" }}>Avatar</a>
+                      <a style={{ color: "white" }}>User</a>
                     </td>
                     <td
                       className="border-dark"

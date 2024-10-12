@@ -29,7 +29,7 @@ import { Typography } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
 import imagebackground from "../../../image/homeapp.png";
 import man from "../../../image/man.png";
-import "./Sidebarr.css";
+import "./Sidebar.css";
 import { DataProvider } from "../../../DataContext";
 
 const SidebarHeader = ({ userName, userAvatar }) => {
@@ -177,7 +177,6 @@ const SideBar1 = () => {
     "4-01-00": "/UserManagement",
   };
 
-  // Sort the menuData array and create hierarchical structure
   const hierarchicalMenuData = {};
   menuData.forEach((item) => {
     const [topLevel, middleLevel] = item.tmencod.split("-");
@@ -194,9 +193,7 @@ const SideBar1 = () => {
     });
   });
 
-  // Function to render sub-submenu
   const renderSubSubMenu = (topLevel, middleLevel, subItems) => {
-    // Exclude the first item (assuming the first item in subItems is already shown in the sub-menu)
     const filteredSubItems = subItems.slice(1);
 
     return filteredSubItems.map((subItem, index) => (
@@ -230,7 +227,6 @@ const SideBar1 = () => {
     ));
   };
 
-  // Function to render submenu (middle level)
   const renderSubMenu = (topLevel, middleLevelItems) => {
     return Object.keys(middleLevelItems)
       .filter((middleLevel) => middleLevel !== "00")
@@ -255,6 +251,7 @@ const SideBar1 = () => {
                     backgroundColor: "#01172e",
                     color: "rgb(33, 193, 214)",
                   },
+                  mt: -1,
                 }}
               >
                 <ListItemText

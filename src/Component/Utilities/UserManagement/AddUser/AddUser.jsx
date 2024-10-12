@@ -10,7 +10,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import StatusSelect from "../../../MainComponent/StatusSelected/StatusSelected";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
 import GeneralTwoFieldsModal from "./AddUser_Modal";
-import { newCompanyData, getcompanyData } from "./AddUser_Api";
+import { getcompanyData } from "./AddUser_Api";
 import { useMutation } from "@tanstack/react-query";
 import { useSidebar } from "../../../../SidebarContext";
 import { useTheme } from "../../../../ThemeContext";
@@ -80,29 +80,7 @@ function AddUser1() {
       console.error("Error:", error);
     },
   });
-  const mutation = useMutation({
-    mutationFn: newCompanyData,
-    onSuccess: (data) => {
-      setFormData((prevState) => ({
-        ...prevState,
-        AccountCodeform: data,
-      }));
 
-      if (data.error === 200) {
-      } else {
-      }
-    },
-    onError: (error) => {
-      console.error("Error:", error);
-    },
-  });
-
-  const newcode = () => {
-    const data = {
-      FPrjId: user?.tprjid,
-    };
-    mutation.mutate(data);
-  };
   const GetDataList = () => {
     const data = {
       code: organisation.code,
@@ -111,7 +89,7 @@ function AddUser1() {
   };
   useEffect(() => {
     GetDataList();
-    newcode();
+
     Codefocus();
   }, []);
   const Codefocus = () => {
@@ -168,8 +146,25 @@ function AddUser1() {
 
     const checks = [
       {
+        value: formData?.AccountCodeform,
+        message: "Please fill your Userid",
+      },
+      {
         value: formData?.Descriptionform,
-        message: "Please fill your description",
+        message: "Please fill your User Name",
+      },
+
+      {
+        value: formData?.Descriptionform,
+        message: "Please fill your User Name",
+      },
+      {
+        value: formData?.inputform8,
+        message: "Please select your Status",
+      },
+      {
+        value: formData?.inputform9,
+        message: "Please select your Type",
       },
     ];
 
@@ -189,7 +184,7 @@ function AddUser1() {
       const formDataa = new FormData();
       formDataa.append("FUsrId", formData.AccountCodeform);
       formDataa.append("FUsrNam", formData.Descriptionform);
-      formDataa.append("FUsrSts", formData.Status);
+      // formDataa.append("FUsrSts", formData.Status);
       // formDataa.append("FUrdDsc", geturdu);
       formDataa.append("FCshCod", formData.inputform4);
       formDataa.append("FStrCod", formData.inputform5);
@@ -215,7 +210,6 @@ function AddUser1() {
       console.log("API Response:", response);
 
       if (response.data.error === 200) {
-        newcode();
         GetDataList();
         Codefocus();
         setFormData({
@@ -491,7 +485,6 @@ function AddUser1() {
     handleFormSubmit();
   };
   const handleClear = () => {
-    newcode();
     setFormData({
       ...formData,
       Descriptionform: "",
@@ -544,8 +537,7 @@ function AddUser1() {
     overflowX: "hidden",
     overflowY: "hidden",
     textAlign: "center",
-    maxWidth: "670px",
-    fontSize: "12px",
+    maxWidth: "720px",
   };
   return (
     <>
@@ -846,7 +838,7 @@ function AddUser1() {
                         className={`form-control-item ${
                           errors.inputform10 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "right" }}
+                        style={{ textAlign: "left" }}
                         value={formData.inputform10}
                         ref={inputform10ref}
                         onFocus={(e) => e.target.select()}
@@ -862,12 +854,12 @@ function AddUser1() {
                       <Form.Control
                         type="text"
                         id="inputform11"
-                        placeholder="Pswd Exp"
+                        placeholder="Email"
                         name="inputform11"
                         className={`form-control-item ${
                           errors.inputform11 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "right" }}
+                        style={{ textAlign: "left" }}
                         value={formData.inputform11}
                         ref={inputform11ref}
                         onFocus={(e) => e.target.select()}
@@ -932,7 +924,7 @@ function AddUser1() {
                         className={`form-control-item ${
                           errors.inputform14 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "right" }}
+                        style={{ textAlign: "left" }}
                         value={formData.inputform14}
                         ref={inputform14ref}
                         onFocus={(e) => e.target.select()}

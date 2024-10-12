@@ -27,9 +27,6 @@ import Item_Purchase from "./Component/Transaction/Item_Purchase/Item_Purchase";
 import CryptoJS from "crypto-js"; // Import crypto-js
 import UserMaintenance from "./Component/Utilities/UserManagement/UserManagement1.jsx";
 import MenuUser from "./Component/Utilities/UserManagement/MenuUser/MenuUser.jsx";
-import EditUser from "./Component/Utilities/UserManagement/Edit_User/Edit_User.jsx";
-
-import SideBar1 from "./Component/MainComponent/SideBar1/SideBar.jsx";
 import Layout from "./Component/MainComponent/Layout/Layout.js";
 import AddUser1 from "./Component/Utilities/UserManagement/AddUser/AddUser.jsx";
 
@@ -157,7 +154,6 @@ function App() {
                     path="/MenuUser/:tusrid"
                     element={<MenuUser />}
                   />
-                  <Route exact path="/EditUser" element={<EditUser />} />
                   <Route exact path="/AddUser1" element={<AddUser1 />} />
                 </Route>
               </Routes>

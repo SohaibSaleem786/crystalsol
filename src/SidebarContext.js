@@ -8,8 +8,8 @@ export const useSidebar = () => {
 };
 
 export const SidebarProvider = ({ children }) => {
-  const [isSidebarVisible, setSidebarVisible] = useState(true);
-  const [getcolor, setcolor] = useState("#021A33"); // Initial color state
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [getcolor, setcolor] = useState("#021A33");
   const [fontcolor, setfontcolor] = useState("white");
   const toggleSidebar = (visible) => {
     // Only update the state if it's different from the current value
