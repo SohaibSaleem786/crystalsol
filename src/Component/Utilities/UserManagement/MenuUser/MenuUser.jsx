@@ -84,15 +84,14 @@ const MenuUser = () => {
         }
 
         const subItems = apiData.filter((subItem) => {
-          return (
-            subItem.tmencod.startsWith(`${activeTab}-`) &&
-            subItem.tmencod !== `${activeTab}-00-00`
-          );
+          return subItem.tmencod.startsWith(`${activeTab}-`);
         });
 
         // Transform data for rendering
         const transformedData = subItems.map((item) => ({
-          Sr: `${item.tmencod.split("-")[1]}`,
+          // Sr: `${item.tmencod.split("-")[1]}`,
+          Sr: item.tmencod,
+
           Description: item.tmendsc,
           Permissions: (
             <select
@@ -152,6 +151,7 @@ const MenuUser = () => {
       FMenCod: users.mcode,
       FUsrPem: users.permission,
     };
+    console.log("Data:", data);
     const formData = new URLSearchParams(data).toString();
 
     return axios
@@ -305,12 +305,20 @@ const MenuUser = () => {
                   >
                     <div
                       style={{
-                        overflowY: data.rows > 10 ? "auto" : "hidden",
-                        maxHeight: "48vh",
+                        overflowY: data.rows.length > 10 ? "auto" : "hidden",
+                        maxHeight: "49vh",
                         width: "100%",
                         borderBottom: `1px solid ${fontcolor}`,
-
-                        // padding: "10px",
+                        "&::-webkit-scrollbar": {
+                          width: "0.4em",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          backgroundColor: "#021A33",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          backgroundColor: "#0d2d4c",
+                          borderRadius: "10px",
+                        },
                       }}
                     >
                       <table
@@ -375,9 +383,9 @@ const MenuUser = () => {
                                     padding: "10px",
                                     width:
                                       index === 0
-                                        ? "10%"
+                                        ? "20%"
                                         : index === 1
-                                        ? "65%"
+                                        ? "55%"
                                         : "25%",
                                     textAlign:
                                       key === "Description" ? "left" : "center",

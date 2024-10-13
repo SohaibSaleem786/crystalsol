@@ -70,7 +70,7 @@ export default function UserMaintenance() {
   const firstColWidth = { width: "6%" };
   const secondColWidth = { width: "10%" };
   const thirdColWidth = { width: "20%" };
-  const forthColWidth = { width: "11%" };
+  // const forthColWidth = { width: "11%" };
   const fifthColWidth = { width: "8%" };
   const sixthColWidth = { width: "8%" };
   const seventhColWidth = { width: "11%" };
@@ -221,15 +221,6 @@ export default function UserMaintenance() {
                     <td
                       className="border-dark"
                       style={{
-                        ...firstColWidth,
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      <a style={{ color: "white" }}>User</a>
-                    </td>
-                    <td
-                      className="border-dark"
-                      style={{
                         ...secondColWidth,
                         wordBreak: "break-word",
                       }}
@@ -245,15 +236,7 @@ export default function UserMaintenance() {
                     >
                       <a style={{ color: "white" }}>Name</a>
                     </td>
-                    <td
-                      className="border-dark"
-                      style={{
-                        ...forthColWidth,
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      <a style={{ color: "white" }}>Password</a>
-                    </td>
+
                     <td
                       className="border-dark"
                       style={{
@@ -314,7 +297,7 @@ export default function UserMaintenance() {
                       {Array.from({ length: Math.max(0, 30 - 3) }).map(
                         (_, rowIndex) => (
                           <tr key={`blank-${rowIndex}`}>
-                            {Array.from({ length: 9 }).map((_, colIndex) => (
+                            {Array.from({ length: 7 }).map((_, colIndex) => (
                               <td key={`blank-${rowIndex}-${colIndex}`}>
                                 &nbsp;
                               </td>
@@ -338,7 +321,7 @@ export default function UserMaintenance() {
                               color: fontcolor,
                             }}
                           >
-                            <td
+                            {/* <td
                               className="text-center"
                               style={{
                                 ...firstColWidth,
@@ -347,7 +330,8 @@ export default function UserMaintenance() {
                               }}
                             >
                               <i className="fa fa-user fa-xl"></i>
-                            </td>
+                            </td> */}
+
                             <td
                               className="text-start"
                               style={{
@@ -368,16 +352,7 @@ export default function UserMaintenance() {
                             >
                               {item.tusrnam}
                             </td>
-                            <td
-                              className="text-center"
-                              style={{
-                                ...forthColWidth,
-                                color: fontcolor,
-                                wordBreak: "break-word",
-                              }}
-                            >
-                              {item.tusrpwd ? "*****" : ""}
-                            </td>
+
                             <td
                               className="text-center"
                               style={{
@@ -386,7 +361,7 @@ export default function UserMaintenance() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.tusrsts}
+                              {item.Status}
                             </td>
                             <td
                               className="text-center"
@@ -396,7 +371,7 @@ export default function UserMaintenance() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.tusrtyp}
+                              {item.Type}
                             </td>
                             <td
                               className="text-center"
@@ -406,7 +381,7 @@ export default function UserMaintenance() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.tmobnum}
+                              {item.Mobile}
                             </td>
                             <td
                               className="text-start"
@@ -416,7 +391,7 @@ export default function UserMaintenance() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.temladd}
+                              {item.Email}
                             </td>
 
                             <td
@@ -446,7 +421,7 @@ export default function UserMaintenance() {
                               color: fontcolor,
                             }}
                           >
-                            {Array.from({ length: 9 }).map((_, colIndex) => (
+                            {Array.from({ length: 7 }).map((_, colIndex) => (
                               <td key={`blank-${rowIndex}-${colIndex}`}>
                                 &nbsp;
                               </td>
@@ -473,8 +448,8 @@ export default function UserMaintenance() {
                   fontFamily: "Poppins, sans-serif",
                   fontStyle: "normal",
                   fontWeight: 400,
-                  fontSize: "15px",
-                  lineHeight: "15px",
+                  fontSize: "13px",
+                  lineHeight: "12px",
                   color: "rgb(230, 233, 236)",
                   backgroundColor: "#186DB7",
                   padding: "10px 20px",
@@ -484,6 +459,7 @@ export default function UserMaintenance() {
                   textAlign: "center",
                   borderRadius: "5px",
                   marginRight: "5px",
+                  textTransform: "capitalize",
                 }}
               >
                 Return
@@ -496,8 +472,8 @@ export default function UserMaintenance() {
                   fontFamily: "Poppins, sans-serif",
                   fontStyle: "normal",
                   fontWeight: 400,
-                  fontSize: "15px",
-                  lineHeight: "15px",
+                  fontSize: "13px",
+                  lineHeight: "12px",
                   color: "rgb(230, 233, 236)",
                   backgroundColor: "#186DB7",
                   padding: "10px 20px",
@@ -507,6 +483,7 @@ export default function UserMaintenance() {
                   textAlign: "center",
                   borderRadius: "5px",
                   marginRight: "5px",
+                  textTransform: "capitalize",
                 }}
               >
                 User

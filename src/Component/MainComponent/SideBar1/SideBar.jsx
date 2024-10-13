@@ -130,13 +130,17 @@ const SideBar1 = () => {
   }, [navigate]);
 
   useEffect(() => {
-    setMenuData(data);
-    dispatch(fetchMenu(user.tusrid));
-  }, [dispatch, user.tusrid]);
+    const filteredData = data.filter((item) => item.Permission !== "S");
+    setMenuData(filteredData);
+    dispatch(fetchMenu(user.tusrid, organisation.code));
+  }, [dispatch, user.tusrid, organisation.code]);
 
   useEffect(() => {
+    const filteredData = data.filter((item) => item.Permission !== "S");
     if (Array.isArray(data)) {
-      setMenuData(data.sort((a, b) => a.tmencod.localeCompare(b.tmencod)));
+      setMenuData(
+        filteredData.sort((a, b) => a.tmencod.localeCompare(b.tmencod))
+      );
     }
   }, [data]);
 
@@ -193,7 +197,7 @@ const SideBar1 = () => {
     hierarchicalMenuData[topLevel].items[middleLevel].push({
       label: item.tmendsc,
       to: item.tmenurl,
-      disabled: item.tmenprm === "N",
+      disabledd: item.Permission == "N",
     });
   });
 
@@ -205,10 +209,11 @@ const SideBar1 = () => {
         button
         key={index}
         component="a"
-        href={subItem.to}
+        href={subItem.disabledd ? "" : subItem.to}
         disabled={subItem.disabled}
         sx={{
-          pl: 7,
+          pl: 8,
+          height: "30px",
           "&:hover": {
             backgroundColor: "#01172e",
             color: "rgb(33, 193, 214)",
@@ -225,6 +230,7 @@ const SideBar1 = () => {
             textTransform: "none",
             textDecoration: "none",
             fontWeight: 500,
+            color: subItem.disabledd === true ? "gray" : "white",
           }}
         />
       </ListItem>
@@ -243,20 +249,22 @@ const SideBar1 = () => {
             {isSidebarVisible && (
               <ListItem
                 button
-                onClick={
-                  () =>
-                    hasSubSubMenu
-                      ? handleSubMenuClick(topLevel, middleLevel)
-                      : subItems[0].to && navigate(subItems[0].to) // Directly navigate if no sub-sub-menu
-                }
+                onClick={() => {
+                  if (subItems[0].disabledd == true) {
+                    return console.log("not working");
+                  }
+                  hasSubSubMenu
+                    ? handleSubMenuClick(topLevel, middleLevel)
+                    : subItems[0].to && navigate(subItems[0].to); // Directly navigate if no sub-sub-menu
+                }}
                 sx={{
-                  pl: 6,
+                  pl: 7,
                   "&:hover": {
                     backgroundColor: "#01172e",
                     color: "rgb(33, 193, 214)",
                   },
-                  height: "25px",
-                  // mt: -2,
+                  disabled: subItems[0].disabledd,
+                  height: "30px",
                 }}
               >
                 <ListItemText
@@ -269,6 +277,7 @@ const SideBar1 = () => {
                     textTransform: "none",
                     textDecoration: "none",
                     fontWeight: 500,
+                    color: subItems[0].disabledd ? "gray" : "white",
                   }}
                 />
                 {hasSubSubMenu ? (
@@ -307,18 +316,29 @@ const SideBar1 = () => {
       <Box sx={{ display: "flex" }}>
         <Drawer
           sx={{
-            width: isSidebarVisible ? 240 : 60,
+            overflowY: "auto",
+            width: isSidebarVisible ? 250 : 60,
             flexShrink: 0,
             transition: "width 0.3s ease-in-out",
             "& .MuiDrawer-paper": {
               marginTop: "56px",
-              width: isSidebarVisible ? 240 : 60,
+              width: isSidebarVisible ? 250 : 60,
               boxSizing: "border-box",
               backgroundColor: "#021A33",
               borderRight: "1px solid gray",
               color: "white",
               overflowX: isSidebarVisible ? "auto" : "hidden",
               transition: "width 1s ease-in-out",
+              "&::-webkit-scrollbar": {
+                width: "0.4em",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "#021A33",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#0d2d4c",
+                borderRadius: "10px",
+              },
             },
           }}
           onMouseEnter={() => {
@@ -353,7 +373,7 @@ const SideBar1 = () => {
                     button
                     onClick={() => handleMenuClick(topLevel)}
                     sx={{
-                      pl: 1,
+                      pl: 2,
                       "&:hover": {
                         backgroundColor: "#01172e",
                         color: "rgb(33, 193, 214)",
@@ -393,7 +413,7 @@ const SideBar1 = () => {
                     {isSidebarVisible && (
                       <ListItemText
                         sx={{
-                          marginLeft: "-28px",
+                          marginLeft: "-33px",
                           "& .MuiTypography-root": {
                             fontSize: "15px",
                             fontWeight: 400,

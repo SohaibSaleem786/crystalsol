@@ -1,17 +1,22 @@
-import { fetchDataMenu, fetchDataItem, fetchDataAccountCode ,fetchDataChartofAccount } from "./api";
+import {
+  fetchDataMenu,
+  fetchDataItem,
+  fetchDataAccountCode,
+  fetchDataChartofAccount,
+} from "./api";
 
 export const FETCH_MENU_REQUEST = "FETCH_MENU_REQUEST";
 export const FETCH_MENU_SUCCESS = "FETCH_MENU_SUCCESS";
 export const FETCH_MENU_FAILURE = "FETCH_MENU_FAILURE";
 
-export const fetchMenu = (userId) => async (dispatch) => {
+export const fetchMenu = (userId, code) => async (dispatch) => {
   dispatch({ type: FETCH_MENU_REQUEST });
 
   try {
     // Log the user ID to the console for verification
     console.log("Fetching data for user ID:", userId);
 
-    const data = await fetchDataMenu(userId);
+    const data = await fetchDataMenu(userId, code);
 
     // Log the fetched data to the console
     console.log("Fetched data:", data);
@@ -56,9 +61,6 @@ export const fetchAccount = () => async (dispatch) => {
     dispatch({ type: FETCH_ACCOUNT_FAILURE, payload: error.message });
   }
 };
-
-
-
 
 export const FETCH_CHARTOFACCOUNT_REQUEST = "FETCH_CHARTOFACCOUNT_REQUEST";
 export const FETCH_CHARTOFACCOUNT_SUCCESS = "FETCH_CHARTOFACCOUNT_SUCCESS";

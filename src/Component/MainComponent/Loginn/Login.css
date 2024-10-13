@@ -51,7 +51,7 @@ button {
   font-weight: bold;
   padding: 12px 45px;
   letter-spacing: 1px;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   transition: all 0.3s ease-in-out;
 }
 

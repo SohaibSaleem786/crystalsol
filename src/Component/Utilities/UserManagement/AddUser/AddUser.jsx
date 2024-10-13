@@ -385,6 +385,18 @@ function AddUser1() {
         console.log("resulttttttttttt");
       });
     }
+    if (name === "inputform11") {
+      const lowercaseValue = value.toLowerCase();
+      setFormData({
+        ...formData,
+        inputform11: lowercaseValue,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
     if (name === "UrduFormDescription") {
       console.log("Searching for:", formattedValue);
       setGeturdu(formattedValue);
@@ -597,7 +609,13 @@ function AddUser1() {
                         placeholder="Code"
                         name="AccountCodeform"
                         value={formData.AccountCodeform}
-                        onChange={handleInputChangefetchdata}
+                        onChange={(e) =>
+                          handleInputChangefetchdata({
+                            target: {
+                              value: e.target.value.toLowerCase(),
+                            },
+                          })
+                        }
                         style={{
                           fontSize: "15px",
                           padding: "10px",

@@ -649,10 +649,10 @@ export default function Header() {
               variant="body2"
               sx={{
                 color: "lightgray",
-                fontSize: "10px", // Adjusted font size to 12px
+                fontSize: "12px", // Adjusted font size to 12px
               }}
             >
-              {user?.temladd || "info@wrappixel.com"}
+              {user?.temladd || `${user?.tusrnam}@gmail.com`}
             </Typography>
           </div>
         </div>
@@ -905,11 +905,22 @@ export default function Header() {
         }}
       >
         <Toolbar>
-          <img
-            src={`${imagelink}01.jpg`}
-            alt="Company Logo"
-            style={{ height: "40px", marginRight: "5px" }}
-          />
+          <div
+            style={{
+              position: "relative",
+            }}
+          >
+            <img
+              src={`${imagelink}01.jpg`}
+              alt="Company Logo"
+              style={{
+                height: "40px",
+                marginRight: "5px",
+                mixBlendMode: "multiply",
+              }}
+            />
+          </div>
+
           <h6
             style={{
               fontSize: "15px",
@@ -979,6 +990,26 @@ export default function Header() {
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            {user.tusrtyp === "A" && (
+              <>
+                <IconButton
+                  size="small"
+                  edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                  style={{ marginRight: "10px" }}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(191, 191, 191,0.5)",
+                      borderRadius: "50%",
+                    },
+                  }}
+                  onClick={() => navigate("/UserManagement")}
+                >
+                  <i className="bi bi-people-fill fs-5 text-white"></i>
+                </IconButton>
+              </>
+            )}
             <IconButton
               size="small"
               edge="start"

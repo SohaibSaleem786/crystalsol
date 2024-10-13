@@ -1,10 +1,10 @@
 const apiLink = "https://crystalsolutions.com.pk/umair_electronic/web/";
 
-export const fetchDataMenu = async (userId) => {
+export const fetchDataMenu = async (userId, code) => {
   try {
     const requestBody = new URLSearchParams({
-      FUsrId: "sohaib",
-      code: "ALPHA",
+      FUsrId: userId,
+      code: code,
     }).toString();
 
     const response = await fetch(
