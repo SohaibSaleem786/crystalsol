@@ -35,7 +35,9 @@ import Filemenu from "../../../image/filemenu.png";
 import Transactionmenu from "../../../image/transactionmenu.png";
 import Reportmenu from "../../../image/reportmenu.png";
 import Utilitymenu from "../../../image/utilitimenu.png";
-
+import Dashboard11menu from "../../../image/Dashboard1.png";
+// import Dashboard2 from "../../../image/dashboard2.png";
+// import Dashboard3 from "../../../image/dashboard3.png";
 const SidebarHeader = ({ userName, userAvatar }) => {
   const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
     useSidebar();
@@ -371,7 +373,10 @@ const SideBar1 = () => {
                 <React.Fragment key={topLevel}>
                   <ListItem
                     button
-                    onClick={() => handleMenuClick(topLevel)}
+                    onClick={() => {
+                      handleMenuClick(topLevel);
+                      console.log("clicked", topLevel);
+                    }}
                     sx={{
                       pl: 2,
                       "&:hover": {
@@ -381,34 +386,47 @@ const SideBar1 = () => {
                     }}
                   >
                     <ListItemIcon sx={{ color: "white" }}>
-                      {/* {index === 0 && <FaFile />}
-                      {index === 1 && <FaExchangeAlt />}
-                      {index === 2 && <FaChartBar />}
-                      {index === 3 && <FaTools />} */}
-                      {index === 0 && (
+                      {hierarchicalMenuData[topLevel].label.includes(
+                        "File"
+                      ) && (
                         <img
                           src={Filemenu}
                           style={{ width: "25px", height: "25px" }}
                         />
                       )}
-                      {index === 1 && (
+                      {hierarchicalMenuData[topLevel].label.includes(
+                        "Transaction"
+                      ) && (
                         <img
                           src={Transactionmenu}
                           style={{ width: "25px", height: "25px" }}
                         />
                       )}
-                      {index === 2 && (
+                      {hierarchicalMenuData[topLevel].label.includes(
+                        "Report"
+                      ) && (
                         <img
                           src={Reportmenu}
                           style={{ width: "25px", height: "25px" }}
                         />
                       )}
-                      {index === 3 && (
+                      {hierarchicalMenuData[topLevel].label.includes(
+                        "Utilities"
+                      ) && (
                         <img
                           src={Utilitymenu}
                           style={{ width: "30px", height: "30px" }}
                         />
                       )}
+                      {hierarchicalMenuData[topLevel].label.includes(
+                        "Dash Board"
+                      ) &&
+                        index === 0 && (
+                          <img
+                            src={Dashboard11menu}
+                            style={{ width: "25px", height: "25px" }}
+                          />
+                        )}
                     </ListItemIcon>
                     {isSidebarVisible && (
                       <ListItemText

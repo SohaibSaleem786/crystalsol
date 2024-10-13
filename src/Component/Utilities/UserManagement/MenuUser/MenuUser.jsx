@@ -44,7 +44,7 @@ const MenuUser = () => {
         const apiData = response.data;
         const user = apiData.find((item) => item.tusrid === tusrid);
         setUserName(user.tusrnam);
-        setUserType(user.tusrtyp);
+        setUserType(user.Type);
       })
       .catch((error) => console.error(error));
   };
@@ -201,6 +201,7 @@ const MenuUser = () => {
   const submit = () => {};
 
   function handleTabClick(tabNumber) {
+    console.log("Tab clicked:", tabNumber);
     setActiveTab(tabNumber);
   }
 
@@ -257,7 +258,7 @@ const MenuUser = () => {
         <div style={contentStyle}>
           <div
             style={{
-              width: "40vw",
+              width: "50vw",
               height: "73vh",
               border: `1px solid ${fontcolor}`,
               alignItems: "center",
@@ -270,16 +271,16 @@ const MenuUser = () => {
           >
             <NavComponent textdata="Menu User" />
             <div className="row">
-              <div className="col-5 label-item" style={{ textAlign: "left" }}>
+              <div className="col-4 label-item" style={{ textAlign: "left" }}>
                 User: <b>{userName}</b>
               </div>
-              <div className="col-4"></div>
-              <div className="col-3 label-item" style={{ textAlign: "right" }}>
+              <div className="col-3"></div>
+              <div className="col-5 label-item" style={{ textAlign: "right" }}>
                 Type:{" "}
                 <b>
-                  {userType === "A"
+                  {userType === "Admin"
                     ? "Admin"
-                    : userType === "U"
+                    : userType === "User"
                     ? "User"
                     : userType}
                 </b>
@@ -292,138 +293,139 @@ const MenuUser = () => {
               fill
               style={{ backgroundColor: "#5aa4f2" }}
             >
-              {["Files", "Transactions", "Reports", "Utilities"].map(
-                (tabLabel, index) => (
-                  <Tab
-                    eventKey={index + 1}
-                    title={
-                      <span style={{ color: "white", fontSize: "11px" }}>
-                        {tabLabel}
-                      </span>
-                    }
-                    key={index}
+              {[
+                "Dashboard",
+                "Files",
+                "Transactions",
+                "Reports",
+                "Utilities",
+              ].map((tabLabel, index) => (
+                <Tab
+                  eventKey={index}
+                  title={
+                    <span style={{ color: "white", fontSize: "11px" }}>
+                      {tabLabel}
+                    </span>
+                  }
+                  key={index}
+                >
+                  <div
+                    style={{
+                      overflowY: data.rows.length > 10 ? "auto" : "hidden",
+                      maxHeight: "49vh",
+                      width: "100%",
+                      borderBottom: `1px solid ${fontcolor}`,
+                      "&::-webkit-scrollbar": {
+                        width: "0.4em",
+                      },
+                      "&::-webkit-scrollbar-track": {
+                        backgroundColor: "#021A33",
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "#0d2d4c",
+                        borderRadius: "10px",
+                      },
+                    }}
                   >
-                    <div
+                    <table
+                      className="myTable"
                       style={{
-                        overflowY: data.rows.length > 10 ? "auto" : "hidden",
-                        maxHeight: "49vh",
+                        fontSize: "14px",
                         width: "100%",
-                        borderBottom: `1px solid ${fontcolor}`,
-                        "&::-webkit-scrollbar": {
-                          width: "0.4em",
-                        },
-                        "&::-webkit-scrollbar-track": {
-                          backgroundColor: "#021A33",
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                          backgroundColor: "#0d2d4c",
-                          borderRadius: "10px",
-                        },
+                        borderCollapse: "collapse",
+                        backgroundColor: getcolor,
                       }}
                     >
-                      <table
-                        className="myTable"
+                      <thead
                         style={{
-                          fontSize: "14px",
-                          width: "100%",
-                          borderCollapse: "collapse",
-                          backgroundColor: getcolor,
+                          fontWeight: "bold",
+                          height: "40px",
+                          position: "sticky",
+                          top: 0,
+                          backgroundColor: "#3368b5",
+                          color: "#fff",
+                          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
                         }}
                       >
-                        <thead
-                          style={{
-                            fontWeight: "bold",
-                            height: "40px",
-                            position: "sticky",
-                            top: 0,
-                            backgroundColor: "#3368b5",
-                            color: "#fff",
-                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                          }}
-                        >
-                          <tr>
-                            {data.columns.map((column, index) => (
-                              <th
+                        <tr>
+                          {data.columns.map((column, index) => (
+                            <th
+                              key={index}
+                              style={{
+                                width: column.field === "Sr" ? "60px" : "auto",
+                                padding: "10px",
+                                textAlign: "center",
+                                height: "40px",
+                                // color: "white",
+                              }}
+                              onDoubleClick={
+                                column.field === "Permissions"
+                                  ? handleDoubleClick
+                                  : null
+                              }
+                            >
+                              {column.label}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.rows.map((row, rowIndex) => (
+                          <tr
+                            key={rowIndex}
+                            style={{
+                              height: "40px",
+                              borderBottom: "1px solid #ddd",
+                              backgroundColor: getcolor,
+                              color: "black",
+                            }}
+                          >
+                            {Object.keys(row).map((key, index) => (
+                              <td
                                 key={index}
                                 style={{
-                                  width:
-                                    column.field === "Sr" ? "60px" : "auto",
+                                  fontSize: "14px",
                                   padding: "10px",
-                                  textAlign: "center",
+                                  width:
+                                    index === 0
+                                      ? "20%"
+                                      : index === 1
+                                      ? "55%"
+                                      : "25%",
+                                  textAlign:
+                                    key === "Description" ? "left" : "center",
                                   height: "40px",
-                                  // color: "white",
-                                }}
-                                onDoubleClick={
-                                  column.field === "Permissions"
-                                    ? handleDoubleClick
-                                    : null
-                                }
-                              >
-                                {column.label}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.rows.map((row, rowIndex) => (
-                            <tr
-                              key={rowIndex}
-                              style={{
-                                height: "40px",
-                                borderBottom: "1px solid #ddd",
-                                backgroundColor: getcolor,
-                                color: "black",
-                              }}
-                            >
-                              {Object.keys(row).map((key, index) => (
-                                <td
-                                  key={index}
-                                  style={{
-                                    fontSize: "14px",
-                                    padding: "10px",
-                                    width:
-                                      index === 0
-                                        ? "20%"
-                                        : index === 1
-                                        ? "55%"
-                                        : "25%",
-                                    textAlign:
-                                      key === "Description" ? "left" : "center",
-                                    height: "40px",
-                                    color: fontcolor,
-                                  }}
-                                >
-                                  {row[key]}
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                          {Array.from({ length: Math.max(0, 20 - 3) }).map(
-                            (_, rowIndex) => (
-                              <tr
-                                key={`blank-${rowIndex}`}
-                                style={{
-                                  height: "40px",
-                                  backgroundColor: getcolor,
                                   color: fontcolor,
                                 }}
                               >
-                                {Array.from({ length: 3 }).map(
-                                  (_, colIndex) => (
-                                    <td key={`blank-${rowIndex}-${colIndex}`}>
-                                      &nbsp;
-                                    </td>
-                                  )
-                                )}
-                              </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </Tab>
-                )
-              )}
+                                {row[key]}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                        {Array.from({ length: Math.max(0, 20 - 3) }).map(
+                          (_, rowIndex) => (
+                            <tr
+                              key={`blank-${rowIndex}`}
+                              style={{
+                                height: "40px",
+                                backgroundColor: getcolor,
+                                color: fontcolor,
+                              }}
+                            >
+                              {Array.from({ length: 3 }).map((_, colIndex) => (
+                                <td key={`blank-${rowIndex}-${colIndex}`}>
+                                  &nbsp;
+                                </td>
+                              ))}
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </Tab>
+              ))}
             </Tabs>
             <div
               style={{
