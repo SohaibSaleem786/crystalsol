@@ -23,24 +23,23 @@ import { ExpandLess, ExpandMore, Opacity } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchMenu } from "../../Redux/action";
 import { getUserData, getOrganisationData, isLoggedIn } from "../../Auth";
-import { useSidebar } from "../../../SidebarContext";
 import { Avatar } from "@mui/material"; // Import Avatar component
 import { Typography } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
 import imagebackground from "../../../image/homeapp.jpg";
 import man from "../../../image/man.png";
 import "./Sidebar.css";
-import { DataProvider } from "../../../DataContext";
 import Filemenu from "../../../image/filemenu.png";
 import Transactionmenu from "../../../image/transactionmenu.png";
 import Reportmenu from "../../../image/reportmenu.png";
 import Utilitymenu from "../../../image/utilitimenu.png";
 import Dashboard11menu from "../../../image/Dashboard1.png";
+import { useTheme } from "../../../ThemeContext";
 // import Dashboard2 from "../../../image/dashboard2.png";
 // import Dashboard3 from "../../../image/dashboard3.png";
 const SidebarHeader = ({ userName, userAvatar }) => {
   const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
-    useSidebar();
+    useTheme();
   return (
     <Box
       style={{
@@ -134,7 +133,7 @@ const SideBar1 = () => {
   useEffect(() => {
     const filteredData = data.filter((item) => item.Permission !== "S");
     setMenuData(filteredData);
-    dispatch(fetchMenu(user.tusrid, organisation.code));
+    dispatch(fetchMenu(user && user.tusrid, organisation && organisation.code));
   }, [dispatch, user.tusrid, organisation.code]);
 
   useEffect(() => {
@@ -214,7 +213,7 @@ const SideBar1 = () => {
         href={subItem.disabledd ? "" : subItem.to}
         disabled={subItem.disabled}
         sx={{
-          pl: 8,
+          pl: 9,
           height: "30px",
           "&:hover": {
             backgroundColor: "#01172e",
@@ -233,6 +232,10 @@ const SideBar1 = () => {
             textDecoration: "none",
             fontWeight: 500,
             color: subItem.disabledd === true ? "gray" : "white",
+            "&:hover": {
+              backgroundColor: "#01172e",
+              color: "rgb(33, 193, 214)",
+            },
           }}
         />
       </ListItem>
@@ -261,6 +264,11 @@ const SideBar1 = () => {
                 }}
                 sx={{
                   pl: 7,
+                  // "&:hover": {
+
+                  //   backgroundColor: "#01172e",
+                  //   color: "rgb(33, 193, 214)",
+                  // },
                   "&:hover": {
                     backgroundColor: "#01172e",
                     color: "rgb(33, 193, 214)",
@@ -280,6 +288,10 @@ const SideBar1 = () => {
                     textDecoration: "none",
                     fontWeight: 500,
                     color: subItems[0].disabledd ? "gray" : "white",
+                    "&:hover": {
+                      backgroundColor: "#01172e",
+                      color: "rgb(33, 193, 214)",
+                    },
                   }}
                 />
                 {hasSubSubMenu ? (
@@ -311,7 +323,7 @@ const SideBar1 = () => {
   }`;
 
   const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
-    useSidebar();
+    useTheme();
   const [hovered, setHovered] = useState(false); // track if opened via hover
   return (
     <>
@@ -419,7 +431,7 @@ const SideBar1 = () => {
                         />
                       )}
                       {hierarchicalMenuData[topLevel].label.includes(
-                        "Dash Board"
+                        "Dashboard"
                       ) &&
                         index === 0 && (
                           <img

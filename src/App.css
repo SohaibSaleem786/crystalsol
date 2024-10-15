@@ -162,6 +162,9 @@ td {
 .form-control-item:focus {
   border: 1px solid red !important;
 }
+.form-control-customer:focus {
+  border: 1px solid red !important;
+}
 .form-control-account:focus {
   border: 1px solid red !important;
 }

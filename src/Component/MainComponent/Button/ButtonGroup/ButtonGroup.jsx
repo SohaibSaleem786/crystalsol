@@ -28,8 +28,8 @@ const ButtonGroup = ({
           fontFamily: "Poppins, sans-serif",
           fontStyle: "normal",
           fontWeight: 400,
-          fontSize: "15px",
-          lineHeight: "15px",
+          fontSize: "13px",
+          lineHeight: "10px",
           color: "rgb(230, 233, 236)",
           backgroundColor: "#186DB7",
           padding: "10px 20px",
@@ -39,7 +39,9 @@ const ButtonGroup = ({
           textAlign: "center",
           borderRadius: "5px",
           marginRight: "5px",
-          marginTop: "2px",
+          textTransform: "capitalize",
+          backgroundColor: "#3368B5",
+          width: "120px",
         }}
         onFocus={() => handleFocus(Submit)}
         onBlur={() => handleBlur(Submit)}
@@ -64,8 +66,8 @@ const ButtonGroup = ({
           fontFamily: "Poppins, sans-serif",
           fontStyle: "normal",
           fontWeight: 400,
-          fontSize: "15px",
-          lineHeight: "15px",
+          fontSize: "13px",
+          lineHeight: "10px",
           color: "rgb(230, 233, 236)",
           backgroundColor: "#186DB7",
           padding: "10px 20px",
@@ -75,7 +77,9 @@ const ButtonGroup = ({
           textAlign: "center",
           borderRadius: "5px",
           marginRight: "5px",
-          marginTop: "2px",
+          textTransform: "capitalize",
+          backgroundColor: "#3368B5",
+          width: "120px",
         }}
         accessKey="r"
         onKeyDown={(event) => {
@@ -103,8 +107,8 @@ const ButtonGroup = ({
           fontFamily: "Poppins, sans-serif",
           fontStyle: "normal",
           fontWeight: 400,
-          fontSize: "15px",
-          lineHeight: "15px",
+          fontSize: "13px",
+          lineHeight: "10px",
           color: "rgb(230, 233, 236)",
           backgroundColor: "#186DB7",
           padding: "10px 20px",
@@ -114,7 +118,9 @@ const ButtonGroup = ({
           textAlign: "center",
           borderRadius: "5px",
           marginRight: "5px",
-          marginTop: "2px",
+          textTransform: "capitalize",
+          backgroundColor: "#3368B5",
+          width: "120px",
         }}
         accessKey="c"
         onKeyDown={(event) => {

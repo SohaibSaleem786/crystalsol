@@ -4,21 +4,23 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import Header from "../../../MainComponent/Header/Header";
-import Footer from "../../../MainComponent/Footer/Footer";
-import { useSidebar } from "../../../../SidebarContext";
+
 import Alert from "@mui/material/Alert";
 import { useTheme } from "../../../../ThemeContext";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
 import NavComponent from "../../../MainComponent/Navform/navbarform";
 import "./MenuUser.css";
+import SingleButton from "../../../MainComponent/Button/SingleButton/SingleButton";
+import { fetchGetUser, fetchMenu } from "../../../Redux/action";
+import { useSelector, useDispatch } from "react-redux";
 const MenuUser = () => {
   const { tusrid } = useParams();
   const user = getUserData();
-  const { apiLinks } = useTheme();
   const organisation = getOrganisationData();
+
+  const { apiLinks } = useTheme();
   const [activeTab, setActiveTab] = useState(1);
-  const [data, setData] = useState({ columns: [], rows: [] });
+  const [getdata, setData] = useState({ columns: [], rows: [] });
   const [showAlert, setShowAlert] = useState(false);
   const [allPermissionsY, setAllPermissionsY] = useState(false);
   const [userName, setUserName] = useState("");
@@ -26,43 +28,26 @@ const MenuUser = () => {
   const [toggleState, setToggleState] = useState(true);
   const navigate = useNavigate();
   const [alertData, setAlertData] = useState(null);
-
-  const functioncallingmenu = () => {
-    const data = {
-      code: organisation.code,
-      FUsrId: user.tusrid,
-    };
-    const formdata = new URLSearchParams(data).toString();
-
-    axios
-      .post(`${apiLinks}/GetUser.php`, formdata, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-      .then((response) => {
-        const apiData = response.data;
-        const user = apiData.find((item) => item.tusrid === tusrid);
-        setUserName(user.tusrnam);
-        setUserType(user.Type);
-      })
-      .catch((error) => console.error(error));
-  };
-
+  const { data, loading, error } = useSelector((state) => state.getuser);
+  const dispatch = useDispatch();
   useEffect(() => {
-    functioncallingmenu();
-  }, [tusrid]);
+    const userr = data.find((item) => item.tusrid === tusrid);
+    setUserName(userr && userr.tusrnam);
+    setUserType(userr && userr.Type);
+    dispatch(fetchGetUser(organisation.code));
+  }, [dispatch, organisation.code]);
 
   useEffect(() => {
     fetchDataForUserId(tusrid);
   }, [activeTab]);
+
   const {
     isSidebarVisible,
     toggleSidebar,
     getcolor, // Background color from context
     fontcolor, // Font color from context
     toggleChangeColor,
-  } = useSidebar();
+  } = useTheme();
 
   function fetchDataForUserId() {
     console.log("call the api");
@@ -157,9 +142,14 @@ const MenuUser = () => {
     return axios
       .post(apiUrl, formData)
       .then((response) => {
-        functioncallingmenu();
         fetchDataForUserId();
-        console.log("Update response:", response.data);
+        console.log(
+          "Update response:",
+          response.data,
+          user.userid,
+          organisation.code
+        );
+        dispatch(fetchMenu(user.tusrid, organisation.code));
         setAlertData({
           type: "success",
           message: response.data.message,
@@ -176,7 +166,7 @@ const MenuUser = () => {
 
   const handleDoubleClick = () => {
     const newPermission = toggleState ? "Y" : "N";
-    const updatedRows = data.rows.map((row) => {
+    const updatedRows = getdata.rows.map((row) => {
       return {
         ...row,
         Permissions: (
@@ -194,7 +184,7 @@ const MenuUser = () => {
         ),
       };
     });
-    setData({ ...data, rows: updatedRows });
+    setData({ ...getdata, rows: updatedRows });
     setToggleState(!toggleState);
   };
 
@@ -227,6 +217,15 @@ const MenuUser = () => {
     lineHeight: "23px",
     fontFamily: '"Poppins", sans-serif',
   };
+  useEffect(() => {
+    document.documentElement.style.setProperty("--font-color", fontcolor);
+  }, [fontcolor]);
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--backgroundcolor-color",
+      getcolor
+    );
+  }, [getcolor]);
 
   return (
     <>
@@ -270,20 +269,34 @@ const MenuUser = () => {
             }}
           >
             <NavComponent textdata="Menu User" />
-            <div className="row">
-              <div className="col-4 label-item" style={{ textAlign: "left" }}>
-                User: <b>{userName}</b>
+            <div
+              className="row"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div className="col-5 label-item" style={{ textAlign: "left" }}>
+                <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+                  User:
+                </span>{" "}
+                <span style={{ fontSize: "1.2rem", color: "#2196F3" }}>
+                  {userName}
+                </span>
               </div>
-              <div className="col-3"></div>
-              <div className="col-5 label-item" style={{ textAlign: "right" }}>
-                Type:{" "}
-                <b>
+
+              <div className="col-6 label-item" style={{ textAlign: "right" }}>
+                <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+                  {" Type:"}
+                </span>
+                <span style={{ fontSize: "1.2rem", color: "#4CAF50" }}>
                   {userType === "Admin"
                     ? "Admin"
                     : userType === "User"
                     ? "User"
                     : userType}
-                </b>
+                </span>
               </div>
             </div>
             <Tabs
@@ -311,21 +324,9 @@ const MenuUser = () => {
                 >
                   <div
                     style={{
-                      overflowY: data.rows.length > 10 ? "auto" : "hidden",
-                      maxHeight: "49vh",
-                      width: "100%",
-                      borderBottom: `1px solid ${fontcolor}`,
-                      "&::-webkit-scrollbar": {
-                        width: "0.4em",
-                      },
-                      "&::-webkit-scrollbar-track": {
-                        backgroundColor: "#021A33",
-                      },
-                      "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: "#0d2d4c",
-                        borderRadius: "10px",
-                      },
+                      overflowY: getdata.rows.length > 10 ? "auto" : "hidden",
                     }}
+                    className="custom-scrollbar-user"
                   >
                     <table
                       className="myTable"
@@ -348,7 +349,7 @@ const MenuUser = () => {
                         }}
                       >
                         <tr>
-                          {data.columns.map((column, index) => (
+                          {getdata.columns.map((column, index) => (
                             <th
                               key={index}
                               style={{
@@ -356,7 +357,6 @@ const MenuUser = () => {
                                 padding: "10px",
                                 textAlign: "center",
                                 height: "40px",
-                                // color: "white",
                               }}
                               onDoubleClick={
                                 column.field === "Permissions"
@@ -370,7 +370,7 @@ const MenuUser = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {data.rows.map((row, rowIndex) => (
+                        {getdata.rows.map((row, rowIndex) => (
                           <tr
                             key={rowIndex}
                             style={{
@@ -434,51 +434,16 @@ const MenuUser = () => {
                 alignItems: "center",
               }}
             >
-              <Link to="/UserManagement">
-                <button
-                  className="btn btn-primary"
-                  style={{
-                    fontSize: "13px",
-                    fontStyle: "normal",
-                    fontWeight: 400,
-                    fontFamily: "Poppins, sans-serif",
-                    color: "white",
-                    backgroundColor: "#186DB7",
-                    padding: "10px 20px",
-                    border: "none",
-                    cursor: "pointer",
-                    lineHeight: "13px",
-                    width: "120px",
-                    textAlign: "center",
-                    borderRadius: "5px",
-                    marginRight: "5px",
-                  }}
-                >
-                  Return
-                </button>
-              </Link>
-              <Link to="/AddUser1">
-                <button
-                  className="btn btn-primary"
-                  style={{
-                    fontSize: "13px",
-                    fontStyle: "normal",
-                    fontWeight: 400,
-                    fontFamily: "Poppins, sans-serif",
-                    color: "white",
-                    backgroundColor: "#186DB7",
-                    padding: "10px 20px",
-                    border: "none",
-                    cursor: "pointer",
-                    lineHeight: "13px",
-                    width: "120px",
-                    textAlign: "center",
-                    borderRadius: "5px",
-                  }}
-                >
-                  User
-                </button>
-              </Link>
+              <SingleButton
+                to="/UserManagement"
+                text="Return"
+                style={{ backgroundColor: "#186DB7", width: "120px" }}
+              />
+              <SingleButton
+                to="/AddUser1"
+                text="User"
+                style={{ backgroundColor: "#186DB7", width: "120px" }}
+              />
             </div>
           </div>
         </div>

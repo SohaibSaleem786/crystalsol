@@ -25,12 +25,23 @@ const ButtonGroupprint = ({
     >
       <button
         style={{
-          border: "1px solid #FFFFFF",
-          width: "75px",
-          height: "25px",
-          marginTop: "2px",
-          color: "white",
+          fontFamily: "Poppins, sans-serif",
+          fontStyle: "normal",
+          fontWeight: 400,
+          fontSize: "13px",
+          lineHeight: "12px",
+          color: "rgb(230, 233, 236)",
+          backgroundColor: "#186DB7",
+          padding: "10px 20px",
+          border: "none",
+          cursor: "pointer",
+          width: "120px",
+          textAlign: "center",
+          borderRadius: "5px",
+          marginRight: "5px",
+          textTransform: "capitalize",
           backgroundColor: "#3368B5",
+          width: "120px",
         }}
         onFocus={() => handleFocus(Submit)}
         onBlur={() => handleBlur(Submit)}
@@ -52,13 +63,23 @@ const ButtonGroupprint = ({
 
       <button
         style={{
-          border: "1px solid #FFFFFF",
-          width: "75px",
-          marginLeft: "2px",
-          height: "25px",
-          marginTop: "2px",
-          color: "white",
+          fontFamily: "Poppins, sans-serif",
+          fontStyle: "normal",
+          fontWeight: 400,
+          fontSize: "13px",
+          lineHeight: "12px",
+          color: "rgb(230, 233, 236)",
+          backgroundColor: "#186DB7",
+          padding: "10px 20px",
+          border: "none",
+          cursor: "pointer",
+          width: "120px",
+          textAlign: "center",
+          borderRadius: "5px",
+          marginRight: "5px",
+          textTransform: "capitalize",
           backgroundColor: "#3368B5",
+          width: "120px",
         }}
         accessKey="r"
         onKeyDown={(event) => {
@@ -83,13 +104,23 @@ const ButtonGroupprint = ({
 
       <button
         style={{
-          border: "1px solid #FFFFFF",
-          width: "75px",
-          marginLeft: "2px",
-          height: "25px",
-          marginTop: "2px",
-          color: "white",
+          fontFamily: "Poppins, sans-serif",
+          fontStyle: "normal",
+          fontWeight: 400,
+          fontSize: "13px",
+          lineHeight: "12px",
+          color: "rgb(230, 233, 236)",
+          backgroundColor: "#186DB7",
+          padding: "10px 20px",
+          border: "none",
+          cursor: "pointer",
+          width: "120px",
+          textAlign: "center",
+          borderRadius: "5px",
+          marginRight: "5px",
+          textTransform: "capitalize",
           backgroundColor: "#3368B5",
+          width: "120px",
         }}
         accessKey="c"
         onKeyDown={(event) => {
@@ -113,13 +144,23 @@ const ButtonGroupprint = ({
       </button>
       <button
         style={{
-          border: "1px solid #FFFFFF",
-          width: "75px",
-          marginLeft: "2px",
-          height: "25px",
-          marginTop: "2px",
-          color: "white",
+          fontFamily: "Poppins, sans-serif",
+          fontStyle: "normal",
+          fontWeight: 400,
+          fontSize: "13px",
+          lineHeight: "12px",
+          color: "rgb(230, 233, 236)",
+          backgroundColor: "#186DB7",
+          padding: "10px 20px",
+          border: "none",
+          cursor: "pointer",
+          width: "120px",
+          textAlign: "center",
+          borderRadius: "5px",
+          marginRight: "5px",
+          textTransform: "capitalize",
           backgroundColor: "#3368B5",
+          width: "120px",
         }}
         accessKey="p"
         onKeyDown={(event) => {

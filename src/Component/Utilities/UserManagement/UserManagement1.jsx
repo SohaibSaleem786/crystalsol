@@ -3,12 +3,15 @@ import { Container, Spinner, Nav } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useTheme } from "../../../ThemeContext";
-import { useSidebar } from "../../../SidebarContext";
+
 import { isLoggedIn, getUserData, getOrganisationData } from "../../Auth";
 import NavComponent from "../../MainComponent/Navform/navbarform";
 import "./UserManagement1.css";
-
+import SingleButton from "../../MainComponent/Button/SingleButton/SingleButton";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchGetUser } from "../../Redux/action";
 export default function UserMaintenance() {
+  const dispatch = useDispatch();
   const user = getUserData();
   const organisation = getOrganisationData();
   const tableTopColor = "#3368B5";
@@ -17,36 +20,15 @@ export default function UserMaintenance() {
   const btnColor = "#3368B5";
   const textColor = "white";
 
-  const { apiLinks } = useTheme();
   const [tableData, setTableData] = useState([]);
   const [selectedSearch, setSelectedSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { data, loading, error } = useSelector((state) => state.getuser);
 
   useEffect(() => {
-    const data = {
-      code: organisation.code,
-    };
-    setIsLoading(true);
-    const formdata = new URLSearchParams(data).toString();
-    axios
-      .post(`${apiLinks}/GetUser.php`, formdata, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-      .then((response) => {
-        if (response.data && Array.isArray(response.data)) {
-          setTableData(response.data);
-        } else {
-          console.error("Unexpected response structure:", response.data);
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false);
-      });
-  }, []);
+    setTableData(data);
+    dispatch(fetchGetUser(organisation && organisation.code));
+  }, [dispatch, organisation.code]);
 
   const handleSearch = (e) => {
     setSelectedSearch(e.target.value);
@@ -96,7 +78,7 @@ export default function UserMaintenance() {
     getcolor,
     fontcolor,
     toggleChangeColor,
-  } = useSidebar();
+  } = useTheme();
   const contentStyle = {
     backgroundColor: getcolor,
     height: "100vh",
@@ -321,17 +303,6 @@ export default function UserMaintenance() {
                               color: fontcolor,
                             }}
                           >
-                            {/* <td
-                              className="text-center"
-                              style={{
-                                ...firstColWidth,
-                                wordBreak: "break-word",
-                                color: fontcolor,
-                              }}
-                            >
-                              <i className="fa fa-user fa-xl"></i>
-                            </td> */}
-
                             <td
                               className="text-start"
                               style={{
@@ -441,54 +412,16 @@ export default function UserMaintenance() {
               marginBottom: "2px",
             }}
           >
-            <Link to="/MainPage">
-              <button
-                className="btn btn-primary"
-                style={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontStyle: "normal",
-                  fontWeight: 400,
-                  fontSize: "13px",
-                  lineHeight: "12px",
-                  color: "rgb(230, 233, 236)",
-                  backgroundColor: "#186DB7",
-                  padding: "10px 20px",
-                  border: "none",
-                  cursor: "pointer",
-                  width: "120px",
-                  textAlign: "center",
-                  borderRadius: "5px",
-                  marginRight: "5px",
-                  textTransform: "capitalize",
-                }}
-              >
-                Return
-              </button>
-            </Link>
-            <Link to="/AddUser1">
-              <button
-                className="btn btn-primary"
-                style={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontStyle: "normal",
-                  fontWeight: 400,
-                  fontSize: "13px",
-                  lineHeight: "12px",
-                  color: "rgb(230, 233, 236)",
-                  backgroundColor: "#186DB7",
-                  padding: "10px 20px",
-                  border: "none",
-                  cursor: "pointer",
-                  width: "120px",
-                  textAlign: "center",
-                  borderRadius: "5px",
-                  marginRight: "5px",
-                  textTransform: "capitalize",
-                }}
-              >
-                User
-              </button>
-            </Link>
+            <SingleButton
+              to="/MainPage"
+              text="Return"
+              style={{ backgroundColor: "#186DB7", width: "120px" }}
+            />
+            <SingleButton
+              to="/AddUser1"
+              text="User"
+              style={{ backgroundColor: "#186DB7", width: "120px" }}
+            />
           </div>
         </div>
       </div>

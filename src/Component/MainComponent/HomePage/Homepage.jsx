@@ -1,10 +1,11 @@
 import { React, useState } from "react";
 import "../../../menu.css";
 import "./Homepage.css";
-import { useSidebar } from "../../../SidebarContext";
+
+import { useTheme } from "../../../ThemeContext";
 function HomePage1() {
   const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
-    useSidebar();
+    useTheme();
 
   return (
     <>

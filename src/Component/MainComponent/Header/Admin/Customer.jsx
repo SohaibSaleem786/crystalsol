@@ -3,14 +3,13 @@ import Alert from "@mui/material/Alert";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "./AddUser.css";
+import "./Admin.css";
 import NavComponent from "../../../MainComponent/Navform/navbarform";
 import ButtonGroupp from "../../../MainComponent/Button/ButtonGroup/ButtonGroup";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import StatusSelect from "../../../MainComponent/StatusSelected/StatusSelected";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
-import GeneralTwoFieldsModal from "./AddUser_Modal";
-import { getcompanyData } from "./AddUser_Api";
+import CustomerModal from "./CustomerModal";
 import { useMutation } from "@tanstack/react-query";
 
 import { useTheme } from "../../../../ThemeContext";
@@ -25,7 +24,7 @@ function removeParentDirectories(path) {
   console.error("Invalid path:", path);
   return "";
 }
-function AddUser1() {
+function Customer() {
   const user = getUserData();
   const organisation = getOrganisationData();
   const { apiLinks } = useTheme();
@@ -56,42 +55,6 @@ function AddUser1() {
   });
   const [dataa, setDataa] = useState([]);
 
-  const mutation2 = useMutation({
-    mutationFn: getcompanyData,
-    onSuccess: (data) => {
-      const columns = [
-        { label: "Code", field: "tacccod", sort: "asc" },
-        { label: "Description", field: "taccdsc", sort: "asc" },
-        { label: "Status", field: "taccsts", sort: "asc" },
-      ];
-      if (Array.isArray(data)) {
-        setDataa(data);
-      } else {
-        console.warn(
-          "Technicians data is not available or not in the correct format."
-        );
-      }
-
-      if (data.error === 200) {
-      } else {
-      }
-    },
-    onError: (error) => {
-      console.error("Error:", error);
-    },
-  });
-
-  const GetDataList = () => {
-    const data = {
-      code: organisation.code,
-    };
-    mutation2.mutate(data);
-  };
-  useEffect(() => {
-    GetDataList();
-
-    Codefocus();
-  }, []);
   const Codefocus = () => {
     if (Code.current) {
       Code.current.focus();
@@ -210,7 +173,6 @@ function AddUser1() {
       console.log("API Response:", response);
 
       if (response.data.error === 200) {
-        GetDataList();
         Codefocus();
         setFormData({
           ...formData,
@@ -264,13 +226,13 @@ function AddUser1() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState({ columns: [], rows: [] });
-  const [textdata, settextdata] = useState("User Management ");
+  const [textdata, settextdata] = useState("Customer Management");
 
   const handleCloseModal = () => {
     setData({ columns: [], rows: [] });
     setSearchText("");
     setHighlightedRowIndex(0);
-    settextdata("User Management");
+    settextdata("Customer Management");
 
     setModalOpen(false);
   };
@@ -391,10 +353,16 @@ function AddUser1() {
         ...formData,
         inputform11: lowercaseValue,
       });
+    } else if (name === "inputform7") {
+      const lowercaseValue = value.toLowerCase();
+      setFormData({
+        ...formData,
+        inputform7: lowercaseValue,
+      });
     } else {
       setFormData({
         ...formData,
-        [name]: value,
+        [name]: formattedValue,
       });
     }
     if (name === "UrduFormDescription") {
@@ -446,11 +414,6 @@ function AddUser1() {
           inputform14: "",
         });
       }
-    } else {
-      setFormData({
-        ...formData,
-        [name]: formattedValue,
-      });
     }
   };
 
@@ -482,7 +445,7 @@ function AddUser1() {
       setGeturdu(result);
     });
 
-    settextdata("User Management");
+    settextdata("Customer Management");
 
     resetData();
   };
@@ -520,7 +483,7 @@ function AddUser1() {
   };
 
   const handleReturn = () => {
-    navigate("/UserManagement");
+    navigate("/MainPage");
   };
 
   const handleBlur = (codeparam) => {
@@ -538,19 +501,35 @@ function AddUser1() {
   const contentStyle = {
     backgroundColor: getcolor,
     height: "100vh",
-    width: isSidebarVisible ? "calc(100vw - 5vw)" : "100vw",
-    marginLeft: isSidebarVisible ? "15vw" : "45vh",
+    width: isSidebarVisible ? "calc(100vw - 55%)" : "70%",
+    position: "relative",
+    top: "50%",
+    left: isSidebarVisible ? "50%" : "60%",
+    transform: "translate(-50%, -50%)",
     transition: isSidebarVisible
-      ? "margin-left 2s ease-in-out, margin-right 2s ease-in-out"
-      : "margin-left 2s ease-in-out, margin-right 2s ease-in-out",
+      ? "left 3s ease-in-out, width 2s ease-in-out"
+      : "left 3s ease-in-out, width 2s ease-in-out",
     display: "flex",
     justifyContent: "center",
     alignItems: "start",
     overflowX: "hidden",
     overflowY: "hidden",
+    wordBreak: "break-word",
     textAlign: "center",
-    maxWidth: "720px",
+    maxWidth: "1000px",
+    fontSize: "15px",
+    fontStyle: "normal",
+    fontWeight: "400",
+    lineHeight: "23px",
+    fontFamily: '"Poppins", sans-serif',
   };
+  useEffect(() => {
+    document.documentElement.style.setProperty("--background-color", getcolor);
+  }, [getcolor]);
+  useEffect(() => {
+    document.documentElement.style.setProperty("--font-color", fontcolor);
+  }, [fontcolor]);
+
   return (
     <>
       <div
@@ -601,11 +580,11 @@ function AddUser1() {
                   <br />
 
                   <div className="row">
-                    <div className="col-sm-2 label-item">Userid:</div>
+                    <div className="col-sm-2 label-customer">Code:</div>
                     <div className="col-sm-3">
                       <Form.Control
                         type="text"
-                        className="form-control-account custom-input"
+                        className="form-control-customer custom-input"
                         placeholder="Code"
                         name="AccountCodeform"
                         value={formData.AccountCodeform}
@@ -625,7 +604,7 @@ function AddUser1() {
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             handleBlurRVC();
-                            handleEnterKeyPress(Description, e);
+                            handleEnterKeyPress(Status, e);
                             const upperCaseValue = e.target.value.toUpperCase();
 
                             if (dataa && dataa.length > 0) {
@@ -635,7 +614,7 @@ function AddUser1() {
 
                               if (selectedItem) {
                                 console.log("selectedItem:", selectedItem);
-                                handleEnterKeyPress(Description, e);
+                                handleEnterKeyPress(Status, e);
                               } else if (upperCaseValue.length < 10) {
                                 // setAlertData({
                                 //   type: "success",
@@ -645,7 +624,7 @@ function AddUser1() {
                                 //   setAlertData(null);
                                 // }, 3000);
                               } else {
-                                handleEnterKeyPress(Description, e);
+                                handleEnterKeyPress(Status, e);
                               }
                             } else {
                               console.warn(
@@ -669,6 +648,30 @@ function AddUser1() {
                       />
                     </div>
                     <div className="col-sm-2"></div>
+                    <div className="col-sm-2 label-customer">Status:</div>
+                    <div className="col-sm-3">
+                      <Form.Control
+                        as="select"
+                        name="Status"
+                        value={formData.Status}
+                        onChange={handleInputChange}
+                        className={`form-control-customer ${
+                          errors.Status ? "border-red" : ""
+                        }`}
+                        style={{
+                          height: "28px",
+                          fontSize: "11px",
+                          padding: "0px",
+                          paddingLeft: "5px",
+                        }}
+                        onKeyDown={(e) => handleEnterKeyPress(Description, e)}
+                        ref={Status}
+                      >
+                        <option value="A">Active</option>
+                        <option value="C">Cancell</option>
+                        <option value="S">Suspend</option>
+                      </Form.Control>
+                    </div>
                   </div>
                   <div className="row">
                     <div className="col-sm-2 label-item">Description:</div>
@@ -681,7 +684,7 @@ function AddUser1() {
                         id="Descriptionform"
                         placeholder="Description"
                         name="Descriptionform"
-                        className={`form-control-item ${
+                        className={`form-control-customer ${
                           errors.Descriptionform ? "border-red" : ""
                         }`}
                         value={formData.Descriptionform}
@@ -696,7 +699,7 @@ function AddUser1() {
                         id="UrduFormDescription"
                         placeholder="اردو میں"
                         name="UrduFormDescription"
-                        className={`form-control-item ${
+                        className={`form-control-customer ${
                           errors.Descriptionform ? "border-red" : ""
                         }`}
                         style={{
@@ -714,17 +717,16 @@ function AddUser1() {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-2 label-item">Cash Code:</div>
-                    <div className="col-sm-4">
+                    <div className="col-sm-2 label-customer">Address:</div>
+                    <div className="col-sm-10">
                       <Form.Control
                         type="text"
                         id="inputform4"
-                        placeholder="Cash Code"
+                        placeholder="Address"
                         name="inputform4"
-                        className={`form-control-item ${
+                        className={`form-control-customer ${
                           errors.inputform4 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "right" }}
                         value={formData.inputform4}
                         ref={inputform4ref}
                         onFocus={(e) => e.target.select()}
@@ -732,14 +734,16 @@ function AddUser1() {
                         onKeyDown={(e) => handleEnterKeyPress(inputform5ref, e)}
                       />
                     </div>
-                    <div className="col-sm-2 label-item">Store Code:</div>
-                    <div className="col-sm-4">
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-customer">Contact NO:</div>
+                    <div className="col-sm-3">
                       <Form.Control
                         type="text"
                         id="inputform5"
-                        placeholder="Store Code"
+                        placeholder="Contact"
                         name="inputform5"
-                        className={`form-control-item ${
+                        className={`form-control-customer ${
                           errors.inputform5 ? "border-red" : ""
                         }`}
                         style={{ textAlign: "right" }}
@@ -750,16 +754,15 @@ function AddUser1() {
                         onKeyDown={(e) => handleEnterKeyPress(inputform6ref, e)}
                       />
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-item">Emp Code:</div>
-                    <div className="col-sm-4">
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-2 label-customer">Mobile:</div>
+                    <div className="col-sm-3">
                       <Form.Control
                         type="text"
                         id="inputform6"
-                        placeholder="Employee Code"
+                        placeholder="Mobile"
                         name="inputform6"
-                        className={`form-control-item ${
+                        className={`form-control-customer ${
                           errors.inputform6 ? "border-red" : ""
                         }`}
                         style={{ textAlign: "right" }}
@@ -770,15 +773,16 @@ function AddUser1() {
                         onKeyDown={(e) => handleEnterKeyPress(inputform7ref, e)}
                       />
                     </div>
-
-                    <div className="col-sm-2 label-item">Pswd Exp:</div>
-                    <div className="col-sm-4">
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-customer">Due Date:</div>
+                    <div className="col-sm-3">
                       <Form.Control
-                        type="text"
+                        type="date"
                         id="inputform7"
-                        placeholder="Pswd Exp"
+                        placeholder="Due Date"
                         name="inputform7"
-                        className={`form-control-item ${
+                        className={`form-control-customer ${
                           errors.inputform7 ? "border-red" : ""
                         }`}
                         style={{ textAlign: "right" }}
@@ -789,168 +793,45 @@ function AddUser1() {
                         onKeyDown={(e) => handleEnterKeyPress(inputform8ref, e)}
                       />
                     </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-sm-2 label-item">Status:</div>
-                    <div className="col-sm-4">
+                    <div className="col-sm-1"></div>
+                    <div className="col-sm-3 label-customer">Due Payment:</div>
+                    <div className="col-sm-3">
                       <Form.Control
-                        as="select"
+                        type="text"
+                        id="inputform8"
+                        placeholder="Due Payment"
                         name="inputform8"
+                        className={`form-control-customer ${
+                          errors.inputform8 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
                         value={formData.inputform8}
-                        onChange={handleInputChange}
-                        className={`form-control-account ${
-                          errors.Status ? "border-red" : ""
-                        }`}
-                        style={{
-                          height: "28px",
-                          fontSize: "11px",
-                          padding: "0px",
-                          paddingLeft: "5px",
-                        }}
-                        onKeyDown={(e) => handleEnterKeyPress(inputform9ref, e)}
                         ref={inputform8ref}
-                      >
-                        <option value="A">Active</option>
-                        <option value="C">Cancell</option>
-                        <option value="S">Suspend</option>
-                      </Form.Control>
-                    </div>
-
-                    <div className="col-sm-2 label-item">User Type:</div>
-                    <div className="col-sm-4">
-                      <Form.Control
-                        as="select"
-                        name="inputform9"
-                        value={formData.inputform9}
+                        onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
-                        className={`form-control-account ${
-                          errors.Status ? "border-red" : ""
-                        }`}
-                        style={{
-                          height: "28px",
-                          fontSize: "11px",
-                          padding: "0px",
-                          paddingLeft: "5px",
-                        }}
-                        onKeyDown={(e) =>
-                          handleEnterKeyPress(inputform10ref, e)
-                        }
-                        ref={inputform9ref}
-                      >
-                        <option value="A">Admin</option>
-                        <option value="U">User</option>
-                        <option value="S">Super User</option>
-                        <option value="G">Guest</option>
-                      </Form.Control>
+                        onKeyDown={(e) => handleEnterKeyPress(inputform9ref, e)}
+                      />
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-2 label-item">Mobile:</div>
-                    <div className="col-sm-4">
+                    <div className="col-sm-2 label-customer">Email:</div>
+                    <div className="col-sm-5">
                       <Form.Control
                         type="text"
-                        id="inputform10"
-                        placeholder="Mobile No"
-                        name="inputform10"
-                        className={`form-control-item ${
-                          errors.inputform10 ? "border-red" : ""
-                        }`}
-                        style={{ textAlign: "left" }}
-                        value={formData.inputform10}
-                        ref={inputform10ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) =>
-                          handleEnterKeyPress(inputform11ref, e)
-                        }
-                      />
-                    </div>
-
-                    <div className="col-sm-2 label-item">Email:</div>
-                    <div className="col-sm-4">
-                      <Form.Control
-                        type="text"
-                        id="inputform11"
+                        id="inputform9"
                         placeholder="Email"
-                        name="inputform11"
-                        className={`form-control-item ${
-                          errors.inputform11 ? "border-red" : ""
+                        name="inputform9"
+                        className={`form-control-customer ${
+                          errors.inputform9 ? "border-red" : ""
                         }`}
                         style={{ textAlign: "left" }}
-                        value={formData.inputform11}
-                        ref={inputform11ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) =>
-                          handleEnterKeyPress(inputform12ref, e)
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-item">Time From:</div>
-                    <div className="col-sm-4">
-                      <Form.Control
-                        type="time"
-                        id="inputform12"
-                        placeholder="Time From"
-                        name="inputform12"
-                        className={`form-control-item ${
-                          errors.inputform12 ? "border-red" : ""
-                        }`}
-                        style={{ textAlign: "right" }}
-                        value={formData.inputform12}
-                        ref={inputform12ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) =>
-                          handleEnterKeyPress(inputform13ref, e)
-                        }
-                      />
-                    </div>
-
-                    <div className="col-sm-2 label-item">Time To:</div>
-                    <div className="col-sm-4">
-                      <Form.Control
-                        type="time"
-                        id="inputform13"
-                        placeholder="Time To"
-                        name="inputform13"
-                        className={`form-control-item ${
-                          errors.inputform13 ? "border-red" : ""
-                        }`}
-                        style={{ textAlign: "right" }}
-                        value={formData.inputform13}
-                        ref={inputform13ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) =>
-                          handleEnterKeyPress(inputform14ref, e)
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-item">Password:</div>
-                    <div className="col-sm-4">
-                      <Form.Control
-                        type="text"
-                        id="inputform14"
-                        placeholder="Password"
-                        name="inputform14"
-                        className={`form-control-item ${
-                          errors.inputform14 ? "border-red" : ""
-                        }`}
-                        style={{ textAlign: "left" }}
-                        value={formData.inputform14}
-                        ref={inputform14ref}
+                        value={formData.inputform9}
+                        ref={inputform9ref}
                         onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
                         onKeyDown={(e) => handleEnterKeyPress(Submit, e)}
                       />
                     </div>
-                    <div className="col-sm-2"></div>
                   </div>
                 </div>
               </div>
@@ -966,10 +847,10 @@ function AddUser1() {
               handleClear={handleClear}
               handleFormSubmit={handleFormSubmit}
             />
-            <GeneralTwoFieldsModal
+            <CustomerModal
               isOpen={isModalOpen}
               handleClose={handleCloseModal}
-              title="Select User"
+              title="Select Customer"
               technicians={dataa}
               searchRef={SearchBox}
               handleRowClick={handleRowClick}
@@ -983,4 +864,4 @@ function AddUser1() {
   );
 }
 
-export default AddUser1;
+export default Customer;

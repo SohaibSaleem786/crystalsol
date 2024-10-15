@@ -16,7 +16,9 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { useData } from "../../../DataContext";
+import { ChromePicker } from "react-color";
+
+// import { useData } from "../../../DataContext";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Ensure this is imported
 import man from "../../../image/man.png";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../Auth";
@@ -26,455 +28,12 @@ import { Settings, ExitToApp, Brightness4, Inbox } from "@mui/icons-material";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { useSidebar } from "../../../SidebarContext";
+import QuikLinks from "./QuickLinks/QuikLinks";
+import MessagePopup from "./Message/Message";
+import NotificationPopup from "./Notification/Notification";
+import BrightnessPopup from "./Brightness/Brightness";
+import Admin from "./Admin/Admin";
 
-const Menufile = ({ isOpen }) => {
-  console.log("menu open");
-  if (!isOpen) return null;
-
-  return (
-    <div
-      className="menu"
-      style={{
-        position: "absolute",
-        top: "60px",
-        left: "18%",
-        width: "650px",
-        backgroundColor: "#0d2949",
-        color: "white",
-        padding: "20px",
-        borderRadius: "10px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        zIndex: 9999,
-      }}
-    >
-      <div
-        className="menu-section"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Left Section: Applications */}
-        <div className="menu-applications" style={{ width: "60%" }}>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {/* Chat Application */}
-            <li style={{ marginBottom: "15px" }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(255, 0, 0, 0.5)",
-                    color: "#fff",
-                    marginRight: "10px", // Add margin to space out from text
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      color: "#ADB7C1",
-                    }}
-                  >
-                    💬
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <strong
-                    style={{
-                      color: "#d4d2d2",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Chat Application
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "#7fbef3",
-                    }}
-                  >
-                    New messages arrived
-                  </span>
-                </div>
-              </div>
-            </li>
-
-            <li style={{ marginBottom: "15px" }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(96, 154, 247, 0.5)",
-                    color: "#fff",
-                    marginRight: "10px", // Add margin to space out from text
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      color: "#ADB7C1",
-                    }}
-                  >
-                    📝
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <strong
-                    style={{
-                      color: "#d4d2d2",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Notes App
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "#7fbef3",
-                    }}
-                  >
-                    Get latest invoice
-                  </span>
-                </div>
-              </div>
-            </li>
-
-            <li style={{ marginBottom: "15px" }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(30, 186, 2, 0.5)",
-                    color: "#fff",
-                    marginRight: "10px", // Add margin to space out from text
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      color: "#ADB7C1",
-                    }}
-                  >
-                    📇
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <strong
-                    style={{
-                      color: "#d4d2d2",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Contact Application
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "#7fbef3",
-                    }}
-                  >
-                    2 Unsaved Contacts
-                  </span>
-                </div>
-              </div>
-            </li>
-
-            <li style={{ marginBottom: "15px" }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(161, 49, 14, 0.5)",
-                    color: "#fff",
-                    marginRight: "10px", // Add margin to space out from text
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      color: "#ADB7C1",
-                    }}
-                  >
-                    📧
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <strong
-                    style={{
-                      color: "#d4d2d2",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Email Application
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "#7fbef3",
-                    }}
-                  >
-                    2 unread messages
-                  </span>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div className="menu-applications" style={{ width: "60%" }}>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            <li style={{ marginBottom: "15px" }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(184, 147, 17, 0.5)",
-                    color: "#fff",
-                    marginRight: "10px", // Add margin to space out from text
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      color: "#ADB7C1",
-                    }}
-                  >
-                    📅
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <strong
-                    style={{
-                      color: "#d4d2d2",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Calendar App
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "#7fbef3",
-                    }}
-                  >
-                    Get dates
-                  </span>
-                </div>
-              </div>
-            </li>
-
-            <li style={{ marginBottom: "15px" }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(164, 222, 29, 0.5)",
-                    color: "#fff",
-                    marginRight: "10px", // Add margin to space out from text
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      color: "#ADB7C1",
-                    }}
-                  >
-                    🎟️
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <strong
-                    style={{
-                      color: "#d4d2d2",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Ticket Application
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "#7fbef3",
-                    }}
-                  >
-                    Get new tickets
-                  </span>
-                </div>
-              </div>
-            </li>
-
-            <li style={{ marginBottom: "15px" }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(25, 240, 22, 0.5)",
-                    color: "#fff",
-                    marginRight: "10px", // Add margin to space out from text
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      color: "#ADB7C1",
-                    }}
-                  >
-                    🛒
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <strong
-                    style={{
-                      color: "#d4d2d2",
-                      fontSize: "14px",
-                    }}
-                  >
-                    eCommerce
-                  </strong>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "#7fbef3",
-                    }}
-                  >
-                    Buy more products
-                  </span>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-        {/* Right Section: Quick Links */}
-        <div className="menu-quick-links" style={{ width: "35%" }}>
-          <strong
-            style={{
-              color: "white",
-              fontSize: "16px",
-            }}
-          >
-            Quick Links
-          </strong>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            <br />
-            {[
-              "Pricing Page",
-              "Authentication",
-              "Register Now",
-              "404 Error Page",
-              "Notes App",
-              "User Application",
-              "Account Settings",
-            ].map((linkText) => (
-              <li
-                key={linkText}
-                style={{
-                  marginBottom: "15px",
-                  fontSize: "14px",
-                  cursor: "pointer",
-                  color: "#b0c8e4",
-                  transition: "color 0.3s ease",
-                }}
-                onMouseEnter={(e) => (e.target.style.color = "#ffffff")}
-                onMouseLeave={(e) => (e.target.style.color = "#b0c8e4")}
-              >
-                {linkText}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Bottom "Check" Button */}
-      <button
-        style={{
-          backgroundColor: "#0090e7",
-          border: "none",
-          color: "white",
-          padding: "10px 20px",
-          borderRadius: "20px",
-          cursor: "pointer",
-          marginTop: "20px",
-          display: "block",
-          width: "100px",
-          transition: "background-color 0.3s ease",
-        }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = "#007bb5")}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = "#0090e7")}
-      >
-        Check
-      </button>
-    </div>
-  );
-};
 const Threelineiconheader = () => {
   return (
     <svg
@@ -751,77 +310,6 @@ export default function Header() {
       </Menu>
     </div>
   );
-  const PopupContainer = styled("div")({
-    position: "absolute",
-    top: "60px",
-    right: "20px",
-    width: "360px",
-    backgroundColor: "#0D2C46",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    zIndex: 1,
-    padding: "10px",
-    color: "#fff",
-    fontFamily: "Arial, sans-serif",
-  });
-
-  const Header = styled("h3")({
-    margin: "0 0 10px 0",
-    padding: "10px",
-    backgroundColor: "#007BFF",
-    borderRadius: "5px",
-    textAlign: "center",
-    fontSize: "16px", // Small but still readable
-  });
-
-  const MessageCount = styled("p")({
-    margin: "0 0 10px 0",
-    textAlign: "center",
-    fontSize: "12px", // Reduced font size for count
-  });
-
-  const MessageList = styled("div")({
-    maxHeight: "370px",
-    overflowY: "auto",
-    marginBottom: "10px",
-  });
-
-  const MessageItem = styled("div")({
-    display: "flex",
-    alignItems: "center",
-    padding: "10px",
-    backgroundColor: "#1E3A5F",
-    borderRadius: "5px",
-    marginBottom: "10px",
-  });
-
-  const MessageDetails = styled("div")({
-    flex: 1,
-    marginLeft: "10px",
-  });
-
-  const MessageTitle = styled("div")({
-    fontWeight: "bold",
-    fontSize: "12px", // Smaller font size
-  });
-
-  const MessageText = styled("p")({
-    margin: "5px 0 0 0",
-    fontSize: "10px",
-    color: "#ccc",
-  });
-
-  const CheckButton = styled("button")({
-    backgroundColor: "#007BFF",
-    color: "#fff",
-    width: "100%",
-    padding: "10px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "12px",
-  });
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -876,24 +364,60 @@ export default function Header() {
   );
   const [isOpenmail, setIsOpenmail] = useState(false);
   const [isOpennotification, setIsOpennotification] = useState(false);
-
-  const handleClickmail = () => {
-    setIsOpenmail(!isOpenmail);
-  };
-
-  const handleClicknotification = () => {
-    setIsOpennotification(!isOpennotification);
-  };
-
   const [isfilesOpen, setIsfilesOpen] = useState(false);
+  const [isbrightnessopen, setbrightnessopen] = useState(false);
+  const [isadminopen, setadminopen] = useState(false);
 
-  const togglefiles = () => {
-    setIsfilesOpen(!isfilesOpen);
+  const handleToggle = (type) => {
+    if (type === "mail") {
+      setIsOpenmail((prev) => !prev);
+      setIsOpennotification(false);
+      setIsfilesOpen(false);
+      setbrightnessopen(false);
+      setadminopen(false);
+    } else if (type === "notification") {
+      setIsOpenmail(false);
+      setIsOpennotification((prev) => !prev);
+      setIsfilesOpen(false);
+      setbrightnessopen(false);
+      setadminopen(false);
+    } else if (type === "files") {
+      setIsOpenmail(false);
+      setIsOpennotification(false);
+      setIsfilesOpen((prev) => !prev);
+      setbrightnessopen(false);
+      setadminopen(false);
+    } else if (type === "brightness") {
+      setIsOpenmail(false);
+      setIsOpennotification(false);
+      setIsfilesOpen(false);
+      setadminopen(false);
+      setbrightnessopen((prev) => !prev);
+    } else if (type === "admin") {
+      setIsOpenmail(false);
+      setIsOpennotification(false);
+      setIsfilesOpen(false);
+      setbrightnessopen(false);
+      setadminopen((prev) => !prev);
+    }
+  };
+  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
+    useTheme();
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [fontColor, setFontColor] = useState("#000000");
+
+  const toggleColorPicker = () => {
+    setShowColorPicker(!showColorPicker);
   };
 
-  const { isSidebarVisible, toggleSidebar, getcolor, toggleChangeColor } =
-    useSidebar();
+  const handleBackgroundChange = (color) => {
+    setBackgroundColor(color.hex);
+  };
 
+  const handleFontColorChange = (color) => {
+    setFontColor(color.hex);
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -965,15 +489,13 @@ export default function Header() {
                 borderRadius: "50%",
               },
             }}
-            onClick={() => {
-              togglefiles();
-            }}
+            onClick={() => handleToggle("files")}
           >
             <CustomGridIcon />
           </IconButton>
-          <Menufile isOpen={isfilesOpen} />
+          <QuikLinks isOpen={isfilesOpen} />
 
-          <IconButton
+          {/* <IconButton
             size="small"
             edge="start"
             color="inherit"
@@ -987,10 +509,27 @@ export default function Header() {
             }}
           >
             <SearchIcon />
-          </IconButton>
+          </IconButton> */}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {user.tusrtyp === "A" && (
+            <IconButton
+              size="small"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{
+                mr: 2,
+                "&:hover": {
+                  backgroundColor: "rgba(191, 191, 191,0.5)",
+                  borderRadius: "50%",
+                },
+              }}
+              onClick={() => handleToggle("admin")}
+            >
+              <i className="bi bi-person-workspace fs-5 text-white"></i>
+            </IconButton>
+            <Admin isOpen={isadminopen} />
+            {user && user.tusrtyp === "A" && (
               <>
                 <IconButton
                   size="small"
@@ -1021,16 +560,19 @@ export default function Header() {
                   borderRadius: "50%",
                 },
               }}
-              onClick={toggleChangeColor}
+              onClick={() => handleToggle("brightness")}
+              // onClick={toggleChangeColor}
             >
               <i className="bi bi-brightness-high fs-5 text-white"></i>
             </IconButton>
+            <BrightnessPopup isOpen={isbrightnessopen} />
 
             <IconButton
               size="large"
               aria-label="show new mails"
               color="inherit"
-              onClick={handleClickmail}
+              // onClick={handleClickmail}
+              onClick={() => handleToggle("mail")}
               sx={{
                 "&:hover": {
                   backgroundColor: "rgba(191, 191, 191,0.5)",
@@ -1055,73 +597,14 @@ export default function Header() {
               </Badge>
             </IconButton>
 
-            {isOpenmail && (
-              <PopupContainer>
-                <Header>Messages</Header>
-                <MessageCount>You have 5 new messages</MessageCount>
-
-                {/* Message List */}
-                <MessageList>
-                  {[
-                    {
-                      title: "Subtain",
-                      time: "9:10 PM",
-                      message: "Just a reminder of the event.",
-                      icon: <EventAvailableIcon />,
-                      avatarColor: "#FF5722",
-                    },
-                    {
-                      title: "Hamza",
-                      time: "9:02 AM",
-                      message: "Just send my admin!",
-                      icon: <EmailIcon />,
-                      avatarColor: "#2196F3",
-                    },
-                    {
-                      title: "Ahmed",
-                      time: "9:02 AM",
-                      message: "Just check emails for today.",
-                      icon: <EmailIcon />,
-                      avatarColor: "#4CAF50",
-                    },
-                    {
-                      title: "Numan",
-                      time: "9:08 AM",
-                      message: "You can customize this template as you...",
-                      icon: <SettingsIcon />,
-                      avatarColor: "#FF9800",
-                    },
-                    {
-                      title: "Saif",
-                      time: "9:02 AM",
-                      message: "Just send my admin!",
-                      icon: <EmailIcon />,
-                      avatarColor: "#9C27B0",
-                    },
-                  ].map((msg, index) => (
-                    <MessageItem key={index}>
-                      <Avatar style={{ backgroundColor: msg.avatarColor }}>
-                        {msg.title[0]}
-                      </Avatar>
-                      <MessageDetails>
-                        <MessageTitle>
-                          {msg.time} - {msg.title}
-                        </MessageTitle>
-                        <MessageText>{msg.message}</MessageText>
-                      </MessageDetails>
-                    </MessageItem>
-                  ))}
-                </MessageList>
-
-                <CheckButton>Check All Messages</CheckButton>
-              </PopupContainer>
-            )}
+            <MessagePopup isOpen={isOpenmail} />
 
             <IconButton
               size="large"
               aria-label="show new notification"
               color="inherit"
-              onClick={handleClicknotification}
+              // onClick={handleClicknotification}
+              onClick={() => handleToggle("notification")}
               sx={{
                 "&:hover": {
                   backgroundColor: "rgba(191, 191, 191,0.5)",
@@ -1146,68 +629,8 @@ export default function Header() {
                 </svg>
               </Badge>
             </IconButton>
+            <NotificationPopup isOpen={isOpennotification} />
 
-            {isOpennotification && (
-              <PopupContainer>
-                <Header>Notification</Header>
-                <MessageCount>You have 5 new notification</MessageCount>
-
-                {/* Message List */}
-                <MessageList>
-                  {[
-                    {
-                      title: "Event Today",
-                      time: "9:10 PM",
-                      message: "Just a reminder of the event.",
-                      icon: <EventAvailableIcon />,
-                      avatarColor: "#FF5722",
-                    },
-                    {
-                      title: "Send Email",
-                      time: "9:02 AM",
-                      message: "Just send my admin!",
-                      icon: <EmailIcon />,
-                      avatarColor: "#2196F3",
-                    },
-                    {
-                      title: "Check Email",
-                      time: "9:02 AM",
-                      message: "Just check emails for today.",
-                      icon: <EmailIcon />,
-                      avatarColor: "#4CAF50",
-                    },
-                    {
-                      title: "Settings",
-                      time: "9:08 AM",
-                      message: "You can customize this template as you...",
-                      icon: <SettingsIcon />,
-                      avatarColor: "#FF9800",
-                    },
-                    {
-                      title: "Send Email",
-                      time: "9:02 AM",
-                      message: "Just send my admin!",
-                      icon: <EmailIcon />,
-                      avatarColor: "#9C27B0",
-                    },
-                  ].map((msg, index) => (
-                    <MessageItem key={index}>
-                      <Avatar style={{ backgroundColor: msg.avatarColor }}>
-                        {msg.title[0]}
-                      </Avatar>
-                      <MessageDetails>
-                        <MessageTitle>
-                          {msg.time} - {msg.title}
-                        </MessageTitle>
-                        <MessageText>{msg.message}</MessageText>
-                      </MessageDetails>
-                    </MessageItem>
-                  ))}
-                </MessageList>
-
-                <CheckButton>Check All Notification</CheckButton>
-              </PopupContainer>
-            )}
             <IconButton
               size="large"
               edge="end"
