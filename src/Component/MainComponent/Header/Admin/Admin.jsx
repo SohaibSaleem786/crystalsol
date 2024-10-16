@@ -13,6 +13,7 @@ const Admin = ({ isOpen }) => {
     top: "60px",
     right: "10vw",
     width: "200px",
+    border: `1px solid ${fontcolor}`,
     backgroundColor: getcolor, // Get from context
     borderRadius: "10px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
@@ -28,7 +29,7 @@ const Admin = ({ isOpen }) => {
     cursor: "pointer",
     "&:hover": {
       backgroundColor: "#3368B5",
-      color: getcolor,
+      color: fontcolor,
     },
   });
 

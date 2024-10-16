@@ -50,6 +50,74 @@ const MenuAdmin = () => {
     toggleChangeColor,
   } = useTheme();
 
+  // function fetchDataForUserId() {
+  //   console.log("call the api");
+  //   const apiUrl = `${apiLinks}/GetMenu.php`;
+  //   const data = { FUsrId: tusrid, code: organisation.code };
+  //   const formData = new URLSearchParams(data).toString();
+
+  //   return axios
+  //     .post(apiUrl, formData)
+  //     .then((response) => response.data)
+  //     .then((apiData) => {
+  //       const mainMenuItem = apiData.find(
+  //         (item) => item.tmencod === `${activeTab}-00-00`
+  //       );
+
+  //       if (!mainMenuItem) {
+  //         console.log("Main menu item not found for tab:", activeTab);
+  //         return;
+  //       }
+
+  //       const subItems = apiData.filter((subItem) => {
+  //         return subItem.tmencod.startsWith(`${activeTab}-`);
+  //       });
+
+  //       // Transform data for rendering
+  //       const transformedData = subItems.map((item) => ({
+  //         // Sr: `${item.tmencod.split("-")[1]}`,
+  //         Sr: item.tmencod,
+
+  //         Description: item.tmendsc,
+  //         Permissions: (
+  //           <select
+  //             style={{
+  //               height: "20px",
+  //               fontSize: "12px",
+  //               padding: "0px",
+  //               textAlign: "center",
+  //               color: fontcolor, // Apply dynamic font color
+  //               backgroundColor: getcolor, // Apply dynamic background color
+  //               border: "1px solid #ccc", // Optional: to make sure the border color is visible
+  //             }}
+  //             value={item.Permission}
+  //             onChange={(e) =>
+  //               handlePermissionChange(item.tmencod, e.target.value)
+  //             }
+  //           >
+  //             <option value="Y">Yes</option>
+  //             <option value="N">No</option>
+  //             <option value="S">Skip</option>
+  //           </select>
+  //         ),
+  //       }));
+
+  //       // Columns configuration for the table
+  //       const columns = [
+  //         { label: "Sr", field: "Sr", sort: "asc" },
+  //         { label: "Description", field: "Description", sort: "asc" },
+  //         { label: "Permissions", field: "Permissions", sort: "asc" },
+  //       ];
+  //       console.log(transformedData, "transformData");
+
+  //       // Set the transformed data for the table
+  //       setData({ columns, rows: transformedData });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error.message);
+  //       throw error;
+  //     });
+  // }
   function fetchDataForUserId() {
     console.log("call the api");
     const apiUrl = `${apiLinks}/GetMenu.php`;
@@ -58,8 +126,21 @@ const MenuAdmin = () => {
 
     return axios
       .post(apiUrl, formData)
-      .then((response) => response.data)
-      .then((apiData) => {
+      .then((response) => {
+        const apiData = response.data;
+
+        // Alert the response from the API
+        alert(JSON.stringify(apiData)); // Show the response in an alert
+
+        // Check if apiData is an array
+        if (!Array.isArray(apiData)) {
+          console.error("Expected apiData to be an array, but got:", apiData);
+          alert(
+            "Unexpected response format from the API. Check the console for details."
+          );
+          return; // Exit the function if the data is not an array
+        }
+
         const mainMenuItem = apiData.find(
           (item) => item.tmencod === `${activeTab}-00-00`
         );
@@ -75,9 +156,7 @@ const MenuAdmin = () => {
 
         // Transform data for rendering
         const transformedData = subItems.map((item) => ({
-          // Sr: `${item.tmencod.split("-")[1]}`,
           Sr: item.tmencod,
-
           Description: item.tmendsc,
           Permissions: (
             <select
@@ -115,6 +194,9 @@ const MenuAdmin = () => {
       })
       .catch((error) => {
         console.error("Error:", error.message);
+        alert(
+          "An error occurred while fetching data. Check the console for details."
+        );
         throw error;
       });
   }

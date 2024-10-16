@@ -26,6 +26,7 @@ import Layout from "./Component/MainComponent/Layout/Layout.js";
 import AddUser1 from "./Component/Utilities/UserManagement/AddUser/AddUser.jsx";
 import Customer from "./Component/MainComponent/Header/Admin/Customer.jsx";
 import MenuAdmin from "./Component/MainComponent/Header/Admin/MenuAdmin/MenuAdmin.jsx";
+import MessageScreen from "./Component/MainComponent/Header/Message/MessageScreen.jsx";
 
 function App() {
   const queryClient = new QueryClient();
@@ -50,6 +51,11 @@ function App() {
                   exact
                   path="/ItemMaintenance"
                   element={<Item_Maintenance />}
+                />
+                <Route
+                  exact
+                  path="/MessageScreen"
+                  element={<MessageScreen />}
                 />
                 <Route exact path="/Customer" element={<Customer />} />
                 <Route exact path="/MenuAdmin" element={<MenuAdmin />} />

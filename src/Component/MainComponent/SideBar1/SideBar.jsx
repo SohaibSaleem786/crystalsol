@@ -131,8 +131,13 @@ const SideBar1 = () => {
   }, [navigate]);
 
   useEffect(() => {
-    const filteredData = data.filter((item) => item.Permission !== "S");
-    setMenuData(filteredData);
+    // Clear sending data on page refresh
+    setMenuData([]);
+    console.log(
+      user && user.tusrid,
+      organisation && organisation.code,
+      "user && user.tusrid, organisation && organisation.code"
+    );
     dispatch(fetchMenu(user && user.tusrid, organisation && organisation.code));
   }, [dispatch, user.tusrid, organisation.code]);
 

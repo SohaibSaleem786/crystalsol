@@ -11,8 +11,9 @@ import StatusSelect from "../../../MainComponent/StatusSelected/StatusSelected";
 import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
 import CustomerModal from "./CustomerModal";
 import { useMutation } from "@tanstack/react-query";
-
 import { useTheme } from "../../../../ThemeContext";
+import { fetchGetCrystalCustomer } from "../../../Redux/action";
+import { useSelector, useDispatch } from "react-redux";
 function formatToThreeDigits(number) {
   // Convert the number to a string and pad with leading zeros if necessary
   return number.toString().padStart(3, "0");
@@ -25,6 +26,8 @@ function removeParentDirectories(path) {
   return "";
 }
 function Customer() {
+  const dispatch = useDispatch();
+
   const user = getUserData();
   const organisation = getOrganisationData();
   const { apiLinks } = useTheme();
@@ -53,8 +56,17 @@ function Customer() {
     inputform13: "",
     inputform14: "",
   });
+  const { data, loading, error } = useSelector(
+    (state) => state.getcrystalcustomer
+  );
+
   const [dataa, setDataa] = useState([]);
 
+  useEffect(() => {
+    console.log("data", data);
+    setDataa(data);
+    dispatch(fetchGetCrystalCustomer());
+  }, [dispatch, organisation.code]);
   const Codefocus = () => {
     if (Code.current) {
       Code.current.focus();
@@ -116,19 +128,6 @@ function Customer() {
         value: formData?.Descriptionform,
         message: "Please fill your User Name",
       },
-
-      {
-        value: formData?.Descriptionform,
-        message: "Please fill your User Name",
-      },
-      {
-        value: formData?.inputform8,
-        message: "Please select your Status",
-      },
-      {
-        value: formData?.inputform9,
-        message: "Please select your Type",
-      },
     ];
 
     for (const check of checks) {
@@ -143,32 +142,46 @@ function Customer() {
         return;
       }
     }
+    const data = {
+      AccountCodeform: formData.AccountCodeform,
+      Descriptionform: formData.Descriptionform,
+      Status: formData.Status,
+      inputform4: formData.inputform4,
+      inputform5: formData.inputform5,
+      inputform6: formData.inputform6,
+      inputform7: formData.inputform7,
+      inputform8: formData.inputform8,
+      inputform9: formData.inputform9,
+      inputform10: formData.inputform10,
+      inputform11: formData.inputform11,
+    };
+    console.log("Form Data:", data);
     try {
       const formDataa = new FormData();
-      formDataa.append("FUsrId", formData.AccountCodeform);
-      formDataa.append("FUsrNam", formData.Descriptionform);
-      // formDataa.append("FUsrSts", formData.Status);
-      // formDataa.append("FUrdDsc", geturdu);
-      formDataa.append("FCshCod", formData.inputform4);
-      formDataa.append("FStrCod", formData.inputform5);
-      formDataa.append("FEmpCod", formData.inputform6);
-      formDataa.append("FPwdExp", formData.inputform7);
-      formDataa.append("FUsrSts", formData.inputform8);
-      formDataa.append("FUsrTyp", formData.inputform9);
-      formDataa.append("FMobNum", formData.inputform10);
-      formDataa.append("FEmlAdd", formData.inputform11);
-      formDataa.append("FTimFrm", formData.inputform12);
-      formDataa.append("FTimToo", formData.inputform13);
-      formDataa.append("FUsrPwd", formData.inputform14);
-      formDataa.append("code", organisation.code);
-      formDataa.append("FCurUsr", user.tusrid);
+      formDataa.append("code", formData.AccountCodeform);
+      formDataa.append("description", formData.Descriptionform);
+      formDataa.append("status", formData.Status);
+      formDataa.append("address", formData.inputform4);
+      formDataa.append("contactno", formData.inputform5);
+      formDataa.append("mobileno", formData.inputform6);
+      formDataa.append("email", formData.inputform7);
+      formDataa.append("menu", formData.inputform8);
+      formDataa.append("duepaymentdate", formData.inputform9);
+      formDataa.append("duepayment", formData.inputform10);
+      formDataa.append("lastpaymentdate", formData.inputform11);
+      formDataa.append("lastpayment", formData.inputform12);
+      formDataa.append("FCurUsr", "sohaib");
       console.log("Submitting Form Data:", formDataa);
 
-      const response = await axios.post(`${apiLinks}/SaveUser.php`, formDataa, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${apiLinks}/SaveCrystalCustomer.php`,
+        formDataa,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       console.log("API Response:", response);
 
@@ -225,11 +238,9 @@ function Customer() {
   };
   const [isModalOpen, setModalOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [data, setData] = useState({ columns: [], rows: [] });
   const [textdata, settextdata] = useState("Customer Management");
 
   const handleCloseModal = () => {
-    setData({ columns: [], rows: [] });
     setSearchText("");
     setHighlightedRowIndex(0);
     settextdata("Customer Management");
@@ -255,28 +266,27 @@ function Customer() {
     });
     console.log("value", value);
     setTimeout(() => {
-      const selectedItem = dataa.find((item) => item.tusrid === value);
+      const selectedItem = dataa.find((item) => item.code === value);
 
       console.log("Selected item:", selectedItem);
 
       if (selectedItem) {
         setFormData({
           ...formData,
-          AccountCodeform: selectedItem.tusrid,
-          Descriptionform: selectedItem.tusrnam,
-          inputform4: selectedItem["Cash Code"],
-          inputform5: selectedItem["Store Code"],
-          inputform6: selectedItem["Emp Code"],
-          inputform7: selectedItem.Expiry,
-          inputform8: selectedItem.Status,
-          inputform9: selectedItem.Type,
-          inputform10: selectedItem.Mobile,
-          inputform11: selectedItem.Email,
-          inputform12: selectedItem["Time From"],
-          inputform13: selectedItem["Time Too"],
-          inputform14: selectedItem.Password,
+          AccountCodeform: selectedItem.code,
+          Descriptionform: selectedItem.description,
+          Status: selectedItem.status,
+          inputform4: selectedItem.address,
+          inputform5: selectedItem.contactno,
+          inputform6: selectedItem.mobileno,
+          inputform7: selectedItem.email,
+          inputform8: selectedItem.menu,
+          inputform9: selectedItem.duepaymentdate,
+          inputform10: selectedItem.duepayment,
+          inputform11: selectedItem.lastpaymentdate,
+          inputform12: selectedItem.lastpayment,
         });
-        handlePrediction(selectedItem.tusrnam).then((result) => {
+        handlePrediction(selectedItem.description).then((result) => {
           setGeturdu(result);
         });
       } else {
@@ -338,7 +348,13 @@ function Customer() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const formattedValue = value.toUpperCase();
-
+    if (name === "inputform8") {
+      const lowercaseValue = value.toLowerCase();
+      setFormData({
+        ...formData,
+        inputform8: lowercaseValue,
+      });
+    }
     if (name === "Descriptionform") {
       console.log("Searching for:", formattedValue);
 
@@ -347,6 +363,7 @@ function Customer() {
         console.log("resulttttttttttt");
       });
     }
+
     if (name === "inputform11") {
       const lowercaseValue = value.toLowerCase();
       setFormData({
@@ -372,26 +389,25 @@ function Customer() {
     if (name === "AccountCodeform") {
       console.log("Searching for:", value);
 
-      const selectedItem = dataa.find((item) => item.tusrid === value);
+      const selectedItem = dataa.find((item) => item.code === value);
 
       console.log("Selected item:", selectedItem);
 
       if (selectedItem) {
         setFormData({
           ...formData,
-          AccountCodeform: selectedItem.tusrid,
-          Descriptionform: selectedItem.tusrnam,
-          inputform4: selectedItem["Cash Code"],
-          inputform5: selectedItem["Store Code"],
-          inputform6: selectedItem["Emp Code"],
-          inputform7: selectedItem.Expiry,
-          inputform8: selectedItem.Status,
-          inputform9: selectedItem.Type,
-          inputform10: selectedItem.Mobile,
-          inputform11: selectedItem.Email,
-          inputform12: selectedItem["Time From"],
-          inputform13: selectedItem["Time Too"],
-          inputform14: selectedItem.Password,
+          AccountCodeform: selectedItem.code,
+          Descriptionform: selectedItem.description,
+          Status: selectedItem.status,
+          inputform4: selectedItem.address,
+          inputform5: selectedItem.contactno,
+          inputform6: selectedItem.mobileno,
+          inputform7: selectedItem.email,
+          inputform8: selectedItem.menu,
+          inputform9: selectedItem.duepaymentdate,
+          inputform10: selectedItem.duepayment,
+          inputform11: selectedItem.lastpaymentdate,
+          inputform12: selectedItem.lastpayment,
         });
         handlePrediction(selectedItem.tcmpdsc).then((result) => {
           setGeturdu(result);
@@ -418,7 +434,6 @@ function Customer() {
   };
 
   const resetData = () => {
-    setData({ columns: [], rows: [] });
     setSearchText("");
   };
   const [highlightedRowIndex, setHighlightedRowIndex] = useState(0);
@@ -427,19 +442,18 @@ function Customer() {
     setModalOpen(false);
     setFormData({
       ...formData,
-      AccountCodeform: selectedItem.tusrid,
-      Descriptionform: selectedItem.tusrnam,
-      inputform4: selectedItem["Cash Code"],
-      inputform5: selectedItem["Store Code"],
-      inputform6: selectedItem["Emp Code"],
-      inputform7: selectedItem.Expiry,
-      inputform8: selectedItem.Status,
-      inputform9: selectedItem.Type,
-      inputform10: selectedItem.Mobile,
-      inputform11: selectedItem.Email,
-      inputform12: selectedItem["Time From"],
-      inputform13: selectedItem["Time Too"],
-      inputform14: selectedItem.Password,
+      AccountCodeform: selectedItem.code,
+      Descriptionform: selectedItem.description,
+      Status: selectedItem.status,
+      inputform4: selectedItem.address,
+      inputform5: selectedItem.contactno,
+      inputform6: selectedItem.mobileno,
+      inputform7: selectedItem.email,
+      inputform8: selectedItem.menu,
+      inputform9: selectedItem.duepaymentdate,
+      inputform10: selectedItem.duepayment,
+      inputform11: selectedItem.lastpaymentdate,
+      inputform12: selectedItem.lastpayment,
     });
     handlePrediction(selectedItem.tcmpdsc).then((result) => {
       setGeturdu(result);
@@ -516,7 +530,7 @@ function Customer() {
     overflowY: "hidden",
     wordBreak: "break-word",
     textAlign: "center",
-    maxWidth: "1000px",
+    maxWidth: "700px",
     fontSize: "15px",
     fontStyle: "normal",
     fontWeight: "400",
@@ -591,7 +605,7 @@ function Customer() {
                         onChange={(e) =>
                           handleInputChangefetchdata({
                             target: {
-                              value: e.target.value.toLowerCase(),
+                              value: e.target.value.toUpperCase(),
                             },
                           })
                         }
@@ -609,7 +623,7 @@ function Customer() {
 
                             if (dataa && dataa.length > 0) {
                               const selectedItem = dataa.find(
-                                (item) => item.tusrid === upperCaseValue
+                                (item) => item.code === upperCaseValue
                               );
 
                               if (selectedItem) {
@@ -634,9 +648,9 @@ function Customer() {
                           }
                         }}
                         onFocus={(e) => {
-                          setTimeout(() => {
-                            e.target.select();
-                          }, 500);
+                          // setTimeout(() => {
+                          //   e.target.select();
+                          // }, 500);
                         }}
                         onDoubleClick={(e) => {
                           handleDoubleClick(e);
@@ -668,8 +682,7 @@ function Customer() {
                         ref={Status}
                       >
                         <option value="A">Active</option>
-                        <option value="C">Cancell</option>
-                        <option value="S">Suspend</option>
+                        <option value="N">Not Active</option>
                       </Form.Control>
                     </div>
                   </div>
@@ -736,7 +749,7 @@ function Customer() {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-2 label-customer">Contact NO:</div>
+                    <div className="col-sm-2 label-customer">Contact#:</div>
                     <div className="col-sm-3">
                       <Form.Control
                         type="text"
@@ -746,6 +759,7 @@ function Customer() {
                         className={`form-control-customer ${
                           errors.inputform5 ? "border-red" : ""
                         }`}
+                        maxLength={11}
                         style={{ textAlign: "right" }}
                         value={formData.inputform5}
                         ref={inputform5ref}
@@ -755,6 +769,8 @@ function Customer() {
                       />
                     </div>
                     <div className="col-sm-2"></div>
+                  </div>
+                  <div className="row">
                     <div className="col-sm-2 label-customer">Mobile:</div>
                     <div className="col-sm-3">
                       <Form.Control
@@ -765,6 +781,7 @@ function Customer() {
                         className={`form-control-customer ${
                           errors.inputform6 ? "border-red" : ""
                         }`}
+                        maxLength={11}
                         style={{ textAlign: "right" }}
                         value={formData.inputform6}
                         ref={inputform6ref}
@@ -775,22 +792,66 @@ function Customer() {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-2 label-customer">Due Date:</div>
-                    <div className="col-sm-3">
+                    <div className="col-sm-2 label-customer">Email:</div>
+                    <div className="col-sm-5">
                       <Form.Control
-                        type="date"
+                        type="email"
                         id="inputform7"
-                        placeholder="Due Date"
+                        placeholder="Email"
                         name="inputform7"
                         className={`form-control-customer ${
                           errors.inputform7 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "right" }}
+                        style={{ textAlign: "left" }}
                         value={formData.inputform7}
                         ref={inputform7ref}
                         onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
                         onKeyDown={(e) => handleEnterKeyPress(inputform8ref, e)}
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
+                      />
+                    </div>
+                    <div className="col-sm-2 label-customer">Menu:</div>
+                    <div className="col-sm-3">
+                      <Form.Control
+                        type="menu"
+                        id="inputform8"
+                        placeholder="Menu"
+                        name="inputform8"
+                        className={`form-control-customer ${
+                          errors.inputform8 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "left" }}
+                        value={formData.inputform8.toLowerCase()}
+                        ref={inputform8ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          e.target.value = e.target.value.toLowerCase();
+                          handleInputChange(e);
+                        }}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform9ref, e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-customer">Due Date:</div>
+                    <div className="col-sm-3">
+                      <Form.Control
+                        type="date"
+                        id="inputform9"
+                        placeholder="Due Date"
+                        name="inputform9"
+                        className={`form-control-customer ${
+                          errors.inputform9 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform9}
+                        ref={inputform9ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform10ref, e)
+                        }
                       />
                     </div>
                     <div className="col-sm-1"></div>
@@ -798,35 +859,58 @@ function Customer() {
                     <div className="col-sm-3">
                       <Form.Control
                         type="text"
-                        id="inputform8"
+                        id="inputform10"
                         placeholder="Due Payment"
-                        name="inputform8"
+                        name="inputform10"
                         className={`form-control-customer ${
-                          errors.inputform8 ? "border-red" : ""
+                          errors.inputform10 ? "border-red" : ""
                         }`}
                         style={{ textAlign: "right" }}
-                        value={formData.inputform8}
-                        ref={inputform8ref}
+                        value={formData.inputform10}
+                        ref={inputform10ref}
                         onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
-                        onKeyDown={(e) => handleEnterKeyPress(inputform9ref, e)}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform11ref, e)
+                        }
                       />
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-2 label-customer">Email:</div>
-                    <div className="col-sm-5">
+                    <div className="col-sm-2 label-customer">Last Date:</div>
+                    <div className="col-sm-3">
+                      <Form.Control
+                        type="date"
+                        id="inputform11"
+                        placeholder="Last Date"
+                        name="inputform11"
+                        className={`form-control-customer ${
+                          errors.inputform11 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform11}
+                        ref={inputform11ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform12ref, e)
+                        }
+                      />
+                    </div>
+                    <div className="col-sm-1"></div>
+                    <div className="col-sm-3 label-customer">Last Payment:</div>
+                    <div className="col-sm-3">
                       <Form.Control
                         type="text"
-                        id="inputform9"
-                        placeholder="Email"
-                        name="inputform9"
+                        id="inputform12"
+                        placeholder="Last Payment"
+                        name="inputform12"
                         className={`form-control-customer ${
-                          errors.inputform9 ? "border-red" : ""
+                          errors.inputform12 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "left" }}
-                        value={formData.inputform9}
-                        ref={inputform9ref}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform12}
+                        ref={inputform12ref}
                         onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
                         onKeyDown={(e) => handleEnterKeyPress(Submit, e)}
@@ -854,8 +938,8 @@ function Customer() {
               technicians={dataa}
               searchRef={SearchBox}
               handleRowClick={handleRowClick}
-              firstColKey="tusrid"
-              secondColKey="tusrnam"
+              firstColKey="code"
+              secondColKey="description"
             />
           </div>
         </div>

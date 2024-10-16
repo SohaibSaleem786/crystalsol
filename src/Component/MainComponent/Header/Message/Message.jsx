@@ -7,6 +7,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useTheme } from "../../../../ThemeContext";
+import { useNavigate } from "react-router-dom";
 const messagesData = [
   {
     title: "Subtain",
@@ -46,6 +47,7 @@ const messagesData = [
 ];
 
 const MessagePopup = ({ isOpen }) => {
+  const navigatee = useNavigate();
   const { getcolor, fontcolor, setcolor, setfontcolor } = useTheme(); // Use the theme context
 
   const PopupContainer = styled("div")({
@@ -142,7 +144,9 @@ const MessagePopup = ({ isOpen }) => {
           ))}
         </MessageList>
 
-        <CheckButton>Check All Messages</CheckButton>
+        <CheckButton onClick={() => navigatee("/MessageScreen")}>
+          Check All Messages
+        </CheckButton>
       </PopupContainer>
     )
   );

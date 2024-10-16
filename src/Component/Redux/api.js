@@ -4,7 +4,7 @@ export const fetchDataMenu = async (userId, code) => {
   const response = await fetch(`${apiLink}GetUserMenu.php`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ FUsrId: userId, code }).toString(),
+    body: new URLSearchParams({ FUsrId: userId, code: code }).toString(),
   });
 
   const data = await response.json();
@@ -21,6 +21,16 @@ export const fetchDataGetUser = async (code) => {
   });
 
   const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+
+  return data;
+};
+
+export const fetchDataGetCrystalCustomer = async () => {
+  const response = await fetch(`${apiLink}GetCrystalCustomer.php`);
+
+  const data = await response.json();
+  console.log(data, "api.js");
   if (!response.ok) throw new Error(data.message);
 
   return data;
