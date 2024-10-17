@@ -14,7 +14,7 @@ const SingleButton = ({ to, text, style, onClick }) => {
           lineHeight: "12px",
           color: "rgb(230, 233, 236)",
           backgroundColor: "#186DB7",
-          padding: "10px 20px",
+          padding: "7px 10px",
           border: "none",
           cursor: "pointer",
           width: "120px",

@@ -2,18 +2,22 @@ import { Form } from "react-bootstrap";
 import Alert from "@mui/material/Alert";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import "./AddUser.css";
-import NavComponent from "../../../MainComponent/Navform/navbarform";
-import ButtonGroupp from "../../../MainComponent/Button/ButtonGroup/ButtonGroup";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import "./AdminAddUser.css";
+import NavComponent from "../../../../Navform/navbarform";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import StatusSelect from "../../../MainComponent/StatusSelected/StatusSelected";
-import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
-import GeneralTwoFieldsModal from "./AddUser_Modal";
-import { getcompanyData } from "./AddUser_Api";
+import {
+  isLoggedIn,
+  getUserData,
+  getOrganisationData,
+} from "../../../../../Auth";
+import GeneralTwoFieldsModal from "./AdminAddUser_Modal";
+import { getcompanyData } from "./AdminAddUser_Api";
 import { useMutation } from "@tanstack/react-query";
 
-import { useTheme } from "../../../../ThemeContext";
+import { useTheme } from "../../../../../../ThemeContext";
+import ButtonGroup from "../../../../Button/ButtonGroup/ButtonGroup";
 function formatToThreeDigits(number) {
   // Convert the number to a string and pad with leading zeros if necessary
   return number.toString().padStart(3, "0");
@@ -25,7 +29,8 @@ function removeParentDirectories(path) {
   console.error("Invalid path:", path);
   return "";
 }
-function AddUser1() {
+function AdminAddUser() {
+  const { selectedcode } = useParams();
   const user = getUserData();
   const organisation = getOrganisationData();
   const { apiLinks } = useTheme();
@@ -83,7 +88,7 @@ function AddUser1() {
 
   const GetDataList = () => {
     const data = {
-      code: organisation.code,
+      code: selectedcode,
     };
     mutation2.mutate(data);
   };
@@ -213,7 +218,7 @@ function AddUser1() {
       formDataa.append("FTimFrm", formData.inputform12);
       formDataa.append("FTimToo", formData.inputform13);
       formDataa.append("FUsrPwd", formData.inputform14);
-      formDataa.append("code", organisation.code);
+      formDataa.append("code", selectedcode);
       formDataa.append("FCurUsr", user.tusrid);
       console.log("Submitting Form Data:", formDataa);
 
@@ -280,13 +285,13 @@ function AddUser1() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState({ columns: [], rows: [] });
-  const [textdata, settextdata] = useState("User Management ");
+  const [textdata, settextdata] = useState("Admin UserManagement ");
 
   const handleCloseModal = () => {
     setData({ columns: [], rows: [] });
     setSearchText("");
     setHighlightedRowIndex(0);
-    settextdata("User Management");
+    settextdata("Admin UserManagement");
 
     setModalOpen(false);
   };
@@ -427,19 +432,19 @@ function AddUser1() {
       if (selectedItem) {
         setFormData({
           ...formData,
-          AccountCodeform: selectedItem.tusrid,
-          Descriptionform: selectedItem.tusrnam,
-          inputform4: selectedItem["Cash Code"],
-          inputform5: selectedItem["Store Code"],
-          inputform6: selectedItem["Emp Code"],
-          inputform7: selectedItem.Expiry,
-          inputform8: selectedItem.Status,
-          inputform9: selectedItem.Type,
-          inputform10: selectedItem.Mobile,
-          inputform11: selectedItem.Email,
-          inputform12: selectedItem["Time From"],
-          inputform13: selectedItem["Time Too"],
-          inputform14: selectedItem.Password,
+          AccountCodeform: selectedItem.tusrid || "",
+          Descriptionform: selectedItem.tusrnam || "",
+          inputform4: selectedItem["Cash Code"] || "",
+          inputform5: selectedItem["Store Code"] || "",
+          inputform6: selectedItem["Emp Code"] || "",
+          inputform7: selectedItem.Expiry || "",
+          inputform8: selectedItem.Status || "",
+          inputform9: selectedItem.Type || "",
+          inputform10: selectedItem.Mobile || "",
+          inputform11: selectedItem.Email || "",
+          inputform12: selectedItem["Time From"] || "",
+          inputform13: selectedItem["Time Too"] || "",
+          inputform14: selectedItem.Password || "",
         });
         handlePrediction(selectedItem.tcmpdsc).then((result) => {
           setGeturdu(result);
@@ -480,25 +485,25 @@ function AddUser1() {
     setModalOpen(false);
     setFormData({
       ...formData,
-      AccountCodeform: selectedItem.tusrid,
-      Descriptionform: selectedItem.tusrnam,
-      inputform4: selectedItem["Cash Code"],
-      inputform5: selectedItem["Store Code"],
-      inputform6: selectedItem["Emp Code"],
-      inputform7: selectedItem.Expiry,
-      inputform8: selectedItem.Status,
-      inputform9: selectedItem.Type,
-      inputform10: selectedItem.Mobile,
-      inputform11: selectedItem.Email,
-      inputform12: selectedItem["Time From"],
-      inputform13: selectedItem["Time Too"],
-      inputform14: selectedItem.Password,
+      AccountCodeform: selectedItem.tusrid || "",
+      Descriptionform: selectedItem.tusrnam || "",
+      inputform4: selectedItem["Cash Code"] || "",
+      inputform5: selectedItem["Store Code"] || "",
+      inputform6: selectedItem["Emp Code"] || "",
+      inputform7: selectedItem.Expiry || "",
+      inputform8: selectedItem.Status || "",
+      inputform9: selectedItem.Type || "",
+      inputform10: selectedItem.Mobile || "",
+      inputform11: selectedItem.Email || "",
+      inputform12: selectedItem["Time From"] || "",
+      inputform13: selectedItem["Time Too"] || "",
+      inputform14: selectedItem.Password || "",
     });
-    handlePrediction(selectedItem.tcmpdsc).then((result) => {
+    handlePrediction(selectedItem.tusrnam).then((result) => {
       setGeturdu(result);
     });
 
-    settextdata("User Management");
+    settextdata("Admin User Management");
 
     resetData();
   };
@@ -536,7 +541,7 @@ function AddUser1() {
   };
 
   const handleReturn = () => {
-    navigate("/UserManagement");
+    navigate("/AdminUserManagement");
   };
 
   const handleBlur = (codeparam) => {
@@ -1034,7 +1039,7 @@ function AddUser1() {
             </Form>
 
             {/* // three button in this  */}
-            <ButtonGroupp
+            <ButtonGroup
               Submit={Submit}
               handleFocus={handleFocus}
               handleBlur={handleBlur}
@@ -1060,4 +1065,4 @@ function AddUser1() {
   );
 }
 
-export default AddUser1;
+export default AdminAddUser;

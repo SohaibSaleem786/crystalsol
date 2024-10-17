@@ -136,21 +136,17 @@ export default function Header() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
   const handleLogout = () => {
-    // Remove user data from local storage
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     localStorage.removeItem("organisation");
-    // Refresh the page
     setTimeout(() => {
       window.location.reload();
-    }, 3000);
+    }, 1000);
     // Optionally, you can also reset your alert data or any other state
     // setAlertData({
     //   type: "info",
     //   message: "You have been logged out.",
     // });
-
-    // Redirect to the login page or another page
     navigate("/");
   };
 
@@ -319,7 +315,7 @@ export default function Header() {
           <ListItemIcon sx={{ color: "white" }}>
             <ExitToApp fontSize="small" />
           </ListItemIcon>
-          Sign Outt
+          Sign Out
         </MenuItem>
       </Menu>
     </div>
@@ -548,7 +544,7 @@ export default function Header() {
               </>
             )}
 
-            <Admin isOpen={isadminopen} />
+            <Admin isOpen={isadminopen} handleToggle={handleToggle} />
             {user && user.tusrtyp === "A" && (
               <>
                 <IconButton

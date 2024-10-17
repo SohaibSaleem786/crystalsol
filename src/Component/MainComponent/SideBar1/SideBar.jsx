@@ -21,7 +21,11 @@ import {
 } from "react-icons/fa";
 import { ExpandLess, ExpandMore, Opacity } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchMenu } from "../../Redux/action";
+import {
+  fetchGetCrystalCustomer,
+  fetchGetUser,
+  fetchMenu,
+} from "../../Redux/action";
 import { getUserData, getOrganisationData, isLoggedIn } from "../../Auth";
 import { Avatar } from "@mui/material"; // Import Avatar component
 import { Typography } from "@mui/material";
@@ -131,14 +135,15 @@ const SideBar1 = () => {
   }, [navigate]);
 
   useEffect(() => {
-    // Clear sending data on page refresh
     setMenuData([]);
     console.log(
       user && user.tusrid,
       organisation && organisation.code,
       "user && user.tusrid, organisation && organisation.code"
     );
+    dispatch(fetchGetUser(organisation && organisation.code));
     dispatch(fetchMenu(user && user.tusrid, organisation && organisation.code));
+    dispatch(fetchGetCrystalCustomer());
   }, [dispatch, user.tusrid, organisation.code]);
 
   useEffect(() => {

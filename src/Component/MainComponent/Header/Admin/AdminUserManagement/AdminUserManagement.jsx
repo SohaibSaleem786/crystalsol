@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Container, Spinner, Nav } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useTheme } from "../../../ThemeContext";
-
-import { isLoggedIn, getUserData, getOrganisationData } from "../../Auth";
-import NavComponent from "../../MainComponent/Navform/navbarform";
-import "./UserManagement1.css";
-import SingleButton from "../../MainComponent/Button/SingleButton/SingleButton";
+import { useTheme } from "../../../../../ThemeContext";
+import { isLoggedIn, getUserData, getOrganisationData } from "../../../../Auth";
+import NavComponent from "../../../Navform/navbarform";
+import "./AdminUserManagement.css";
+import SingleButton from "../../../Button/SingleButton/SingleButton";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchGetUser } from "../../Redux/action";
-export default function UserMaintenance() {
+import {
+  fetchGetCrystalCustomer,
+  fetchGetUser,
+} from "../../../../Redux/action";
+import AdminUserManagementModal from "./AdminUserManagementModal";
+export default function AdminUserManagement() {
   const dispatch = useDispatch();
   const user = getUserData();
   const organisation = getOrganisationData();
@@ -19,17 +22,24 @@ export default function UserMaintenance() {
   const secondaryColor = "white";
   const btnColor = "#3368B5";
   const textColor = "white";
-
+  const {
+    isSidebarVisible,
+    toggleSidebar,
+    getcolor,
+    fontcolor,
+    toggleChangeColor,
+  } = useTheme();
   const [tableData, setTableData] = useState([]);
   const [selectedSearch, setSelectedSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { data, loading, error } = useSelector((state) => state.getuser);
+  const [selectedcode, setSelectedCode] = useState("CRYSTAL");
 
   useEffect(() => {
     setTableData(data);
-    console.log(data, "data", organisation && organisation.code);
-    dispatch(fetchGetUser(organisation && organisation.code));
-  }, [dispatch, organisation.code]);
+    console.log(data, "selectedcode", selectedcode);
+    dispatch(fetchGetUser(selectedcode));
+  }, [dispatch, selectedcode]);
 
   const handleSearch = (e) => {
     setSelectedSearch(e.target.value);
@@ -73,13 +83,7 @@ export default function UserMaintenance() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const {
-    isSidebarVisible,
-    toggleSidebar,
-    getcolor,
-    fontcolor,
-    toggleChangeColor,
-  } = useTheme();
+
   const contentStyle = {
     backgroundColor: getcolor,
     height: "100vh",
@@ -105,6 +109,50 @@ export default function UserMaintenance() {
     lineHeight: "23px",
     fontFamily: '"Poppins", sans-serif',
   };
+  const SearchBox = useRef(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const handleRowClick = async (selectedItem, rowIndex) => {
+    console.log("handleRowClickAccount", selectedItem);
+    await dispatch(fetchGetUser(selectedItem.code));
+    setSelectedCode(selectedItem.code);
+    console.log("selectedCode", selectedItem.code);
+
+    if (data && data.length > 0) {
+      setTableData(data);
+    }
+    setModalOpen(false);
+  };
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleDoubleClick = (e) => {
+    setTimeout(() => {
+      SearchBox.current.focus();
+    }, 500);
+    setModalOpen(true);
+  };
+  const {
+    data: crystalCustomerData,
+    loading: crystalCustomerLoading,
+    error: crystalCustomerError,
+  } = useSelector((state) => state.getcrystalcustomer);
+  const [dataaa, setDataaa] = useState([]);
+
+  // Only fetch once when component mounts
+  useEffect(() => {
+    console.log("customerlist", crystalCustomerData);
+    setTimeout(() => {
+      console.log("customerlist", crystalCustomerData);
+    }, 3000);
+    if (crystalCustomerData?.length === 0) {
+      dispatch(fetchGetCrystalCustomer());
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    setDataaa(crystalCustomerData);
+  }, [crystalCustomerData]);
 
   return (
     <>
@@ -118,53 +166,33 @@ export default function UserMaintenance() {
             borderRadius: "9px",
           }}
         >
-          <NavComponent textdata="User Management" />
-          <div className="my-1 mx-3">
-            <div className="col-12 d-flex justify-content-between mt-1">
-              <div className="col-4 d-flex justify-content-start">
-                <label
-                  className="col-3 text-end"
-                  // style={{ fontSize: "0.8rem" }}
-                >
-                  <strong>Search: &nbsp;&nbsp;</strong>
-                </label>
-                <input
-                  type="text"
-                  className="col-6"
-                  onChange={handleSearch}
-                  placeholder="Search by Name"
-                  value={selectedSearch}
-                  style={{
-                    height: "22px",
-                    // fontSize: "0.8rem",
-                    backgroundColor: getcolor,
-                    border: `1px solid ${fontcolor}`,
-                    color: fontcolor,
-                    "::placeholder": {
-                      color: "white",
-                      opacity: 5,
-                    },
-                  }}
-                />
-                {/* <Form.Control
-                  type="search"
-                  placeholder="Search"
-                  className="col-6"
-                  onChange={handleSearch}
-                  value={selectedSearch}
-                  style={{
-                    height: "22px",
-                    // fontSize: "0.8rem",
-                    backgroundColor: getcolor,
-                    border: `1px solid ${fontcolor}`,
-                    color: fontcolor,
-                    "::placeholder": {
-                      color: "white",
-                    },
-                  }}
-                /> */}
-              </div>
+          <NavComponent textdata="Admin UserManagement" />
+          <div className="my-1 mx-3 row">
+            <div className="col-4">
+              <label className="col-3 text-end">
+                <strong>Search: &nbsp;&nbsp;</strong>
+              </label>
+              <input
+                type="text"
+                className="col-9"
+                onChange={handleSearch}
+                placeholder="Search by Name"
+                value={selectedSearch}
+                style={{
+                  height: "22px",
+                  // fontSize: "0.8rem",
+                  backgroundColor: getcolor,
+                  border: `1px solid ${fontcolor}`,
+                  color: fontcolor,
+                  "::placeholder": {
+                    color: "white",
+                    opacity: 5,
+                  },
+                }}
+              />
             </div>
+            <div className="col-4"></div>
+            <div className="col-4">{selectedcode}</div>
           </div>
           <div>
             <div
@@ -374,7 +402,9 @@ export default function UserMaintenance() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              <Link to={`/MenuUser/${item.tusrid}`}>
+                              <Link
+                                to={`/AdminMenuUser/${item.tusrid}/${selectedcode}`}
+                              >
                                 <i
                                   className="fa fa-list fa-xl"
                                   style={{ color: fontcolor }}
@@ -420,9 +450,24 @@ export default function UserMaintenance() {
               style={{ backgroundColor: "#186DB7", width: "120px" }}
             />
             <SingleButton
-              to="/AddUser1"
+              to={`/AdminAddUser/${selectedcode}`}
               text="User"
               style={{ backgroundColor: "#186DB7", width: "120px" }}
+            />
+            <SingleButton
+              onClick={handleDoubleClick}
+              text=" Company"
+              style={{ backgroundColor: "#186DB7", width: "120px" }}
+            />
+            <AdminUserManagementModal
+              isOpen={isModalOpen}
+              handleClose={handleCloseModal}
+              title="Select Customer"
+              technicians={crystalCustomerData}
+              searchRef={SearchBox}
+              handleRowClick={handleRowClick}
+              firstColKey="code"
+              secondColKey="description"
             />
           </div>
         </div>

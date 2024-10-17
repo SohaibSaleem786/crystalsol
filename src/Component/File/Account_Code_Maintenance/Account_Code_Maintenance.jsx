@@ -333,8 +333,8 @@ function Account_Code_Maintenance() {
   const handleBlurRVC = (e) => {
     const accountCodeValue = String(formData.AccountCodeform);
     const part1 = "12"; // Fixed part
-    const part2 = accountCodeValue.slice(0, 2).padStart(2, "0"); // First 2 digits, padded
-    const part3 = accountCodeValue.slice(2).padStart(4, "0"); // Last 4 digits, padded
+    const part2 = accountCodeValue.slice(0, 2).padStart(2, "0");
+    const part3 = accountCodeValue.slice(2).padStart(4, "0");
 
     // Combine parts to form the desired format
     const formattedValue = `${part1}-${part2}-${part3}`;

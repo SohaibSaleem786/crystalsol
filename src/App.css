@@ -172,3 +172,46 @@ td {
 .form-control-remarks:focus {
   border: 1px solid red !important;
 }
+input[name="AccountCodeform"]::placeholder {
+  color: gray;
+}
+
+input[name="Descriptionform"]::placeholder {
+  color: gray;
+}
+input[name="inputform4"]::placeholder {
+  color: gray;
+}
+input[name="inputform5"]::placeholder {
+  color: gray;
+}
+input[name="inputform6"]::placeholder {
+  color: gray;
+}
+input[name="inputform7"]::placeholder {
+  color: gray;
+}
+input[name="inputform8"]::placeholder {
+  color: gray;
+}
+input[name="inputform9"]::placeholder {
+  color: gray;
+}
+input[name="inputform10"]::placeholder {
+  color: gray;
+}
+input[name="inputform11"]::placeholder {
+  color: gray;
+}
+input[name="inputform12"]::placeholder {
+  color: gray;
+}
+input[name="inputform13"]::placeholder {
+  color: gray;
+}
+input[name="inputform14"]::placeholder {
+  color: gray;
+}
+input[name="form-control-remarkss"]::placeholder {
+  color: gray;
+}

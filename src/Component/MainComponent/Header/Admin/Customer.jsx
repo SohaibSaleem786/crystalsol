@@ -59,14 +59,19 @@ function Customer() {
   const { data, loading, error } = useSelector(
     (state) => state.getcrystalcustomer
   );
-
   const [dataa, setDataa] = useState([]);
 
+  // Only fetch once when component mounts
   useEffect(() => {
-    console.log("data", data);
+    if (data?.length === 0) {
+      dispatch(fetchGetCrystalCustomer());
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
     setDataa(data);
-    dispatch(fetchGetCrystalCustomer());
-  }, [dispatch, organisation.code]);
+  }, [data]);
+
   const Codefocus = () => {
     if (Code.current) {
       Code.current.focus();
@@ -119,6 +124,7 @@ function Customer() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic validation
     const checks = [
       {
         value: formData?.AccountCodeform,
@@ -142,37 +148,39 @@ function Customer() {
         return;
       }
     }
-    const data = {
-      AccountCodeform: formData.AccountCodeform,
-      Descriptionform: formData.Descriptionform,
-      Status: formData.Status,
-      inputform4: formData.inputform4,
-      inputform5: formData.inputform5,
-      inputform6: formData.inputform6,
-      inputform7: formData.inputform7,
-      inputform8: formData.inputform8,
-      inputform9: formData.inputform9,
-      inputform10: formData.inputform10,
-      inputform11: formData.inputform11,
-    };
-    console.log("Form Data:", data);
-    try {
-      const formDataa = new FormData();
-      formDataa.append("code", formData.AccountCodeform);
-      formDataa.append("description", formData.Descriptionform);
-      formDataa.append("status", formData.Status);
-      formDataa.append("address", formData.inputform4);
-      formDataa.append("contactno", formData.inputform5);
-      formDataa.append("mobileno", formData.inputform6);
-      formDataa.append("email", formData.inputform7);
-      formDataa.append("menu", formData.inputform8);
-      formDataa.append("duepaymentdate", formData.inputform9);
-      formDataa.append("duepayment", formData.inputform10);
-      formDataa.append("lastpaymentdate", formData.inputform11);
-      formDataa.append("lastpayment", formData.inputform12);
-      formDataa.append("FCurUsr", "sohaib");
-      console.log("Submitting Form Data:", formDataa);
+    // const data = {
+    //   AccountCodeform: formData.AccountCodeform,
+    //   Descriptionform: formData.Descriptionform,
+    //   Status: formData.Status,
+    //   inputform4: formData.inputform4,
+    //   inputform5: formData.inputform5,
+    //   inputform6: formData.inputform6,
+    //   inputform7: formData.inputform7,
+    //   inputform8: formData.inputform8,
+    //   inputform9: formData.inputform9,
+    //   inputform10: formData.inputform10,
+    //   inputform11: formData.inputform11,
+    // };
+    // console.log("Form Data:", data);
+    // Prepare form data for submission
+    const formDataa = new FormData();
+    formDataa.append("code", formData.AccountCodeform);
+    formDataa.append("description", formData.Descriptionform);
+    formDataa.append("status", formData.Status);
+    formDataa.append("address", formData.inputform4);
+    formDataa.append("contactno", formData.inputform5);
+    formDataa.append("mobileno", formData.inputform6);
+    formDataa.append("email", formData.inputform7);
+    formDataa.append("menu", formData.inputform8);
+    formDataa.append("duepaymentdate", formData.inputform9);
+    formDataa.append("duepayment", formData.inputform10);
+    formDataa.append("lastpaymentdate", formData.inputform11);
+    formDataa.append("lastpayment", formData.inputform12);
+    formDataa.append("FCurUsr", "sohaib");
 
+    console.log("Submitting Form Data:", formDataa);
+
+    try {
       const response = await axios.post(
         `${apiLinks}/SaveCrystalCustomer.php`,
         formDataa,
@@ -186,7 +194,12 @@ function Customer() {
       console.log("API Response:", response);
 
       if (response.data.error === 200) {
-        Codefocus();
+        Code.current.focus();
+        setTimeout(() => {
+          dispatch(fetchGetCrystalCustomer()); // Re-fetch data from the server
+        }, 1000);
+
+        // Clear form fields
         setFormData({
           ...formData,
           AccountCodeform: "",
@@ -201,9 +214,8 @@ function Customer() {
           inputform10: "",
           inputform11: "",
           inputform12: "",
-          inputform13: "",
-          inputform14: "",
         });
+
         setAlertData({
           type: "success",
           message: `${response.data.message}`,
@@ -222,6 +234,13 @@ function Customer() {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setAlertData({
+        type: "error",
+        message: "Form submission failed. Please try again.",
+      });
+      setTimeout(() => {
+        setAlertData(null);
+      }, 2000);
     } finally {
       console.log("Form submission process completed.");
     }
@@ -242,6 +261,7 @@ function Customer() {
 
   const handleCloseModal = () => {
     setSearchText("");
+    // data
     setHighlightedRowIndex(0);
     settextdata("Customer Management");
 
@@ -249,6 +269,7 @@ function Customer() {
   };
 
   const handleDoubleClick = (e) => {
+    dispatch(fetchGetCrystalCustomer());
     focusNextInput(Code);
     console.log("====== handle double click=======");
     // setSearchText(e.target.value);
@@ -649,12 +670,13 @@ function Customer() {
                         }}
                         onFocus={(e) => {
                           // setTimeout(() => {
-                          //   e.target.select();
+                          e.target.select();
                           // }, 500);
                         }}
                         onDoubleClick={(e) => {
                           handleDoubleClick(e);
                           setTimeout(() => {
+                            dispatch(fetchGetCrystalCustomer());
                             focusNextInput(SearchBox);
                           }, 100);
                         }}
@@ -674,15 +696,30 @@ function Customer() {
                         }`}
                         style={{
                           height: "28px",
-                          fontSize: "11px",
                           padding: "0px",
                           paddingLeft: "5px",
                         }}
                         onKeyDown={(e) => handleEnterKeyPress(Description, e)}
                         ref={Status}
                       >
-                        <option value="A">Active</option>
-                        <option value="N">Not Active</option>
+                        <option
+                          style={{
+                            backgroundColor: getcolor,
+                            color: fontcolor,
+                          }}
+                          value="A"
+                        >
+                          Active
+                        </option>
+                        <option
+                          style={{
+                            backgroundColor: getcolor,
+                            color: fontcolor,
+                          }}
+                          value="N"
+                        >
+                          Not Active
+                        </option>
                       </Form.Control>
                     </div>
                   </div>

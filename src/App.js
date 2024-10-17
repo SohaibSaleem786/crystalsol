@@ -27,6 +27,9 @@ import AddUser1 from "./Component/Utilities/UserManagement/AddUser/AddUser.jsx";
 import Customer from "./Component/MainComponent/Header/Admin/Customer.jsx";
 import MenuAdmin from "./Component/MainComponent/Header/Admin/MenuAdmin/MenuAdmin.jsx";
 import MessageScreen from "./Component/MainComponent/Header/Message/MessageScreen.jsx";
+import AdminUserManagement from "./Component/MainComponent/Header/Admin/AdminUserManagement/AdminUserManagement.jsx";
+import AdminMenuUser from "./Component/MainComponent/Header/Admin/AdminUserManagement/AdminMenuUser/AdminMenuUser.jsx";
+import AdminAddUser from "./Component/MainComponent/Header/Admin/AdminUserManagement/AdminAddUser/AdminAddUser.jsx";
 
 function App() {
   const queryClient = new QueryClient();
@@ -87,6 +90,22 @@ function App() {
                 />
                 <Route exact path="/MenuUser/:tusrid" element={<MenuUser />} />
                 <Route exact path="/AddUser1" element={<AddUser1 />} />
+
+                <Route
+                  exact
+                  path="/AdminUserManagement"
+                  element={<AdminUserManagement />}
+                />
+                <Route
+                  exact
+                  path="/AdminMenuUser/:tusrid/:selectedcode"
+                  element={<AdminMenuUser />}
+                />
+                <Route
+                  exact
+                  path="/AdminAddUser/:selectedcode"
+                  element={<AdminAddUser />}
+                />
               </Route>
             </Routes>
           </QueryClientProvider>

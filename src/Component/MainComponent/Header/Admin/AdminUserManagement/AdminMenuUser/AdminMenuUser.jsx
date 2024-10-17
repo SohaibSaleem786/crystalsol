@@ -6,18 +6,21 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 import Alert from "@mui/material/Alert";
-import { useTheme } from "../../../../ThemeContext";
-import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
-import NavComponent from "../../../MainComponent/Navform/navbarform";
-import "./MenuUser.css";
-import SingleButton from "../../../MainComponent/Button/SingleButton/SingleButton";
-import { fetchGetUser, fetchMenu } from "../../../Redux/action";
+import { useTheme } from "../../../../../../ThemeContext";
+import {
+  isLoggedIn,
+  getUserData,
+  getOrganisationData,
+} from "../../../../../Auth";
+import NavComponent from "../../../../Navform/navbarform";
+import "./AdminMenuUser.css";
+import SingleButton from "../../../../Button/SingleButton/SingleButton";
+import { fetchGetUser, fetchMenu } from "../../../../../Redux/action";
 import { useSelector, useDispatch } from "react-redux";
-const MenuUser = () => {
-  const { tusrid } = useParams();
+const AdminMenuUser = () => {
+  const { tusrid, selectedcode } = useParams();
   const user = getUserData();
   const organisation = getOrganisationData();
-
   const { apiLinks } = useTheme();
   const [activeTab, setActiveTab] = useState(1);
   const [getdata, setData] = useState({ columns: [], rows: [] });
@@ -120,7 +123,7 @@ const MenuUser = () => {
   function fetchDataForUserId() {
     console.log("call the api");
     const apiUrl = `${apiLinks}/GetMenu.php`;
-    const data = { FUsrId: tusrid, code: organisation.code };
+    const data = { FUsrId: tusrid, code: selectedcode };
     const formData = new URLSearchParams(data).toString();
 
     return axios
@@ -212,7 +215,7 @@ const MenuUser = () => {
   function Update_Menu(users) {
     const apiUrl = `${apiLinks}/SavePermission.php`;
     const data = {
-      code: organisation.code,
+      code: selectedcode,
       FUsrId: tusrid,
       FMenCod: users.mcode,
       FUsrPem: users.permission,
@@ -349,7 +352,7 @@ const MenuUser = () => {
               color: fontcolor,
             }}
           >
-            <NavComponent textdata="Menu User" />
+            <NavComponent textdata="Admin Menu User" />
             <div
               className="row"
               style={{
@@ -516,12 +519,12 @@ const MenuUser = () => {
               }}
             >
               <SingleButton
-                to="/UserManagement"
+                to="/AdminUserManagement"
                 text="Return"
                 style={{ backgroundColor: "#186DB7", width: "120px" }}
               />
               <SingleButton
-                to="/AddUser1"
+                to="/AdminAddUser1"
                 text="User"
                 style={{ backgroundColor: "#186DB7", width: "120px" }}
               />
@@ -533,4 +536,4 @@ const MenuUser = () => {
   );
 };
 
-export default MenuUser;
+export default AdminMenuUser;

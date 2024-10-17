@@ -209,6 +209,10 @@ function Loginn() {
                   borderRadius: "5px",
                   border: "1px solid #ccc",
                 }}
+                onFocus={(e) => e.target.select()}
+                onChange={(e) =>
+                  (e.target.value = e.target.value.toLowerCase())
+                }
               />
               <div className="input-container" style={{ position: "relative" }}>
                 <input
@@ -216,6 +220,7 @@ function Loginn() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   ref={password}
+                  onFocus={(e) => e.target.select()}
                   onKeyDown={(e) => handleEnterKeyPress(Code, e)}
                   style={{
                     padding: "10px",
@@ -238,6 +243,7 @@ function Loginn() {
                 type="text"
                 placeholder="Code"
                 ref={Code}
+                onFocus={(e) => e.target.select()}
                 onChange={(e) =>
                   (e.target.value = e.target.value.toUpperCase())
                 }
