@@ -689,6 +689,7 @@ import {
   fetchGetCrystalMenu,
 } from "../../../../Redux/action";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchDataGetCrystalMenu } from "../../../../Redux/api";
 function formatToThreeDigits(number) {
   // Convert the number to a string and pad with leading zeros if necessary
   return number.toString().padStart(3, "0");
@@ -781,20 +782,17 @@ function MenuAdmin() {
 
   const [errors, setErrors] = useState({});
 
+  const [geturdu, setGeturdu] = useState("");
   const [selectedImage1, setSelectedImage1] = useState(null);
 
   const handleImageChange1 = (event) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedImage1(file);
-      console.log("file", file);
       const imgElement = document.getElementById("pic1-preview");
       imgElement.src = URL.createObjectURL(file);
     }
   };
-
-  const [geturdu, setGeturdu] = useState("");
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
@@ -869,9 +867,7 @@ function MenuAdmin() {
 
       if (response.data.error === 200) {
         Code.current.focus();
-        setTimeout(() => {
-          dispatch(fetchGetCrystalCustomer()); // Re-fetch data from the server
-        }, 1000);
+        dispatch(fetchGetCrystalMenu());
 
         // Clear form fields
         setFormData({
@@ -937,21 +933,29 @@ function MenuAdmin() {
     setSearchText("");
     setHighlightedRowIndex(0);
     settextdata("Menu Management");
-
+    setTimeout(() => {
+      dispatch(fetchGetCrystalMenu());
+    }, 500);
     setModalOpen(false);
   };
 
-  const handleDoubleClick = (e) => {
+  const handleDoubleClick = async (e) => {
     focusNextInput(Code);
-    console.log("====== handle double click=======");
-    // setSearchText(e.target.value);
+
+    // Fetch the data and wait for it to complete
+    const fetchedData = await dispatch(fetchGetCrystalMenu());
+
+    // Update the local state with the fetched data
+    setDataa(fetchedData);
+
+    // After updating the state, open the modal
     setModalOpen(true);
   };
 
   const handleBlurRVC = (e) => {
     // // Convert nextItemId to string before calling padStart
     const formattedValue = String(formData.AccountCodeform).padStart(3, "0");
-    console.log("dataa item:", dataa);
+    console.log("dataa item:", data);
     // const accountCodeValue = String(formData.AccountCodeform);
     // const part1 = accountCodeValue.substring(0, 2);
     // const part2 = accountCodeValue.substring(2, 5);
@@ -964,9 +968,7 @@ function MenuAdmin() {
     });
     console.log("value", formattedValue);
     setTimeout(() => {
-      const selectedItem = dataa.find(
-        (item) => item.tmencod === formattedValue
-      );
+      const selectedItem = data.find((item) => item.tmencod === formattedValue);
 
       console.log("Selected item:", formattedValue);
 
@@ -1040,19 +1042,20 @@ function MenuAdmin() {
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const formattedValue = value;
+    let formattedValue = value;
+
     if (name === "AccountCodeform") {
       console.log("Searching for:", value);
 
-      // Remove all non-digit characters
+      // Remove any non-digit characters
       let rawValue = value.replace(/\D/g, "");
 
-      // Limit to 8 digits (to allow full formatting into 00-000-000)
+      // Ensure we only consider the first 8 digits
       if (rawValue.length > 8) {
         rawValue = rawValue.slice(0, 8);
       }
 
-      // Format the value as 00-000-000
+      // Apply the 00-000-000 format
       if (rawValue.length === 8) {
         formattedValue = `${rawValue.slice(0, 2)}-${rawValue.slice(
           2,
@@ -1060,15 +1063,14 @@ function MenuAdmin() {
         )}-${rawValue.slice(5)}`;
       } else if (rawValue.length > 2) {
         formattedValue = `${rawValue.slice(0, 2)}-${rawValue.slice(2)}`;
+      } else {
+        formattedValue = rawValue;
       }
 
       console.log("Formatted Value:", formattedValue);
 
-      // Find the matching item based on the formatted value
-      const selectedItem = dataa.find(
-        (item) => item.tmencod === formattedValue
-      );
-
+      // Find matching item based on formatted account code
+      const selectedItem = data.find((item) => item.tmencod === formattedValue);
       console.log("Selected item:", selectedItem);
 
       if (selectedItem) {
@@ -1113,22 +1115,14 @@ function MenuAdmin() {
 
       handlePrediction(formattedValue).then((result) => {
         setGeturdu(result);
-        console.log("resulttttttttttt");
-      });
-    }
-    if (name === "inputform8") {
-      const lowercaseValue = value.toLowerCase();
-      setFormData({
-        ...formData,
-        inputform8: lowercaseValue,
       });
     }
 
-    if (name === "inputform11") {
+    if (name === "inputform8" || name === "inputform11") {
       const lowercaseValue = value.toLowerCase();
       setFormData({
         ...formData,
-        inputform11: lowercaseValue,
+        [name]: lowercaseValue,
       });
     } else if (name === "inputform5") {
       const lowercaseValue = value;
@@ -1142,6 +1136,7 @@ function MenuAdmin() {
         [name]: formattedValue,
       });
     }
+
     if (name === "UrduFormDescription") {
       console.log("Searching for:", formattedValue);
       setGeturdu(formattedValue);
@@ -1238,7 +1233,7 @@ function MenuAdmin() {
     overflowY: "hidden",
     // wordBreak: "break-word",
     // textAlign: "center",
-    maxWidth: "500px",
+    maxWidth: "700px",
     fontSize: "15px",
     fontStyle: "normal",
     fontWeight: "400",
@@ -1298,12 +1293,12 @@ function MenuAdmin() {
               }}
             >
               <div className="row">
-                <div className="col-sm-12">
+                <div className="col-sm-8">
                   <br />
 
                   <div className="row">
-                    <div className="col-sm-3 label-customer">Code:</div>
-                    <div className="col-sm-4">
+                    <div className="col-sm-2 label-customer">Code:</div>
+                    <div className="col-sm-5">
                       <Form.Control
                         type="text"
                         className="form-control-customer custom-input"
@@ -1324,8 +1319,8 @@ function MenuAdmin() {
                             handleEnterKeyPress(Status, e);
                             const upperCaseValue = e.target.value.toUpperCase();
 
-                            if (dataa && dataa.length > 0) {
-                              const selectedItem = dataa.find(
+                            if (data && data.length > 0) {
+                              const selectedItem = data.find(
                                 (item) => item.tmencod === upperCaseValue
                               );
 
@@ -1333,13 +1328,6 @@ function MenuAdmin() {
                                 console.log("selectedItem:", selectedItem);
                                 handleEnterKeyPress(Status, e);
                               } else if (upperCaseValue.length < 10) {
-                                // setAlertData({
-                                //   type: "success",
-                                //   message: "Fetch Data",
-                                // });
-                                // setTimeout(() => {
-                                //   setAlertData(null);
-                                // }, 3000);
                               } else {
                                 handleEnterKeyPress(Status, e);
                               }
@@ -1359,7 +1347,7 @@ function MenuAdmin() {
                           handleDoubleClick(e);
                           setTimeout(() => {
                             focusNextInput(SearchBox);
-                          }, 100);
+                          }, 500);
                         }}
                         ref={Code}
                       />
@@ -1404,8 +1392,8 @@ function MenuAdmin() {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-3 label-item">Description:</div>
-                    <div className="col-sm-9">
+                    <div className="col-sm-2 label-item">Description:</div>
+                    <div className="col-sm-10">
                       <Form.Control
                         type="text"
                         id="Descriptionform"
@@ -1424,8 +1412,8 @@ function MenuAdmin() {
                   </div>
 
                   <div className="row">
-                    <div className="col-sm-3 label-customer">URL:</div>
-                    <div className="col-sm-9">
+                    <div className="col-sm-2 label-customer">URL:</div>
+                    <div className="col-sm-10">
                       <Form.Control
                         type="text"
                         id="inputform4"
@@ -1435,7 +1423,7 @@ function MenuAdmin() {
                           errors.inputform4 ? "border-red" : ""
                         }`}
                         style={{ textAlign: "left" }}
-                        value={formData.inputform4.toLocaleLowerCase()}
+                        value={formData.inputform4}
                         ref={inputform4ref}
                         onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
@@ -1445,8 +1433,8 @@ function MenuAdmin() {
                     <div className="col-sm-2"></div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-3 label-customer">Remarks:</div>
-                    <div className="col-sm-9">
+                    <div className="col-sm-2 label-customer">Remarks:</div>
+                    <div className="col-sm-10">
                       <Form.Control
                         as="textarea"
                         id="inputform5"
@@ -1468,6 +1456,78 @@ function MenuAdmin() {
                     </div>
                   </div>
                 </div>
+                <div className="col-sm-4">
+                  <div className="row " style={{ marginTop: "8vh" }}>
+                    <label style={{ display: "block" }}>
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "95px",
+                          border: "2px dashed #ababab",
+                          marginLeft: "-4%",
+                          borderRadius: "0px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          backgroundColor: getcolor,
+                          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                          transition: "background-color 0.3s ease",
+                          // cursor: "pointer",
+                          overflow: "hidden",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor = fontcolor)
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor = getcolor)
+                        }
+                      >
+                        <img
+                          id="pic1-preview"
+                          src=""
+                          alt="Upload"
+                          style={{
+                            width: "100px",
+                            height: "90px",
+                            display: "block",
+                          }}
+                        />
+                      </div>
+                    </label>
+                  </div>
+                  <div className="row">
+                    <input
+                      type="file"
+                      id="pic1"
+                      style={{ display: "none" }}
+                      onChange={handleImageChange1}
+                    />
+                    <label
+                      htmlFor="pic1"
+                      style={{
+                        border: "1px solid #FFFFFF",
+                        width: "90%",
+                        marginLeft: "2px",
+                        height: "25px",
+                        marginTop: "2px",
+                        color: "black",
+                        backgroundColor: "#3368B5",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        cursor: "pointer",
+                      }}
+                      ref={inputform6ref}
+                      onKeyDown={(e) => handleEnterKeyPress(Submit, e)}
+                    >
+                      <i
+                        className="fas fa-upload"
+                        style={{ marginRight: "5px" }}
+                      ></i>
+                      Image
+                    </label>
+                  </div>
+                </div>
               </div>
             </Form>
 
@@ -1485,7 +1545,7 @@ function MenuAdmin() {
               isOpen={isModalOpen}
               handleClose={handleCloseModal}
               title="Select Menu"
-              technicians={dataa}
+              technicians={data}
               searchRef={SearchBox}
               handleRowClick={handleRowClick}
               firstColKey="tmencod"

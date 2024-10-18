@@ -6,19 +6,19 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 import Alert from "@mui/material/Alert";
-import { useTheme } from "../../../../../../ThemeContext";
+import { useTheme } from "../../../../../../../ThemeContext";
 import {
   isLoggedIn,
   getUserData,
   getOrganisationData,
-} from "../../../../../Auth";
-import NavComponent from "../../../../Navform/navbarform";
+} from "../../../../../../Auth";
+import NavComponent from "../../../../../Navform/navbarform";
 import "./AdminMenuUser.css";
-import SingleButton from "../../../../Button/SingleButton/SingleButton";
-import { fetchGetUser, fetchMenu } from "../../../../../Redux/action";
+import SingleButton from "../../../../../Button/SingleButton/SingleButton";
+import { fetchGetUser, fetchMenu } from "../../../../../../Redux/action";
 import { useSelector, useDispatch } from "react-redux";
 const AdminMenuUser = () => {
-  const { tusrid, selectedcode } = useParams();
+  const { tusrid, code } = useParams();
   const user = getUserData();
   const organisation = getOrganisationData();
   const { apiLinks } = useTheme();
@@ -123,13 +123,16 @@ const AdminMenuUser = () => {
   function fetchDataForUserId() {
     console.log("call the api");
     const apiUrl = `${apiLinks}/GetMenu.php`;
-    const data = { FUsrId: tusrid, code: selectedcode };
+    const data = { FUsrId: tusrid, code: code };
+    // const data = { FUsrId: "sohaib", code: "ALPHA" };
+
     const formData = new URLSearchParams(data).toString();
 
     return axios
       .post(apiUrl, formData)
       .then((response) => {
         const apiData = response.data;
+        console.log("=====================apiData:", code, tusrid, apiData);
 
         // Alert the response from the API
         // alert(JSON.stringify(apiData)); // Show the response in an alertsohai
@@ -215,7 +218,7 @@ const AdminMenuUser = () => {
   function Update_Menu(users) {
     const apiUrl = `${apiLinks}/SavePermission.php`;
     const data = {
-      code: selectedcode,
+      code: code,
       FUsrId: tusrid,
       FMenCod: users.mcode,
       FUsrPem: users.permission,
@@ -352,7 +355,7 @@ const AdminMenuUser = () => {
               color: fontcolor,
             }}
           >
-            <NavComponent textdata="Admin Menu User" />
+            <NavComponent textdata={`Admin User Menu (${code})`} />
             <div
               className="row"
               style={{
@@ -519,13 +522,8 @@ const AdminMenuUser = () => {
               }}
             >
               <SingleButton
-                to="/AdminUserManagement"
+                to="/AdminCustomers"
                 text="Return"
-                style={{ backgroundColor: "#186DB7", width: "120px" }}
-              />
-              <SingleButton
-                to="/AdminAddUser1"
-                text="User"
                 style={{ backgroundColor: "#186DB7", width: "120px" }}
               />
             </div>

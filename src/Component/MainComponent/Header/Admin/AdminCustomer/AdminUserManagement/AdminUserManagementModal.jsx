@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import { Modal, Nav, Row, Col, Form, NavLink } from "react-bootstrap";
-import "./AdminAddUser.css";
+import "./AdminUserManagement.css";
 import { useTheme } from "../../../../../../ThemeContext";
 import NavComponent from "../../../../Navform/navbarform";
-const GeneralTwoFieldsModal = ({
+const AdminUserManagementModal = ({
   isOpen,
   handleClose,
   title,
@@ -233,4 +233,4 @@ const GeneralTwoFieldsModal = ({
   );
 };
 
-export default GeneralTwoFieldsModal;
+export default AdminUserManagementModal;

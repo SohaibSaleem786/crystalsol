@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
-import { Modal, Nav, Row, Col, Form, NavLink } from "react-bootstrap";
+import React, { useState, useRef, useEffect } from "react";
+import { Modal, Row, Col, Form } from "react-bootstrap";
 import "../../Admin/Admin.css";
 import { useTheme } from "../../../../../ThemeContext";
 import NavComponent from "../../../Navform/navbarform";
+
 const MenuAdminModal = ({
   isOpen,
   handleClose,
@@ -46,11 +47,6 @@ const MenuAdminModal = ({
     setSearchText(uppercase);
   };
 
-  const resetData = () => {
-    setData({ columns: [], rows: [] });
-    setSearchText("");
-  };
-
   const handleArrowKeyPress = (direction) => {
     if (filteredRows.length === 0) return;
 
@@ -75,11 +71,29 @@ const MenuAdminModal = ({
     setHighlightedRowIndex(newIndex);
   };
 
+  const resetTableStates = () => {
+    setSearchText("");
+    setData({ columns: [], rows: [] });
+    setEnterCount(0);
+    setHighlightedRowIndex(0);
+  };
+
+  // useEffect to reset table state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      resetTableStates(); // Reset table states when modal closes
+    }
+  }, [isOpen]);
+
   const firstColWidth = "150px";
   const secondColWidth = "500px";
 
   return (
-    <Modal show={isOpen} onHide={handleClose} dialogClassName="my-modal">
+    <Modal
+      show={isOpen}
+      onHide={handleClose}
+      dialogClassName="my-modal-MenuAdminModal"
+    >
       <NavComponent textdata={title} />
       <Modal.Body style={{ backgroundColor: getcolor, color: fontcolor }}>
         <Row>
@@ -107,14 +121,14 @@ const MenuAdminModal = ({
                   } else if (enterCount === 1) {
                     const selectedRowData = filteredRows[highlightedRowIndex];
                     handleRowClick(selectedRowData, highlightedRowIndex);
-                    setEnterCount(0); // Reset count after the second enter press
+                    setEnterCount(0);
                   }
                 } else if (e.key === "ArrowUp") {
                   handleArrowKeyPress("up");
                 } else if (e.key === "ArrowDown") {
                   handleArrowKeyPress("down");
                 } else {
-                  setEnterCount(0); // Reset count for any other key press
+                  setEnterCount(0);
                 }
               }}
             />
@@ -196,7 +210,9 @@ const MenuAdminModal = ({
                     ref={index === 0 ? firstRowRef : null}
                     key={index}
                     id={`row-${index}`}
-                    onClick={() => handleRowClick(row, index)}
+                    onClick={() => {
+                      handleRowClick(row, index);
+                    }}
                   >
                     <td style={{ width: firstColWidth, fontWeight: "normal" }}>
                       {row[firstColKey]}

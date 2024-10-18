@@ -22,7 +22,7 @@ export const fetchDataGetUser = async (code) => {
   });
 
   const data = await response.json();
-  console.log("The data i received is api data:", data);
+  // console.log("The data i received is api data:", data);
 
   if (!response.ok) throw new Error(data.message);
 
@@ -33,7 +33,7 @@ export const fetchDataGetCrystalCustomer = async () => {
   const response = await fetch(`${apiLink}GetCrystalCustomer.php`);
 
   const data = await response.json();
-  console.log(data, "api.js");
+  // console.log(data, "api.js");
   if (!response.ok) throw new Error(data.message);
 
   return data;
@@ -43,7 +43,7 @@ export const fetchDataGetCrystalMenu = async () => {
   const response = await fetch(`${apiLink}GetCrystalMenu.php`);
 
   const data = await response.json();
-  console.log(data, "fetchDataGetCrystalMenu api.js");
+  // console.log(data, "fetchDataGetCrystalMenu api.js");
   if (!response.ok) throw new Error(data.message);
 
   return data;

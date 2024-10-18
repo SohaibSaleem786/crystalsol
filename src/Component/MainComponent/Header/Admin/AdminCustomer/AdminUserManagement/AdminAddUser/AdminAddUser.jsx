@@ -2,18 +2,22 @@ import { Form } from "react-bootstrap";
 import Alert from "@mui/material/Alert";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import "./Admin.css";
-import NavComponent from "../../../MainComponent/Navform/navbarform";
-import ButtonGroupp from "../../../MainComponent/Button/ButtonGroup/ButtonGroup";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import "./AdminAddUser.css";
+import NavComponent from "../../../../../Navform/navbarform";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import StatusSelect from "../../../MainComponent/StatusSelected/StatusSelected";
-import { isLoggedIn, getUserData, getOrganisationData } from "../../../Auth";
-import CustomerModal from "./CustomerModal";
+import {
+  isLoggedIn,
+  getUserData,
+  getOrganisationData,
+} from "../../../../../../Auth";
+import GeneralTwoFieldsModal from "./AdminAddUser_Modal";
+import { getcompanyData } from "./AdminAddUser_Api";
 import { useMutation } from "@tanstack/react-query";
-import { useTheme } from "../../../../ThemeContext";
-import { fetchGetCrystalCustomer } from "../../../Redux/action";
-import { useSelector, useDispatch } from "react-redux";
+
+import { useTheme } from "../../../../../../../ThemeContext";
+import ButtonGroup from "../../../../../Button/ButtonGroup/ButtonGroup";
 function formatToThreeDigits(number) {
   // Convert the number to a string and pad with leading zeros if necessary
   return number.toString().padStart(3, "0");
@@ -25,9 +29,8 @@ function removeParentDirectories(path) {
   console.error("Invalid path:", path);
   return "";
 }
-function Customer() {
-  const dispatch = useDispatch();
-
+function AdminAddUser() {
+  const { code } = useParams();
   const user = getUserData();
   const organisation = getOrganisationData();
   const { apiLinks } = useTheme();
@@ -56,22 +59,44 @@ function Customer() {
     inputform13: "",
     inputform14: "",
   });
-  const { data, loading, error } = useSelector(
-    (state) => state.getcrystalcustomer
-  );
   const [dataa, setDataa] = useState([]);
 
-  // Only fetch once when component mounts
-  useEffect(() => {
-    if (data?.length === 0) {
-      dispatch(fetchGetCrystalCustomer());
-    }
-  }, [dispatch]);
+  const mutation2 = useMutation({
+    mutationFn: getcompanyData,
+    onSuccess: (data) => {
+      const columns = [
+        { label: "Code", field: "tacccod", sort: "asc" },
+        { label: "Description", field: "taccdsc", sort: "asc" },
+        { label: "Status", field: "taccsts", sort: "asc" },
+      ];
+      if (Array.isArray(data)) {
+        setDataa(data);
+      } else {
+        console.warn(
+          "Technicians data is not available or not in the correct format."
+        );
+      }
 
-  useEffect(() => {
-    setDataa(data);
-  }, [data]);
+      if (data.error === 200) {
+      } else {
+      }
+    },
+    onError: (error) => {
+      console.error("Error:", error);
+    },
+  });
 
+  const GetDataList = () => {
+    const data = {
+      code: code,
+    };
+    mutation2.mutate(data);
+  };
+  useEffect(() => {
+    GetDataList();
+
+    Codefocus();
+  }, []);
   const Codefocus = () => {
     if (Code.current) {
       Code.current.focus();
@@ -124,7 +149,6 @@ function Customer() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     const checks = [
       {
         value: formData?.AccountCodeform,
@@ -133,6 +157,19 @@ function Customer() {
       {
         value: formData?.Descriptionform,
         message: "Please fill your User Name",
+      },
+
+      {
+        value: formData?.Descriptionform,
+        message: "Please fill your User Name",
+      },
+      {
+        value: formData?.inputform8,
+        message: "Please select your Status",
+      },
+      {
+        value: formData?.inputform9,
+        message: "Please select your Type",
       },
     ];
 
@@ -148,58 +185,70 @@ function Customer() {
         return;
       }
     }
-    // const data = {
-    //   AccountCodeform: formData.AccountCodeform,
-    //   Descriptionform: formData.Descriptionform,
-    //   Status: formData.Status,
-    //   inputform4: formData.inputform4,
-    //   inputform5: formData.inputform5,
-    //   inputform6: formData.inputform6,
-    //   inputform7: formData.inputform7,
-    //   inputform8: formData.inputform8,
-    //   inputform9: formData.inputform9,
-    //   inputform10: formData.inputform10,
-    //   inputform11: formData.inputform11,
-    // };
-    // console.log("Form Data:", data);
-    // Prepare form data for submission
-    const formDataa = new FormData();
-    formDataa.append("code", formData.AccountCodeform);
-    formDataa.append("description", formData.Descriptionform);
-    formDataa.append("status", formData.Status);
-    formDataa.append("address", formData.inputform4);
-    formDataa.append("contactno", formData.inputform5);
-    formDataa.append("mobileno", formData.inputform6);
-    formDataa.append("email", formData.inputform7);
-    formDataa.append("menu", formData.inputform8);
-    formDataa.append("duepaymentdate", formData.inputform9);
-    formDataa.append("duepayment", formData.inputform10);
-    formDataa.append("lastpaymentdate", formData.inputform11);
-    formDataa.append("lastpayment", formData.inputform12);
-    formDataa.append("FCurUsr", "sohaib");
-
-    console.log("Submitting Form Data:", formDataa);
-
+    const data = {
+      AccountCodeform: formData.AccountCodeform,
+      Descriptionform: formData.Descriptionform,
+      inputform4: formData.inputform4,
+      inputform5: formData.inputform5,
+      inputform6: formData.inputform6,
+      inputform7: formData.inputform7,
+      inputform8: formData.inputform8,
+      inputform9: formData.inputform9,
+      inputform10: formData.inputform10,
+      inputform11: formData.inputform11,
+      inputform12: formData.inputform12,
+      inputform13: formData.inputform13,
+      inputform14: formData.inputform14,
+    };
+    console.log(data, "data");
     try {
-      const response = await axios.post(
-        `${apiLinks}/SaveCrystalCustomer.php`,
-        formDataa,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+      const formDataa = new FormData();
+      formDataa.append("FUsrId", formData.AccountCodeform);
+      formDataa.append("FUsrNam", formData.Descriptionform);
+      // formDataa.append("FUsrSts", formData.Status);
+      // formDataa.append("FUrdDsc", geturdu);
+      formDataa.append("FCshCod", formData.inputform4);
+      formDataa.append("FStrCod", formData.inputform5);
+      formDataa.append("FEmpCod", formData.inputform6);
+      formDataa.append("FPwdExp", formData.inputform7);
+      formDataa.append(
+        "FUsrSts",
+        formData.inputform8 === "Active"
+          ? "A"
+          : formData.inputform8 === "Suspend"
+          ? "S"
+          : "C"
       );
+      formDataa.append(
+        "FUsrTyp",
+        formData.inputform9 === "Admin"
+          ? "A"
+          : formData.inputform9 === "User"
+          ? "U"
+          : formData.inputform9 === "SuperUser"
+          ? "S"
+          : "G"
+      );
+      formDataa.append("FMobNum", formData.inputform10);
+      formDataa.append("FEmlAdd", formData.inputform11);
+      formDataa.append("FTimFrm", formData.inputform12);
+      formDataa.append("FTimToo", formData.inputform13);
+      formDataa.append("FUsrPwd", formData.inputform14);
+      formDataa.append("code", code);
+      formDataa.append("FCurUsr", user.tusrid);
+      console.log("Submitting Form Data:", formDataa);
+
+      const response = await axios.post(`${apiLinks}/SaveUser.php`, formDataa, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       console.log("API Response:", response);
 
       if (response.data.error === 200) {
-        Code.current.focus();
-        setTimeout(() => {
-          dispatch(fetchGetCrystalCustomer()); // Re-fetch data from the server
-        }, 1000);
-
-        // Clear form fields
+        GetDataList();
+        Codefocus();
         setFormData({
           ...formData,
           AccountCodeform: "",
@@ -214,8 +263,9 @@ function Customer() {
           inputform10: "",
           inputform11: "",
           inputform12: "",
+          inputform13: "",
+          inputform14: "",
         });
-
         setAlertData({
           type: "success",
           message: `${response.data.message}`,
@@ -234,13 +284,6 @@ function Customer() {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      setAlertData({
-        type: "error",
-        message: "Form submission failed. Please try again.",
-      });
-      setTimeout(() => {
-        setAlertData(null);
-      }, 2000);
     } finally {
       console.log("Form submission process completed.");
     }
@@ -257,19 +300,20 @@ function Customer() {
   };
   const [isModalOpen, setModalOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [textdata, settextdata] = useState("Customer Management");
+  const [data, setData] = useState({ columns: [], rows: [] });
+  const [textdata, settextdata] = useState("Admin UserManagement ");
 
   const handleCloseModal = () => {
+    GetDataList();
+    setData({ columns: [], rows: [] });
     setSearchText("");
-    // data
     setHighlightedRowIndex(0);
-    settextdata("Customer Management");
+    settextdata("Admin UserManagement");
 
     setModalOpen(false);
   };
 
   const handleDoubleClick = (e) => {
-    dispatch(fetchGetCrystalCustomer());
     focusNextInput(Code);
     console.log("====== handle double click=======");
     // setSearchText(e.target.value);
@@ -287,27 +331,28 @@ function Customer() {
     });
     console.log("value", value);
     setTimeout(() => {
-      const selectedItem = dataa.find((item) => item.code === value);
+      const selectedItem = dataa.find((item) => item.tusrid === value);
 
       console.log("Selected item:", selectedItem);
 
       if (selectedItem) {
         setFormData({
           ...formData,
-          AccountCodeform: selectedItem.code,
-          Descriptionform: selectedItem.description,
-          Status: selectedItem.status,
-          inputform4: selectedItem.address,
-          inputform5: selectedItem.contactno,
-          inputform6: selectedItem.mobileno,
-          inputform7: selectedItem.email,
-          inputform8: selectedItem.menu,
-          inputform9: selectedItem.duepaymentdate,
-          inputform10: selectedItem.duepayment,
-          inputform11: selectedItem.lastpaymentdate,
-          inputform12: selectedItem.lastpayment,
+          AccountCodeform: selectedItem.tusrid || "",
+          Descriptionform: selectedItem.tusrnam || "",
+          inputform4: selectedItem["Cash Code"] || "",
+          inputform5: selectedItem["Store Code"] || "",
+          inputform6: selectedItem["Emp Code"] || "",
+          inputform7: selectedItem.Expiry || "",
+          inputform8: selectedItem.Status || "",
+          inputform9: selectedItem.Type || "",
+          inputform10: selectedItem.Mobile || "",
+          inputform11: selectedItem.Email || "",
+          inputform12: selectedItem["Time From"] || "",
+          inputform13: selectedItem["Time Too"] || "",
+          inputform14: selectedItem.Password || "",
         });
-        handlePrediction(selectedItem.description).then((result) => {
+        handlePrediction(selectedItem.tusrnam).then((result) => {
           setGeturdu(result);
         });
       } else {
@@ -369,13 +414,7 @@ function Customer() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const formattedValue = value.toUpperCase();
-    if (name === "inputform8") {
-      const lowercaseValue = value.toLowerCase();
-      setFormData({
-        ...formData,
-        inputform8: lowercaseValue,
-      });
-    }
+
     if (name === "Descriptionform") {
       console.log("Searching for:", formattedValue);
 
@@ -384,23 +423,16 @@ function Customer() {
         console.log("resulttttttttttt");
       });
     }
-
     if (name === "inputform11") {
       const lowercaseValue = value.toLowerCase();
       setFormData({
         ...formData,
         inputform11: lowercaseValue,
       });
-    } else if (name === "inputform7") {
-      const lowercaseValue = value.toLowerCase();
-      setFormData({
-        ...formData,
-        inputform7: lowercaseValue,
-      });
     } else {
       setFormData({
         ...formData,
-        [name]: formattedValue,
+        [name]: value,
       });
     }
     if (name === "UrduFormDescription") {
@@ -410,25 +442,26 @@ function Customer() {
     if (name === "AccountCodeform") {
       console.log("Searching for:", value);
 
-      const selectedItem = dataa.find((item) => item.code === value);
+      const selectedItem = dataa.find((item) => item.tusrid === value);
 
       console.log("Selected item:", selectedItem);
 
       if (selectedItem) {
         setFormData({
           ...formData,
-          AccountCodeform: selectedItem.code,
-          Descriptionform: selectedItem.description,
-          Status: selectedItem.status,
-          inputform4: selectedItem.address,
-          inputform5: selectedItem.contactno,
-          inputform6: selectedItem.mobileno,
-          inputform7: selectedItem.email,
-          inputform8: selectedItem.menu,
-          inputform9: selectedItem.duepaymentdate,
-          inputform10: selectedItem.duepayment,
-          inputform11: selectedItem.lastpaymentdate,
-          inputform12: selectedItem.lastpayment,
+          AccountCodeform: selectedItem.tusrid || "",
+          Descriptionform: selectedItem.tusrnam || "",
+          inputform4: selectedItem["Cash Code"] || "",
+          inputform5: selectedItem["Store Code"] || "",
+          inputform6: selectedItem["Emp Code"] || "",
+          inputform7: selectedItem.Expiry || "",
+          inputform8: selectedItem.Status || "",
+          inputform9: selectedItem.Type || "",
+          inputform10: selectedItem.Mobile || "",
+          inputform11: selectedItem.Email || "",
+          inputform12: selectedItem["Time From"] || "",
+          inputform13: selectedItem["Time Too"] || "",
+          inputform14: selectedItem.Password || "",
         });
         handlePrediction(selectedItem.tcmpdsc).then((result) => {
           setGeturdu(result);
@@ -451,10 +484,16 @@ function Customer() {
           inputform14: "",
         });
       }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: formattedValue,
+      });
     }
   };
 
   const resetData = () => {
+    setData({ columns: [], rows: [] });
     setSearchText("");
   };
   const [highlightedRowIndex, setHighlightedRowIndex] = useState(0);
@@ -463,24 +502,25 @@ function Customer() {
     setModalOpen(false);
     setFormData({
       ...formData,
-      AccountCodeform: selectedItem.code,
-      Descriptionform: selectedItem.description,
-      Status: selectedItem.status,
-      inputform4: selectedItem.address,
-      inputform5: selectedItem.contactno,
-      inputform6: selectedItem.mobileno,
-      inputform7: selectedItem.email,
-      inputform8: selectedItem.menu,
-      inputform9: selectedItem.duepaymentdate,
-      inputform10: selectedItem.duepayment,
-      inputform11: selectedItem.lastpaymentdate,
-      inputform12: selectedItem.lastpayment,
+      AccountCodeform: selectedItem.tusrid || "",
+      Descriptionform: selectedItem.tusrnam || "",
+      inputform4: selectedItem["Cash Code"] || "",
+      inputform5: selectedItem["Store Code"] || "",
+      inputform6: selectedItem["Emp Code"] || "",
+      inputform7: selectedItem.Expiry || "",
+      inputform8: selectedItem.Status || "",
+      inputform9: selectedItem.Type || "",
+      inputform10: selectedItem.Mobile || "",
+      inputform11: selectedItem.Email || "",
+      inputform12: selectedItem["Time From"] || "",
+      inputform13: selectedItem["Time Too"] || "",
+      inputform14: selectedItem.Password || "",
     });
-    handlePrediction(selectedItem.tcmpdsc).then((result) => {
+    handlePrediction(selectedItem.tusrnam).then((result) => {
       setGeturdu(result);
     });
 
-    settextdata("Customer Management");
+    settextdata("Admin User Management");
 
     resetData();
   };
@@ -518,7 +558,7 @@ function Customer() {
   };
 
   const handleReturn = () => {
-    navigate("/MainPage");
+    navigate(`/AdminCustomers`);
   };
 
   const handleBlur = (codeparam) => {
@@ -536,35 +576,19 @@ function Customer() {
   const contentStyle = {
     backgroundColor: getcolor,
     height: "100vh",
-    width: isSidebarVisible ? "calc(100vw - 55%)" : "70%",
-    position: "relative",
-    top: "50%",
-    left: isSidebarVisible ? "50%" : "60%",
-    transform: "translate(-50%, -50%)",
+    width: isSidebarVisible ? "calc(100vw - 5vw)" : "100vw",
+    marginLeft: isSidebarVisible ? "15vw" : "45vh",
     transition: isSidebarVisible
-      ? "left 3s ease-in-out, width 2s ease-in-out"
-      : "left 3s ease-in-out, width 2s ease-in-out",
+      ? "margin-left 2s ease-in-out, margin-right 2s ease-in-out"
+      : "margin-left 2s ease-in-out, margin-right 2s ease-in-out",
     display: "flex",
     justifyContent: "center",
     alignItems: "start",
     overflowX: "hidden",
     overflowY: "hidden",
-    wordBreak: "break-word",
     textAlign: "center",
-    maxWidth: "700px",
-    fontSize: "15px",
-    fontStyle: "normal",
-    fontWeight: "400",
-    lineHeight: "23px",
-    fontFamily: '"Poppins", sans-serif',
+    maxWidth: "720px",
   };
-  useEffect(() => {
-    document.documentElement.style.setProperty("--background-color", getcolor);
-  }, [getcolor]);
-  useEffect(() => {
-    document.documentElement.style.setProperty("--font-color", fontcolor);
-  }, [fontcolor]);
-
   return (
     <>
       <div
@@ -600,7 +624,7 @@ function Customer() {
               borderRadius: "9px",
             }}
           >
-            <NavComponent textdata={textdata} />
+            <NavComponent textdata={`${textdata}(${code})`} />
 
             <br />
             <Form
@@ -615,18 +639,18 @@ function Customer() {
                   <br />
 
                   <div className="row">
-                    <div className="col-sm-2 label-customer">Code:</div>
+                    <div className="col-sm-2 label-adduser">Userid:</div>
                     <div className="col-sm-3">
                       <Form.Control
                         type="text"
-                        className="form-control-customer custom-input"
+                        className="form-control-adduser custom-input"
                         placeholder="Code"
                         name="AccountCodeform"
                         value={formData.AccountCodeform}
                         onChange={(e) =>
                           handleInputChangefetchdata({
                             target: {
-                              value: e.target.value.toUpperCase(),
+                              value: e.target.value.toLowerCase(),
                             },
                           })
                         }
@@ -639,17 +663,17 @@ function Customer() {
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             handleBlurRVC();
-                            handleEnterKeyPress(Status, e);
+                            handleEnterKeyPress(Description, e);
                             const upperCaseValue = e.target.value.toUpperCase();
 
                             if (dataa && dataa.length > 0) {
                               const selectedItem = dataa.find(
-                                (item) => item.code === upperCaseValue
+                                (item) => item.tusrid === upperCaseValue
                               );
 
                               if (selectedItem) {
                                 console.log("selectedItem:", selectedItem);
-                                handleEnterKeyPress(Status, e);
+                                handleEnterKeyPress(Description, e);
                               } else if (upperCaseValue.length < 10) {
                                 // setAlertData({
                                 //   type: "success",
@@ -659,7 +683,7 @@ function Customer() {
                                 //   setAlertData(null);
                                 // }, 3000);
                               } else {
-                                handleEnterKeyPress(Status, e);
+                                handleEnterKeyPress(Description, e);
                               }
                             } else {
                               console.warn(
@@ -669,14 +693,13 @@ function Customer() {
                           }
                         }}
                         onFocus={(e) => {
-                          // setTimeout(() => {
-                          e.target.select();
-                          // }, 500);
+                          setTimeout(() => {
+                            e.target.select();
+                          }, 500);
                         }}
                         onDoubleClick={(e) => {
                           handleDoubleClick(e);
                           setTimeout(() => {
-                            dispatch(fetchGetCrystalCustomer());
                             focusNextInput(SearchBox);
                           }, 100);
                         }}
@@ -684,23 +707,151 @@ function Customer() {
                       />
                     </div>
                     <div className="col-sm-2"></div>
-                    <div className="col-sm-2 label-customer">Status:</div>
-                    <div className="col-sm-3">
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-adduser">Description:</div>
+                    <div
+                      className="col-sm-10"
+                      style={{ display: "flex", gap: "10px" }}
+                    >
+                      <Form.Control
+                        type="text"
+                        id="Descriptionform"
+                        placeholder="Description"
+                        name="Descriptionform"
+                        className={`form-control-adduser ${
+                          errors.Descriptionform ? "border-red" : ""
+                        }`}
+                        value={formData.Descriptionform}
+                        ref={Description}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform4ref, e)}
+                        style={{ flex: "1", marginRight: "4px" }}
+                      />
+                      <Form.Control
+                        type="text"
+                        id="UrduFormDescription"
+                        placeholder="اردو میں"
+                        name="UrduFormDescription"
+                        className={`form-control-adduser ${
+                          errors.Descriptionform ? "border-red" : ""
+                        }`}
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          flex: "1",
+                          marginRight: "10px",
+                          textAlign: "right",
+                          fontFamily: "Noto Nastaliq Urdu",
+                          backgroundColor: getcolor,
+                          color: fontcolor,
+                        }}
+                        value={geturdu}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-adduser">Cash Code:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform4"
+                        placeholder="Cash Code"
+                        name="inputform4"
+                        className={`form-control-adduser ${
+                          errors.inputform4 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform4}
+                        ref={inputform4ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform5ref, e)}
+                      />
+                    </div>
+                    <div className="col-sm-2 label-adduser">Store Code:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform5"
+                        placeholder="Store Code"
+                        name="inputform5"
+                        className={`form-control-adduser ${
+                          errors.inputform5 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform5}
+                        ref={inputform5ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform6ref, e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-adduser">Emp Code:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform6"
+                        placeholder="Employee Code"
+                        name="inputform6"
+                        className={`form-control-adduser ${
+                          errors.inputform6 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform6}
+                        ref={inputform6ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform7ref, e)}
+                      />
+                    </div>
+
+                    <div className="col-sm-2 label-adduser">Pswd Exp:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform7"
+                        placeholder="Pswd Exp"
+                        name="inputform7"
+                        className={`form-control-adduser ${
+                          errors.inputform7 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform7}
+                        ref={inputform7ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform8ref, e)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-sm-2 label-adduser">Status:</div>
+                    <div className="col-sm-4">
                       <Form.Control
                         as="select"
-                        name="Status"
-                        value={formData.Status}
+                        name="inputform8"
+                        value={formData.inputform8}
                         onChange={handleInputChange}
-                        className={`form-control-customer ${
+                        className={`form-control-adduser ${
                           errors.Status ? "border-red" : ""
                         }`}
                         style={{
                           height: "28px",
+                          // fontSize: "11px",
                           padding: "0px",
                           paddingLeft: "5px",
+                          backgroundColor: getcolor,
+                          color: fontcolor,
                         }}
-                        onKeyDown={(e) => handleEnterKeyPress(Description, e)}
-                        ref={Status}
+                        onKeyDown={(e) => handleEnterKeyPress(inputform9ref, e)}
+                        ref={inputform8ref}
                       >
                         <option
                           style={{
@@ -716,193 +867,95 @@ function Customer() {
                             backgroundColor: getcolor,
                             color: fontcolor,
                           }}
-                          value="N"
+                          value="C"
                         >
-                          Not Active
+                          Cancell
+                        </option>
+                        <option
+                          style={{
+                            backgroundColor: getcolor,
+                            color: fontcolor,
+                          }}
+                          value="S"
+                        >
+                          Suspend
+                        </option>
+                      </Form.Control>
+                    </div>
+
+                    <div className="col-sm-2 label-adduser">User Type:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        as="select"
+                        name="inputform9"
+                        value={formData.inputform9}
+                        onChange={handleInputChange}
+                        className={`form-control-adduser ${
+                          errors.Status ? "border-red" : ""
+                        }`}
+                        style={{
+                          height: "28px",
+                          padding: "0px",
+                          paddingLeft: "5px",
+                          backgroundColor: getcolor,
+                          color: fontcolor,
+                        }}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform10ref, e)
+                        }
+                        ref={inputform9ref}
+                      >
+                        <option
+                          style={{
+                            backgroundColor: getcolor,
+                            color: fontcolor,
+                          }}
+                          value="A"
+                        >
+                          Admin
+                        </option>
+                        <option
+                          style={{
+                            backgroundColor: getcolor,
+                            color: fontcolor,
+                          }}
+                          value="U"
+                        >
+                          User
+                        </option>
+                        <option
+                          style={{
+                            backgroundColor: getcolor,
+                            color: fontcolor,
+                          }}
+                          value="S"
+                        >
+                          Super User
+                        </option>
+                        <option
+                          style={{
+                            backgroundColor: getcolor,
+                            color: fontcolor,
+                          }}
+                          value="G"
+                        >
+                          Guest
                         </option>
                       </Form.Control>
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-2 label-item">Description:</div>
-                    <div
-                      className="col-sm-10"
-                      style={{ display: "flex", gap: "10px" }}
-                    >
-                      <Form.Control
-                        type="text"
-                        id="Descriptionform"
-                        placeholder="Description"
-                        name="Descriptionform"
-                        className={`form-control-customer ${
-                          errors.Descriptionform ? "border-red" : ""
-                        }`}
-                        value={formData.Descriptionform}
-                        ref={Description}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) => handleEnterKeyPress(inputform4ref, e)}
-                        style={{ flex: "1", marginRight: "4px" }}
-                      />
-                      <Form.Control
-                        type="text"
-                        id="UrduFormDescription"
-                        placeholder="اردو میں"
-                        name="UrduFormDescription"
-                        className={`form-control-customer ${
-                          errors.Descriptionform ? "border-red" : ""
-                        }`}
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: "bold",
-                          flex: "1",
-                          marginRight: "10px",
-                          textAlign: "right",
-                          fontFamily: "Noto Nastaliq Urdu",
-                        }}
-                        value={geturdu}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-customer">Address:</div>
-                    <div className="col-sm-10">
-                      <Form.Control
-                        type="text"
-                        id="inputform4"
-                        placeholder="Address"
-                        name="inputform4"
-                        className={`form-control-customer ${
-                          errors.inputform4 ? "border-red" : ""
-                        }`}
-                        value={formData.inputform4}
-                        ref={inputform4ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) => handleEnterKeyPress(inputform5ref, e)}
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-customer">Contact#:</div>
-                    <div className="col-sm-3">
-                      <Form.Control
-                        type="text"
-                        id="inputform5"
-                        placeholder="Contact"
-                        name="inputform5"
-                        className={`form-control-customer ${
-                          errors.inputform5 ? "border-red" : ""
-                        }`}
-                        maxLength={11}
-                        style={{ textAlign: "right" }}
-                        value={formData.inputform5}
-                        ref={inputform5ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) => handleEnterKeyPress(inputform6ref, e)}
-                      />
-                    </div>
-                    <div className="col-sm-2"></div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-customer">Mobile:</div>
-                    <div className="col-sm-3">
-                      <Form.Control
-                        type="text"
-                        id="inputform6"
-                        placeholder="Mobile"
-                        name="inputform6"
-                        className={`form-control-customer ${
-                          errors.inputform6 ? "border-red" : ""
-                        }`}
-                        maxLength={11}
-                        style={{ textAlign: "right" }}
-                        value={formData.inputform6}
-                        ref={inputform6ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) => handleEnterKeyPress(inputform7ref, e)}
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-customer">Email:</div>
-                    <div className="col-sm-5">
-                      <Form.Control
-                        type="email"
-                        id="inputform7"
-                        placeholder="Email"
-                        name="inputform7"
-                        className={`form-control-customer ${
-                          errors.inputform7 ? "border-red" : ""
-                        }`}
-                        style={{ textAlign: "left" }}
-                        value={formData.inputform7}
-                        ref={inputform7ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) => handleEnterKeyPress(inputform8ref, e)}
-                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
-                      />
-                    </div>
-                    <div className="col-sm-2 label-customer">Menu:</div>
-                    <div className="col-sm-3">
-                      <Form.Control
-                        type="menu"
-                        id="inputform8"
-                        placeholder="Menu"
-                        name="inputform8"
-                        className={`form-control-customer ${
-                          errors.inputform8 ? "border-red" : ""
-                        }`}
-                        style={{ textAlign: "left" }}
-                        value={formData.inputform8.toLowerCase()}
-                        ref={inputform8ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={(e) => {
-                          e.target.value = e.target.value.toLowerCase();
-                          handleInputChange(e);
-                        }}
-                        onKeyDown={(e) => handleEnterKeyPress(inputform9ref, e)}
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-customer">Due Date:</div>
-                    <div className="col-sm-3">
-                      <Form.Control
-                        type="date"
-                        id="inputform9"
-                        placeholder="Due Date"
-                        name="inputform9"
-                        className={`form-control-customer ${
-                          errors.inputform9 ? "border-red" : ""
-                        }`}
-                        style={{ textAlign: "right" }}
-                        value={formData.inputform9}
-                        ref={inputform9ref}
-                        onFocus={(e) => e.target.select()}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) =>
-                          handleEnterKeyPress(inputform10ref, e)
-                        }
-                      />
-                    </div>
-                    <div className="col-sm-1"></div>
-                    <div className="col-sm-3 label-customer">Due Payment:</div>
-                    <div className="col-sm-3">
+                    <div className="col-sm-2 label-adduser">Mobile:</div>
+                    <div className="col-sm-4">
                       <Form.Control
                         type="text"
                         id="inputform10"
-                        placeholder="Due Payment"
+                        placeholder="Mobile No"
                         name="inputform10"
-                        className={`form-control-customer ${
+                        className={`form-control-adduser ${
                           errors.inputform10 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "right" }}
+                        style={{ textAlign: "left" }}
                         value={formData.inputform10}
                         ref={inputform10ref}
                         onFocus={(e) => e.target.select()}
@@ -912,20 +965,19 @@ function Customer() {
                         }
                       />
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2 label-customer">Last Date:</div>
-                    <div className="col-sm-3">
+
+                    <div className="col-sm-2 label-adduser">Email:</div>
+                    <div className="col-sm-4">
                       <Form.Control
-                        type="date"
+                        type="text"
                         id="inputform11"
-                        placeholder="Last Date"
+                        placeholder="Email"
                         name="inputform11"
-                        className={`form-control-customer ${
+                        className={`form-control-adduser ${
                           errors.inputform11 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "right" }}
-                        value={formData.inputform11}
+                        style={{ textAlign: "left" }}
+                        value={formData.inputform11.toLocaleLowerCase()}
                         ref={inputform11ref}
                         onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
@@ -934,15 +986,16 @@ function Customer() {
                         }
                       />
                     </div>
-                    <div className="col-sm-1"></div>
-                    <div className="col-sm-3 label-customer">Last Payment:</div>
-                    <div className="col-sm-3">
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-adduser">Time From:</div>
+                    <div className="col-sm-4">
                       <Form.Control
-                        type="text"
+                        type="time"
                         id="inputform12"
-                        placeholder="Last Payment"
+                        placeholder="Time From"
                         name="inputform12"
-                        className={`form-control-customer ${
+                        className={`form-control-adduser ${
                           errors.inputform12 ? "border-red" : ""
                         }`}
                         style={{ textAlign: "right" }}
@@ -950,16 +1003,60 @@ function Customer() {
                         ref={inputform12ref}
                         onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform13ref, e)
+                        }
+                      />
+                    </div>
+
+                    <div className="col-sm-2 label-adduser">Time To:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="time"
+                        id="inputform13"
+                        placeholder="Time To"
+                        name="inputform13"
+                        className={`form-control-adduser ${
+                          errors.inputform13 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "right" }}
+                        value={formData.inputform13}
+                        ref={inputform13ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) =>
+                          handleEnterKeyPress(inputform14ref, e)
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2 label-adduser">Password:</div>
+                    <div className="col-sm-4">
+                      <Form.Control
+                        type="text"
+                        id="inputform14"
+                        placeholder="Password"
+                        name="inputform14"
+                        className={`form-control-adduser ${
+                          errors.inputform14 ? "border-red" : ""
+                        }`}
+                        style={{ textAlign: "left" }}
+                        value={formData.inputform14}
+                        ref={inputform14ref}
+                        onFocus={(e) => e.target.select()}
+                        onChange={handleInputChange}
                         onKeyDown={(e) => handleEnterKeyPress(Submit, e)}
                       />
                     </div>
+                    <div className="col-sm-2"></div>
                   </div>
                 </div>
               </div>
             </Form>
 
             {/* // three button in this  */}
-            <ButtonGroupp
+            <ButtonGroup
               Submit={Submit}
               handleFocus={handleFocus}
               handleBlur={handleBlur}
@@ -968,15 +1065,15 @@ function Customer() {
               handleClear={handleClear}
               handleFormSubmit={handleFormSubmit}
             />
-            <CustomerModal
+            <GeneralTwoFieldsModal
               isOpen={isModalOpen}
               handleClose={handleCloseModal}
-              title="Select Customer"
+              title="Select User"
               technicians={dataa}
               searchRef={SearchBox}
               handleRowClick={handleRowClick}
-              firstColKey="code"
-              secondColKey="description"
+              firstColKey="tusrid"
+              secondColKey="tusrnam"
             />
           </div>
         </div>
@@ -985,4 +1082,4 @@ function Customer() {
   );
 }
 
-export default Customer;
+export default AdminAddUser;

@@ -14,7 +14,10 @@
   margin-bottom: 4px !important;
   margin-left: -10px !important;
 }
-
+.my-modal-user {
+  width: 35vw;
+  max-width: 35vw;
+}
 .label-adduser {
   font-family: "Poppins", sans-serif;
   font-size: 15px;

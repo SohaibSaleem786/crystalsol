@@ -1,7 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Modal, Nav, Row, Col, Form, NavLink } from "react-bootstrap";
-import "./Admin.css";
-const CustomerModal = ({
+import "./AdminAddUser.css";
+import { useTheme } from "../../../../../../../ThemeContext";
+import NavComponent from "../../../../../Navform/navbarform";
+const GeneralTwoFieldsModal = ({
   isOpen,
   handleClose,
   title,
@@ -11,6 +13,7 @@ const CustomerModal = ({
   handleRowClick,
   technicians,
 }) => {
+  const { apiLinks, getcolor, fontcolor } = useTheme();
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState({ columns: [], rows: [] });
   const [enterCount, setEnterCount] = useState(0);
@@ -43,11 +46,6 @@ const CustomerModal = ({
     setSearchText(uppercase);
   };
 
-  const resetData = () => {
-    setData({ columns: [], rows: [] });
-    setSearchText("");
-  };
-
   const handleArrowKeyPress = (direction) => {
     if (filteredRows.length === 0) return;
 
@@ -72,34 +70,26 @@ const CustomerModal = ({
     setHighlightedRowIndex(newIndex);
   };
 
+  const resetTableStates = () => {
+    setSearchText("");
+    setData({ columns: [], rows: [] });
+    setEnterCount(0);
+    setHighlightedRowIndex(0);
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      resetTableStates();
+    }
+  }, [isOpen]);
+
   const firstColWidth = "150px";
   const secondColWidth = "500px";
 
   return (
-    <Modal show={isOpen} onHide={handleClose} dialogClassName="my-modal">
-      <Nav
-        className="col-12 d-flex justify-content-between"
-        style={{
-          backgroundColor: "#3368b5",
-          color: "#fff",
-          height: "24px",
-        }}
-      >
-        <div className="col-4 "></div>
-        <div style={{ fontSize: "14px" }} className="col-4 text-center">
-          <strong>{title}</strong>
-        </div>
-        <div className="text-end col-4">
-          <NavLink
-            onClick={handleClose}
-            className="topBtn"
-            style={{ marginTop: "-5%", color: "white" }}
-          >
-            <i className="fa fa-close fa-lg crossBtn"></i>
-          </NavLink>
-        </div>
-      </Nav>
-      <Modal.Body>
+    <Modal show={isOpen} onHide={handleClose} dialogClassName="my-modal-user">
+      <NavComponent textdata={title} />
+      <Modal.Body style={{ backgroundColor: getcolor, color: fontcolor }}>
         <Row>
           <Col xs={12} sm={4} md={4} lg={4} xl={{ span: 4 }}>
             <Form.Control
@@ -125,24 +115,27 @@ const CustomerModal = ({
                   } else if (enterCount === 1) {
                     const selectedRowData = filteredRows[highlightedRowIndex];
                     handleRowClick(selectedRowData, highlightedRowIndex);
-                    setEnterCount(0); // Reset count after the second enter press
+                    setEnterCount(0);
                   }
                 } else if (e.key === "ArrowUp") {
                   handleArrowKeyPress("up");
                 } else if (e.key === "ArrowDown") {
                   handleArrowKeyPress("down");
                 } else {
-                  setEnterCount(0); // Reset count for any other key press
+                  setEnterCount(0);
                 }
               }}
             />
           </Col>
         </Row>
-        <table className="custom-table-area" style={{ color: "black" }}>
-          <thead>
+        <table
+          className="custom-table-area"
+          style={{ backgroundColor: getcolor, color: fontcolor }}
+        >
+          <thead style={{ backgroundColor: "#3368B5" }}>
             <tr>
               <th
-                className="sticky-header-area"
+                className="sticky-header-menuadmin"
                 style={{
                   width: firstColWidth,
                   fontWeight: "bold",
@@ -153,7 +146,7 @@ const CustomerModal = ({
                 Code
               </th>
               <th
-                className="sticky-header-area"
+                className="sticky-header-menuadmin"
                 style={{
                   width: secondColWidth,
                   textAlign: "center",
@@ -169,13 +162,16 @@ const CustomerModal = ({
             {!filteredRows || filteredRows.length === 0 ? (
               <>
                 {Array.from({ length: 18 }).map((_, index) => (
-                  <tr key={`blank-${index}`}>
+                  <tr
+                    key={`blank-${index}`}
+                    style={{ backgroundColor: getcolor, color: fontcolor }}
+                  >
                     {Array.from({ length: 2 }).map((_, colIndex) => (
                       <td key={`blank-${index}-${colIndex}`}>&nbsp;</td>
                     ))}
                   </tr>
                 ))}
-                <tr>
+                <tr style={{ backgroundColor: getcolor, color: fontcolor }}>
                   <td
                     style={{
                       textAlign: "center",
@@ -195,6 +191,7 @@ const CustomerModal = ({
                 {filteredRows.map((row, index) => (
                   <tr
                     style={{
+                      color: fontcolor,
                       fontWeight:
                         highlightedRowIndex === index ? "bold" : "normal",
                       border:
@@ -202,20 +199,16 @@ const CustomerModal = ({
                           ? "1px solid #3368B5"
                           : "1px solid #3368B5",
                       backgroundColor:
-                        highlightedRowIndex === index ? "#739ad1" : "",
+                        highlightedRowIndex === index ? "#739ad1" : getcolor,
                     }}
                     ref={index === 0 ? firstRowRef : null}
                     key={index}
                     id={`row-${index}`}
-                    onClick={() => handleRowClick(row, index)}
+                    onClick={() => {
+                      handleRowClick(row, index);
+                    }}
                   >
-                    <td
-                      style={{
-                        textAlign: "left",
-                        width: firstColWidth,
-                        fontWeight: "normal",
-                      }}
-                    >
+                    <td style={{ width: firstColWidth, fontWeight: "normal" }}>
                       {row[firstColKey]}
                     </td>
                     <td
@@ -232,7 +225,10 @@ const CustomerModal = ({
                 {Array.from({
                   length: Math.max(0, 19 - filteredRows.length),
                 }).map((_, index) => (
-                  <tr key={`blank-${index}`}>
+                  <tr
+                    key={`blank-${index}`}
+                    style={{ backgroundColor: getcolor, color: fontcolor }}
+                  >
                     {Array.from({ length: 2 }).map((_, colIndex) => (
                       <td key={`blank-${index}-${colIndex}`}>&nbsp;</td>
                     ))}
@@ -247,4 +243,4 @@ const CustomerModal = ({
   );
 };
 
-export default CustomerModal;
+export default GeneralTwoFieldsModal;

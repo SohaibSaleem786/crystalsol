@@ -62,7 +62,7 @@ const Admin = ({ isOpen, handleToggle }) => {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            navigate("/Customer");
+            navigate("/AdminCustomers");
           }}
         >
           Customer

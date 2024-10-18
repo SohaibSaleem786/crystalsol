@@ -23,6 +23,7 @@ import { ExpandLess, ExpandMore, Opacity } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchGetCrystalCustomer,
+  fetchGetCrystalMenu,
   fetchGetUser,
   fetchMenu,
 } from "../../Redux/action";
@@ -144,6 +145,7 @@ const SideBar1 = () => {
     dispatch(fetchGetUser(organisation && organisation.code));
     dispatch(fetchMenu(user && user.tusrid, organisation && organisation.code));
     dispatch(fetchGetCrystalCustomer());
+    dispatch(fetchGetCrystalMenu());
   }, [dispatch, user.tusrid, organisation.code]);
 
   useEffect(() => {

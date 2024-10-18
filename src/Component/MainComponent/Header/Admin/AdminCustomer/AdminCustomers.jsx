@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Spinner, Nav } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useTheme } from "../../../../../ThemeContext";
+
 import { isLoggedIn, getUserData, getOrganisationData } from "../../../../Auth";
 import NavComponent from "../../../Navform/navbarform";
-import "./AdminUserManagement.css";
+import "./AdminCustomer.css";
 import SingleButton from "../../../Button/SingleButton/SingleButton";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchGetCrystalCustomer,
   fetchGetUser,
 } from "../../../../Redux/action";
-import AdminUserManagementModal from "./AdminUserManagementModal";
-export default function AdminUserManagement() {
+export default function AdminCustomers() {
   const dispatch = useDispatch();
   const user = getUserData();
   const organisation = getOrganisationData();
@@ -22,25 +22,21 @@ export default function AdminUserManagement() {
   const secondaryColor = "white";
   const btnColor = "#3368B5";
   const textColor = "white";
-  const {
-    isSidebarVisible,
-    toggleSidebar,
-    getcolor,
-    fontcolor,
-    toggleChangeColor,
-  } = useTheme();
+
   const [tableData, setTableData] = useState([]);
   const [selectedSearch, setSelectedSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { data, loading, error } = useSelector((state) => state.getuser);
-  const [selectedcode, setSelectedCode] = useState("CRYSTAL");
+  const { data, loading, error } = useSelector(
+    (state) => state.getcrystalcustomer
+  );
 
   useEffect(() => {
     setTableData(data);
-    console.log(data, "selectedcode", selectedcode);
-    dispatch(fetchGetUser(selectedcode));
-  }, [dispatch, selectedcode]);
-
+    dispatch(fetchGetCrystalCustomer());
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchGetCrystalCustomer());
+  }, []);
   const handleSearch = (e) => {
     setSelectedSearch(e.target.value);
   };
@@ -53,7 +49,7 @@ export default function AdminUserManagement() {
     if (selectedSearch.trim() !== "") {
       const query = selectedSearch.trim().toLowerCase();
       filteredData = filteredData.filter(
-        (data) => data.tusrnam && data.tusrnam.toLowerCase().includes(query)
+        (data) => data.code && data.code.toLowerCase().includes(query)
       );
     }
 
@@ -67,9 +63,10 @@ export default function AdminUserManagement() {
   const fifthColWidth = { width: "8%" };
   const sixthColWidth = { width: "8%" };
   const seventhColWidth = { width: "11%" };
-  const eighthColWidth = { width: "21%" };
+  const eighthColWidth = { width: "18%" };
   const ninthColWidth = { width: "6%" };
-
+  const tenthColWidth = { width: "6%" };
+  const eleventhColWidth = { width: "8%" };
   // Adjust the content width based on sidebar state
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -83,7 +80,13 @@ export default function AdminUserManagement() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
+  const {
+    isSidebarVisible,
+    toggleSidebar,
+    getcolor,
+    fontcolor,
+    toggleChangeColor,
+  } = useTheme();
   const contentStyle = {
     backgroundColor: getcolor,
     height: "100vh",
@@ -102,57 +105,13 @@ export default function AdminUserManagement() {
     overflowY: "hidden",
     wordBreak: "break-word",
     textAlign: "center",
-    maxWidth: "1000px",
+    maxWidth: "1050px",
     fontSize: "15px",
     fontStyle: "normal",
     fontWeight: "400",
     lineHeight: "23px",
     fontFamily: '"Poppins", sans-serif',
   };
-  const SearchBox = useRef(null);
-  const [isModalOpen, setModalOpen] = useState(false);
-  const handleRowClick = async (selectedItem, rowIndex) => {
-    console.log("handleRowClickAccount", selectedItem);
-    await dispatch(fetchGetUser(selectedItem.code));
-    setSelectedCode(selectedItem.code);
-    console.log("selectedCode", selectedItem.code);
-
-    if (data && data.length > 0) {
-      setTableData(data);
-    }
-    setModalOpen(false);
-  };
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
-  const handleDoubleClick = (e) => {
-    setTimeout(() => {
-      SearchBox.current.focus();
-    }, 500);
-    setModalOpen(true);
-  };
-  const {
-    data: crystalCustomerData,
-    loading: crystalCustomerLoading,
-    error: crystalCustomerError,
-  } = useSelector((state) => state.getcrystalcustomer);
-  const [dataaa, setDataaa] = useState([]);
-
-  // Only fetch once when component mounts
-  useEffect(() => {
-    console.log("customerlist", crystalCustomerData);
-    setTimeout(() => {
-      console.log("customerlist", crystalCustomerData);
-    }, 3000);
-    if (crystalCustomerData?.length === 0) {
-      dispatch(fetchGetCrystalCustomer());
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    setDataaa(crystalCustomerData);
-  }, [crystalCustomerData]);
 
   return (
     <>
@@ -166,33 +125,53 @@ export default function AdminUserManagement() {
             borderRadius: "9px",
           }}
         >
-          <NavComponent textdata="Admin UserManagement" />
-          <div className="my-1 mx-3 row">
-            <div className="col-4">
-              <label className="col-3 text-end">
-                <strong>Search: &nbsp;&nbsp;</strong>
-              </label>
-              <input
-                type="text"
-                className="col-9"
-                onChange={handleSearch}
-                placeholder="Search by Name"
-                value={selectedSearch}
-                style={{
-                  height: "22px",
-                  // fontSize: "0.8rem",
-                  backgroundColor: getcolor,
-                  border: `1px solid ${fontcolor}`,
-                  color: fontcolor,
-                  "::placeholder": {
-                    color: "white",
-                    opacity: 5,
-                  },
-                }}
-              />
+          <NavComponent textdata="Customer Management" />
+          <div className="my-1 mx-3">
+            <div className="col-12 d-flex justify-content-between mt-1">
+              <div className="col-4 d-flex justify-content-start">
+                <label
+                  className="col-3 text-end"
+                  // style={{ fontSize: "0.8rem" }}
+                >
+                  <strong>Search: &nbsp;&nbsp;</strong>
+                </label>
+                <input
+                  type="text"
+                  className="col-6"
+                  onChange={handleSearch}
+                  placeholder="Search by Name"
+                  value={selectedSearch}
+                  style={{
+                    height: "22px",
+                    // fontSize: "0.8rem",
+                    backgroundColor: getcolor,
+                    border: `1px solid ${fontcolor}`,
+                    color: fontcolor,
+                    "::placeholder": {
+                      color: "white",
+                      opacity: 5,
+                    },
+                  }}
+                />
+                {/* <Form.Control
+                  type="search"
+                  placeholder="Search"
+                  className="col-6"
+                  onChange={handleSearch}
+                  value={selectedSearch}
+                  style={{
+                    height: "22px",
+                    // fontSize: "0.8rem",
+                    backgroundColor: getcolor,
+                    border: `1px solid ${fontcolor}`,
+                    color: fontcolor,
+                    "::placeholder": {
+                      color: "white",
+                    },
+                  }}
+                /> */}
+              </div>
             </div>
-            <div className="col-4"></div>
-            <div className="col-4">{selectedcode}</div>
           </div>
           <div>
             <div
@@ -236,7 +215,7 @@ export default function AdminUserManagement() {
                         wordBreak: "break-word",
                       }}
                     >
-                      <a style={{ color: "white" }}>UserId</a>
+                      <a style={{ color: "white" }}>Code</a>
                     </td>
                     <td
                       className="border-dark"
@@ -264,7 +243,7 @@ export default function AdminUserManagement() {
                         wordBreak: "break-word",
                       }}
                     >
-                      <a style={{ color: "white" }}>Type</a>
+                      <a style={{ color: "white" }}>Menu</a>
                     </td>
                     <td
                       className="border-dark"
@@ -294,6 +273,24 @@ export default function AdminUserManagement() {
                     >
                       <a style={{ color: "white" }}>Menu</a>
                     </td>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...tenthColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      <a style={{ color: "white" }}>User</a>
+                    </td>
+                    <td
+                      className="border-dark"
+                      style={{
+                        ...eleventhColWidth,
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      <a style={{ color: "white" }}>Branches</a>
+                    </td>
                   </tr>
                 </thead>
 
@@ -308,7 +305,7 @@ export default function AdminUserManagement() {
                       {Array.from({ length: Math.max(0, 30 - 3) }).map(
                         (_, rowIndex) => (
                           <tr key={`blank-${rowIndex}`}>
-                            {Array.from({ length: 7 }).map((_, colIndex) => (
+                            {Array.from({ length: 9 }).map((_, colIndex) => (
                               <td key={`blank-${rowIndex}-${colIndex}`}>
                                 &nbsp;
                               </td>
@@ -340,7 +337,7 @@ export default function AdminUserManagement() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.tusrid}
+                              {item.code}
                             </td>
                             <td
                               className="text-start"
@@ -350,7 +347,7 @@ export default function AdminUserManagement() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.tusrnam}
+                              {item.description}
                             </td>
 
                             <td
@@ -361,7 +358,7 @@ export default function AdminUserManagement() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.Status}
+                              {item.status}
                             </td>
                             <td
                               className="text-center"
@@ -371,7 +368,7 @@ export default function AdminUserManagement() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.Type}
+                              {item.menu}
                             </td>
                             <td
                               className="text-center"
@@ -381,7 +378,7 @@ export default function AdminUserManagement() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.Mobile}
+                              {item.mobileno}
                             </td>
                             <td
                               className="text-start"
@@ -391,7 +388,7 @@ export default function AdminUserManagement() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {item.Email}
+                              {item.email}
                             </td>
 
                             <td
@@ -402,11 +399,39 @@ export default function AdminUserManagement() {
                                 wordBreak: "break-word",
                               }}
                             >
-                              <Link
-                                to={`/AdminMenuUser/${item.tusrid}/${selectedcode}`}
-                              >
+                              <Link to={`/AdminCustomerMenu/${item.code}`}>
                                 <i
                                   className="fa fa-list fa-xl"
+                                  style={{ color: fontcolor }}
+                                ></i>
+                              </Link>
+                            </td>
+                            <td
+                              className="text-center"
+                              style={{
+                                ...tenthColWidth,
+                                color: fontcolor,
+                                wordBreak: "break-word",
+                              }}
+                            >
+                              <Link to={`/AdminUserManagement/${item.code}`}>
+                                <i
+                                  className="fa fa-user-cog fa-xl"
+                                  style={{ color: fontcolor }}
+                                ></i>
+                              </Link>
+                            </td>
+                            <td
+                              className="text-center"
+                              style={{
+                                ...eleventhColWidth,
+                                color: fontcolor,
+                                wordBreak: "break-word",
+                              }}
+                            >
+                              <Link to={`/MenuUser/${item.code}`}>
+                                <i
+                                  className="fa fa-code-branch fa-xl"
                                   style={{ color: fontcolor }}
                                 ></i>
                               </Link>
@@ -423,7 +448,7 @@ export default function AdminUserManagement() {
                               color: fontcolor,
                             }}
                           >
-                            {Array.from({ length: 7 }).map((_, colIndex) => (
+                            {Array.from({ length: 9 }).map((_, colIndex) => (
                               <td key={`blank-${rowIndex}-${colIndex}`}>
                                 &nbsp;
                               </td>
@@ -450,24 +475,9 @@ export default function AdminUserManagement() {
               style={{ backgroundColor: "#186DB7", width: "120px" }}
             />
             <SingleButton
-              to={`/AdminAddUser/${selectedcode}`}
-              text="User"
+              to="/Customers"
+              text="Customer"
               style={{ backgroundColor: "#186DB7", width: "120px" }}
-            />
-            <SingleButton
-              onClick={handleDoubleClick}
-              text=" Company"
-              style={{ backgroundColor: "#186DB7", width: "120px" }}
-            />
-            <AdminUserManagementModal
-              isOpen={isModalOpen}
-              handleClose={handleCloseModal}
-              title="Select Customer"
-              technicians={crystalCustomerData}
-              searchRef={SearchBox}
-              handleRowClick={handleRowClick}
-              firstColKey="code"
-              secondColKey="description"
             />
           </div>
         </div>

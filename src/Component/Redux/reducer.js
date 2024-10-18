@@ -39,7 +39,7 @@ const GetUser = (
   state = { loading: false, data: [], error: null },
   { type, payload }
 ) => {
-  console.log("The data i received is reducer GetUser:", payload);
+  // console.log("The data i received is reducer GetUser:", payload);
 
   switch (type) {
     case FETCH_GETUSER_REQUEST:
@@ -62,7 +62,7 @@ const GetCrystalCustomer = (
   state = { loading: false, data: [], error: null },
   { type, payload }
 ) => {
-  console.log("The data i received is:", payload);
+  // console.log("The data i received is:", payload);
   switch (type) {
     case FETCH_GETCRYSTALCUSTOMER_REQUEST:
       return { ...state, loading: true, error: null };
@@ -84,7 +84,7 @@ const GetCrystalMenu = (
   state = { loading: false, data: [], error: null },
   { type, payload }
 ) => {
-  console.log("The data i received is:", payload);
+  // console.log("The data i received is:", payload);
   switch (type) {
     case FETCH_GETCRYSTALMENU_REQUEST:
       return { ...state, loading: true, error: null };

@@ -14,6 +14,8 @@ import { getcompanyData } from "./AddUser_Api";
 import { useMutation } from "@tanstack/react-query";
 
 import { useTheme } from "../../../../ThemeContext";
+import { fetchGetUser } from "../../../Redux/action";
+import { useDispatch } from "react-redux";
 function formatToThreeDigits(number) {
   // Convert the number to a string and pad with leading zeros if necessary
   return number.toString().padStart(3, "0");
@@ -26,6 +28,7 @@ function removeParentDirectories(path) {
   return "";
 }
 function AddUser1() {
+  const dispatch = useDispatch();
   const user = getUserData();
   const organisation = getOrganisationData();
   const { apiLinks } = useTheme();
@@ -206,8 +209,24 @@ function AddUser1() {
       formDataa.append("FStrCod", formData.inputform5);
       formDataa.append("FEmpCod", formData.inputform6);
       formDataa.append("FPwdExp", formData.inputform7);
-      formDataa.append("FUsrSts", formData.inputform8);
-      formDataa.append("FUsrTyp", formData.inputform9);
+      formDataa.append(
+        "FUsrSts",
+        formData.inputform8 === "Active"
+          ? "A"
+          : formData.inputform8 === "Suspend"
+          ? "S"
+          : "C"
+      );
+      formDataa.append(
+        "FUsrTyp",
+        formData.inputform9 === "Admin"
+          ? "A"
+          : formData.inputform8 === "User"
+          ? "U"
+          : formData.inputform8 === "SuperUser"
+          ? "S"
+          : "G"
+      );
       formDataa.append("FMobNum", formData.inputform10);
       formDataa.append("FEmlAdd", formData.inputform11);
       formDataa.append("FTimFrm", formData.inputform12);
@@ -226,6 +245,7 @@ function AddUser1() {
       console.log("API Response:", response);
 
       if (response.data.error === 200) {
+        dispatch(fetchGetUser(organisation && organisation.code));
         GetDataList();
         Codefocus();
         setFormData({
@@ -283,6 +303,7 @@ function AddUser1() {
   const [textdata, settextdata] = useState("User Management ");
 
   const handleCloseModal = () => {
+    dispatch(fetchGetUser(organisation && organisation.code));
     setData({ columns: [], rows: [] });
     setSearchText("");
     setHighlightedRowIndex(0);
@@ -316,19 +337,19 @@ function AddUser1() {
       if (selectedItem) {
         setFormData({
           ...formData,
-          AccountCodeform: selectedItem.tusrid,
-          Descriptionform: selectedItem.tusrnam,
-          inputform4: selectedItem["Cash Code"],
-          inputform5: selectedItem["Store Code"],
-          inputform6: selectedItem["Emp Code"],
-          inputform7: selectedItem.Expiry,
-          inputform8: selectedItem.Status,
-          inputform9: selectedItem.Type,
-          inputform10: selectedItem.Mobile,
-          inputform11: selectedItem.Email,
-          inputform12: selectedItem["Time From"],
-          inputform13: selectedItem["Time Too"],
-          inputform14: selectedItem.Password,
+          AccountCodeform: selectedItem.tusrid || "",
+          Descriptionform: selectedItem.tusrnam || "",
+          inputform4: selectedItem["Cash Code"] || "",
+          inputform5: selectedItem["Store Code"] || "",
+          inputform6: selectedItem["Emp Code"] || "",
+          inputform7: selectedItem.Expiry || "",
+          inputform8: selectedItem.Status || "",
+          inputform9: selectedItem.Type || "",
+          inputform10: selectedItem.Mobile || "",
+          inputform11: selectedItem.Email || "",
+          inputform12: selectedItem["Time From"] || "",
+          inputform13: selectedItem["Time Too"] || "",
+          inputform14: selectedItem.Password || "",
         });
         handlePrediction(selectedItem.tusrnam).then((result) => {
           setGeturdu(result);
@@ -402,11 +423,37 @@ function AddUser1() {
       });
     }
     if (name === "inputform11") {
-      const lowercaseValue = value.toLowerCase();
+      const formattedValue = value.replace(/\s/g, "").toLowerCase();
       setFormData({
         ...formData,
-        inputform11: lowercaseValue,
+        inputform11: formattedValue,
       });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: formattedValue,
+      });
+    }
+    if (name === "inputform10") {
+      const formattedValue = value.replace(/\D/g, "");
+      if (formattedValue.length === 10) {
+        if (!formattedValue.startsWith("03")) {
+          setFormData({
+            ...formData,
+            inputform10: "",
+          });
+        } else {
+          setFormData({
+            ...formData,
+            inputform10: formattedValue,
+          });
+        }
+      } else {
+        setFormData({
+          ...formData,
+          inputform10: formattedValue,
+        });
+      }
     } else {
       setFormData({
         ...formData,
@@ -427,19 +474,19 @@ function AddUser1() {
       if (selectedItem) {
         setFormData({
           ...formData,
-          AccountCodeform: selectedItem.tusrid,
-          Descriptionform: selectedItem.tusrnam,
-          inputform4: selectedItem["Cash Code"],
-          inputform5: selectedItem["Store Code"],
-          inputform6: selectedItem["Emp Code"],
-          inputform7: selectedItem.Expiry,
-          inputform8: selectedItem.Status,
-          inputform9: selectedItem.Type,
-          inputform10: selectedItem.Mobile,
-          inputform11: selectedItem.Email,
-          inputform12: selectedItem["Time From"],
-          inputform13: selectedItem["Time Too"],
-          inputform14: selectedItem.Password,
+          AccountCodeform: selectedItem.tusrid || "",
+          Descriptionform: selectedItem.tusrnam || "",
+          inputform4: selectedItem["Cash Code"] || "",
+          inputform5: selectedItem["Store Code"] || "",
+          inputform6: selectedItem["Emp Code"] || "",
+          inputform7: selectedItem.Expiry || "",
+          inputform8: selectedItem.Status || "",
+          inputform9: selectedItem.Type || "",
+          inputform10: selectedItem.Mobile || "",
+          inputform11: selectedItem.Email || "",
+          inputform12: selectedItem["Time From"] || "",
+          inputform13: selectedItem["Time Too"] || "",
+          inputform14: selectedItem.Password || "",
         });
         handlePrediction(selectedItem.tcmpdsc).then((result) => {
           setGeturdu(result);
@@ -480,19 +527,19 @@ function AddUser1() {
     setModalOpen(false);
     setFormData({
       ...formData,
-      AccountCodeform: selectedItem.tusrid,
-      Descriptionform: selectedItem.tusrnam,
-      inputform4: selectedItem["Cash Code"],
-      inputform5: selectedItem["Store Code"],
-      inputform6: selectedItem["Emp Code"],
-      inputform7: selectedItem.Expiry,
-      inputform8: selectedItem.Status,
-      inputform9: selectedItem.Type,
-      inputform10: selectedItem.Mobile,
-      inputform11: selectedItem.Email,
-      inputform12: selectedItem["Time From"],
-      inputform13: selectedItem["Time Too"],
-      inputform14: selectedItem.Password,
+      AccountCodeform: selectedItem.tusrid || "",
+      Descriptionform: selectedItem.tusrnam || "",
+      inputform4: selectedItem["Cash Code"] || "",
+      inputform5: selectedItem["Store Code"] || "",
+      inputform6: selectedItem["Emp Code"] || "",
+      inputform7: selectedItem.Expiry || "",
+      inputform8: selectedItem.Status || "",
+      inputform9: selectedItem.Type || "",
+      inputform10: selectedItem.Mobile || "",
+      inputform11: selectedItem.Email || "",
+      inputform12: selectedItem["Time From"] || "",
+      inputform13: selectedItem["Time Too"] || "",
+      inputform14: selectedItem.Password || "",
     });
     handlePrediction(selectedItem.tcmpdsc).then((result) => {
       setGeturdu(result);
@@ -933,7 +980,8 @@ function AddUser1() {
                         className={`form-control-adduser ${
                           errors.inputform10 ? "border-red" : ""
                         }`}
-                        style={{ textAlign: "left" }}
+                        maxLength={11}
+                        style={{ textAlign: "right" }}
                         value={formData.inputform10}
                         ref={inputform10ref}
                         onFocus={(e) => e.target.select()}
@@ -955,13 +1003,16 @@ function AddUser1() {
                           errors.inputform11 ? "border-red" : ""
                         }`}
                         style={{ textAlign: "left" }}
-                        value={formData.inputform11.toLocaleLowerCase()}
+                        value={formData.inputform11
+                          .replace(/\s/g, "")
+                          .toLocaleLowerCase()}
                         ref={inputform11ref}
                         onFocus={(e) => e.target.select()}
                         onChange={handleInputChange}
                         onKeyDown={(e) =>
                           handleEnterKeyPress(inputform12ref, e)
                         }
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
                       />
                     </div>
                   </div>

@@ -24,12 +24,16 @@ import UserMaintenance from "./Component/Utilities/UserManagement/UserManagement
 import MenuUser from "./Component/Utilities/UserManagement/MenuUser/MenuUser.jsx";
 import Layout from "./Component/MainComponent/Layout/Layout.js";
 import AddUser1 from "./Component/Utilities/UserManagement/AddUser/AddUser.jsx";
-import Customer from "./Component/MainComponent/Header/Admin/Customer.jsx";
 import MenuAdmin from "./Component/MainComponent/Header/Admin/MenuAdmin/MenuAdmin.jsx";
 import MessageScreen from "./Component/MainComponent/Header/Message/MessageScreen.jsx";
-import AdminUserManagement from "./Component/MainComponent/Header/Admin/AdminUserManagement/AdminUserManagement.jsx";
-import AdminMenuUser from "./Component/MainComponent/Header/Admin/AdminUserManagement/AdminMenuUser/AdminMenuUser.jsx";
-import AdminAddUser from "./Component/MainComponent/Header/Admin/AdminUserManagement/AdminAddUser/AdminAddUser.jsx";
+// import AdminMenuUser from "./Component/MainComponent/Header/Admin/AdminUserManagement/AdminMenuUser/AdminMenuUser.jsx";
+// import AdminAddUser from "./Component/MainComponent/Header/Admin/AdminUserManagement/AdminAddUser/AdminAddUser.jsx";
+import AdminCustomers from "./Component/MainComponent/Header/Admin/AdminCustomer/AdminCustomers.jsx";
+import AdminUserManagement from "./Component/MainComponent/Header/Admin/AdminCustomer/AdminUserManagement/AdminUserManagement.jsx";
+import AdminAddUser from "./Component/MainComponent/Header/Admin/AdminCustomer/AdminUserManagement/AdminAddUser/AdminAddUser.jsx";
+import AdminMenuUser from "./Component/MainComponent/Header/Admin/AdminCustomer/AdminUserManagement/AdminMenuUser/AdminMenuUser.jsx";
+import AdminCustomerMenu from "./Component/MainComponent/Header/Admin/AdminCustomer/AdminCustomerMenu/AdminCustomerMenu/AdminCustomerMenu.jsx";
+import Customer from "./Component/MainComponent/Header/Admin/AdminCustomer/SaveCustomer.jsx";
 
 function App() {
   const queryClient = new QueryClient();
@@ -60,8 +64,7 @@ function App() {
                   path="/MessageScreen"
                   element={<MessageScreen />}
                 />
-                <Route exact path="/Customer" element={<Customer />} />
-                <Route exact path="/MenuAdmin" element={<MenuAdmin />} />
+
                 <Route
                   exact
                   path="/CompanyMaintenance"
@@ -93,19 +96,31 @@ function App() {
 
                 <Route
                   exact
-                  path="/AdminUserManagement"
+                  path="/AdminUserManagement/:code"
                   element={<AdminUserManagement />}
                 />
                 <Route
                   exact
-                  path="/AdminMenuUser/:tusrid/:selectedcode"
+                  path="/AdminMenuUser/:tusrid/:code"
                   element={<AdminMenuUser />}
                 />
                 <Route
                   exact
-                  path="/AdminAddUser/:selectedcode"
+                  path="/AdminAddUser/:code"
                   element={<AdminAddUser />}
                 />
+                <Route
+                  exact
+                  path="/AdminCustomerMenu/:code"
+                  element={<AdminCustomerMenu />}
+                />
+                <Route
+                  exact
+                  path="/AdminCustomers"
+                  element={<AdminCustomers />}
+                />
+                <Route exact path="/MenuAdmin" element={<MenuAdmin />} />
+                <Route exact path="/Customers" element={<Customer />} />
               </Route>
             </Routes>
           </QueryClientProvider>
